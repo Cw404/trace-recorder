@@ -1,0 +1,6 @@
+Trace-Recorder Changes
+
+Changes in 1.0.1
+
+ * Resolve dependencies through a central repository,
+   Instead of manually pushing to a local Maven repository
