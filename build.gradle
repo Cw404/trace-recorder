@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+group 'cn.xusc'
+version '1.0'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+repositories {
+    // 优先本地仓库加载
+    mavenLocal()
+    // 阿里云中央仓库加载
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://maven.aliyun.com/repository/spring/' }
+    // 默认的中央仓库加载
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.mockito:mockito-core:4.5.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// 发行
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'cn.xusc'
+            artifactId = 'trace-recorder'
+            version = '1.0'
+
+            from components.java
+        }
+    }
+}

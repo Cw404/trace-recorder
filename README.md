@@ -1,0 +1,41 @@
+# Trace-Recorder<sup><sup>&nbsp;It's Scalable.</sup></sup>
+
+Simple, Scalable. Trace-Recorder is a trace recorder, mainly in order to better record the source code flow,
+can better access to the source code implementation of the basic process and the full process; 
+Records can be better managed with a scalable plug-in architecture.
+
+### Use
+1、The JDK11 environment needs to be installed (openJDK is recommended)
+> The following page is only [Linux/x64](https://jdk.java.net/java-se-ri/11)、[Windows/x64](https://jdk.java.net/java-se-ri/11) two versions，
+> for more please visit [OracleJDK](https://www.oracle.com/java/technologies/downloads/#java11) official website to download
+    
+    openJDK11: https://jdk.java.net/java-se-ri/11
+
+2、Cloning project
+
+3、Dependency resolution
+
+    gradle build
+
+4、Install dependencies to the local Maven repository
+
+    gradle publishToMavenLocal    
+
+5、Project depend on
+```gradle
+implementation 'cn.xusc:trace-recorder:1.0'
+```
+
+```maven
+<dependency>
+    <groupId>cn.xusc</groupId>
+    <artifactId>trace-recorder</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+
+### Author
+* QQ    : 2506162335
+* WeChat: m47705945
+* email : 18573707104@163.com
+* describe: Please contact the author if you have any questions
