@@ -49,7 +49,7 @@ public final class Recorders {
      * 添加信息过滤器
      *
      * @param filter 信息过滤器
-     * @return       添加结果
+     * @return 添加结果
      */
     public static boolean addInfoFilter(InfoFilter filter) {
         return TRACE_RECORDER.addInfoFilter(filter);
@@ -59,7 +59,7 @@ public final class Recorders {
      * 添加信息增强器
      *
      * @param enhancer 信息增强器
-     * @return         添加结果
+     * @return 添加结果
      */
     public static boolean addInfoEnhancer(InfoEnhancer enhancer) {
         return TRACE_RECORDER.addInfoEnhancer(enhancer);
@@ -69,7 +69,7 @@ public final class Recorders {
      * 添加信息记录器
      *
      * @param recorder 信息记录器
-     * @return         添加结果
+     * @return 添加结果
      */
     public static boolean addInfoRecorder(InfoRecorder recorder) {
         return TRACE_RECORDER.addInfoRecorder(recorder);
@@ -158,7 +158,7 @@ public final class Recorders {
      * 添加文件信息记录器
      *
      * @param fileName 记录文件名
-     * @return         添加结果
+     * @return 添加结果
      */
     @SuppressWarnings("unused")
     public static boolean addFileInfoRecorder(String fileName) {
@@ -171,7 +171,7 @@ public final class Recorders {
      *
      * @param file 记录文件
      *             仅文件地址，需要具备可写权限，目标文件不存在会自动创建
-     * @return     添加结果
+     * @return 添加结果
      */
     public static boolean addFileInfoRecorder(File file) {
         Objects.requireNonNull(file);
@@ -233,7 +233,7 @@ public final class Recorders {
             }
             
             StringBuilder sb = new StringBuilder();
-            String lineSeparator = System.lineSeparator();
+            String lineSeparator = Symbols.lineSeparator();
             sb.append("--------------------").append(lineSeparator);
             do {
                 sb.append(String.format("%s - %d", head.getClassName(), head.getCount())).append(lineSeparator);

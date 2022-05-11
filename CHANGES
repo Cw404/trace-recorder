@@ -1,5 +1,9 @@
 Trace-Recorder Changes
 
+Changes in 1.0.3
+
+ * Add Symbols, simplified symbol generation
+
 Changes in 1.0.1
 
  * Resolve dependencies through a central repository,

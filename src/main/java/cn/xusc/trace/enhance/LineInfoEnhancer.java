@@ -17,6 +17,7 @@
 package cn.xusc.trace.enhance;
 
 import cn.xusc.trace.EnhanceInfo;
+import cn.xusc.trace.util.Symbols;
 
 import java.util.Objects;
 
@@ -34,7 +35,7 @@ public class LineInfoEnhancer implements InfoEnhancer {
     
     @Override
     public EnhanceInfo enhance(EnhanceInfo eInfo) {
-        eInfo.setInfo(eInfo.getInfo() + System.lineSeparator());
+        eInfo.setInfo(eInfo.getInfo() + Symbols.lineSeparator());
         return eInfo;
     }
     
@@ -44,7 +45,7 @@ public class LineInfoEnhancer implements InfoEnhancer {
             /*
               如果消息不为空，默认写出消息就为输入消息
              */
-            eInfo.setWriteInfo(eInfo.getInfo() + System.lineSeparator());
+            eInfo.setWriteInfo(eInfo.getInfo() + Symbols.lineSeparator());
         }
         return eInfo;
     }
