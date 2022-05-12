@@ -27,6 +27,7 @@ import cn.xusc.trace.filter.RecordLabelInfoFilter;
 import cn.xusc.trace.record.ConsoleInfoRecorder;
 import cn.xusc.trace.record.InfoRecorder;
 import cn.xusc.trace.util.FastList;
+import cn.xusc.trace.util.Formats;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,12 +36,12 @@ import java.util.Objects;
  * 跟踪记录仪
  *
  * <p>
- *     Examples:
+ * Examples:
  * </p>
  * <pre>
  *     TraceRecorder recorder = new TraceRecorder();
  *     recorder.log("msg");
- *     recorder.log("msg",false);
+ *     recorder.nolog("msg");
  * </pre>
  *
  * @author WangCai
@@ -93,7 +94,7 @@ public class TraceRecorder {
      * 添加信息过滤器
      *
      * @param filter 信息过滤器
-     * @return       添加结果
+     * @return 添加结果
      */
     public boolean addInfoFilter(InfoFilter filter) {
         return INFO_FILTERS.add(filter);
@@ -103,7 +104,7 @@ public class TraceRecorder {
      * 添加信息增强器
      *
      * @param enhancer 信息增强器
-     * @return         添加结果
+     * @return 添加结果
      */
     public boolean addInfoEnhancer(InfoEnhancer enhancer) {
         return INFO_ENHANCERS.add(enhancer);
@@ -113,7 +114,7 @@ public class TraceRecorder {
      * 添加信息记录器
      *
      * @param recorder 信息记录器
-     * @return         添加结果
+     * @return 添加结果
      */
     public boolean addInfoRecorder(InfoRecorder recorder) {
         return INFO_RECORDERS.add(recorder);
@@ -198,6 +199,17 @@ public class TraceRecorder {
     }
     
     /**
+     * 记录格式信息
+     *
+     * @param info     格式信息
+     * @param argArray 参数列表
+     * @since 1.1
+     */
+    public void log(String info, Object... argArray) {
+        log(info, Objects.requireNonNullElse(LABEL, RecordLabel.NOW), argArray);
+    }
+    
+    /**
      * 根据跳过标记进行记录信息
      *
      * @param info     信息
@@ -205,10 +217,33 @@ public class TraceRecorder {
      *                 true  => HIDE
      *                 false => NOW
      *                 if enable ALL, will ignore parameter of isRecord
+     * @deprecated 对格式化记录信息的支持下，为了更明确的语意，1.1版本后请使用{{@link #nolog(String)}}，1.2版本后将进行剔除
      */
+    @Deprecated
     public void log(String info, boolean isRecord) {
         RecordLabel label = isRecord ? RecordLabel.NOW : RecordLabel.HIDE;
         log(info, Objects.requireNonNullElse(LABEL, label));
+    }
+    
+    /**
+     * 不记录信息
+     *
+     * @param info 信息
+     * @since 1.1
+     */
+    public void nolog(String info) {
+        log(info, Objects.requireNonNullElse(LABEL, RecordLabel.HIDE));
+    }
+    
+    /**
+     * 不记录格式信息
+     *
+     * @param info     格式信息
+     * @param argArray 参数列表
+     * @since 1.1
+     */
+    public void nolog(String info, Object... argArray) {
+        log(info, Objects.requireNonNullElse(LABEL, RecordLabel.HIDE), argArray);
     }
     
     /**
@@ -221,7 +256,7 @@ public class TraceRecorder {
      * @param info  信息
      * @param label 记录标签
      */
-    private void log(String info, RecordLabel label) {
+    private void log(String info, RecordLabel label, Object... argArray) {
         boolean isRecord = true;
         /*
           过滤信息
@@ -237,6 +272,12 @@ public class TraceRecorder {
         }
         
         if (isRecord) {
+            if (Objects.nonNull(argArray) && argArray.length > 0) {
+                /*
+                  格式化信息
+                 */
+                info = Formats.format(info, argArray);
+            }
             EnhanceInfo enhanceInfo = new EnhanceInfo(info);
             enhanceInfo.setTemporaryValue(Temporary.ENABLE_STACK, enableStack);
             enhanceInfo.setTemporaryValue(Temporary.ENABLE_SHORT_CLASS_NAME, enableShortClassName);

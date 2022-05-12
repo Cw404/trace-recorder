@@ -1,5 +1,10 @@
 Trace-Recorder Changes
 
+Changes in 1.1
+
+ * Add Formats, bring formatting to the log.
+   Clean up some util class of instantiations
+
 Changes in 1.0.3
 
  * Add Symbols, simplified symbol generation

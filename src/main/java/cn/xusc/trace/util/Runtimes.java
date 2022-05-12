@@ -18,7 +18,10 @@ package cn.xusc.trace.util;
 
 import cn.xusc.trace.annotation.CloseOrder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 运行时工具类
@@ -27,6 +30,12 @@ import java.util.*;
  * @since 1.0
  */
 public final class Runtimes {
+    
+    /**
+     * 禁止实例化
+     */
+    private Runtimes() {
+    }
     
     /**
      * 关闭处理队列

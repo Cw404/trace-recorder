@@ -52,9 +52,21 @@ public class TraceRecorderTest {
     }
     
     @Test
+    @DisplayName("Base record of format")
+    public void baseRecordOfFormatTest() {
+        recorder.log("base {}", "record");
+    }
+    
+    @Test
     @DisplayName("hide record")
     public void hideRecordTest() {
-        recorder.log("hide record", false);
+        recorder.nolog("hide record");
+    }
+    
+    @Test
+    @DisplayName("hide record of format")
+    public void hideRecordOfFormatTest() {
+        recorder.nolog("hide {}", "record");
     }
     
     @Test
@@ -80,7 +92,7 @@ public class TraceRecorderTest {
     public void recordALLConfigTest() {
         assertTrue(recorder.recordALL());
         recorder.log("show one");
-        recorder.log("hide two", false);
+        recorder.nolog("hide two");
     }
     
     @Test
@@ -88,7 +100,7 @@ public class TraceRecorderTest {
     public void hideALLConfigTest() {
         assertTrue(recorder.hideALL());
         recorder.log("show one");
-        recorder.log("hide two", false);
+        recorder.nolog("hide two");
     }
     
     @Test

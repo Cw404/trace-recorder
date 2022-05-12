@@ -41,6 +41,12 @@ import java.util.Objects;
 public final class Recorders {
     
     /**
+     * 禁止实例化
+     */
+    private Recorders() {
+    }
+    
+    /**
      * 跟踪记录仪（全局）
      */
     private final static TraceRecorder TRACE_RECORDER = new TraceRecorder();
@@ -138,16 +144,37 @@ public final class Recorders {
     }
     
     /**
-     * 根据跳过标记进行记录信息
+     * 记录格式信息
      *
-     * @param info     信息
-     * @param isRecord 是否记录
-     *                 true  => HIDE
-     *                 false => NOW
-     *                 if enable ALL, will ignore parameter of isRecord
+     * @param info     格式信息
+     * @param argArray 参数列表
+     * @since 1.1
      */
-    public static void log(String info, boolean isRecord) {
-        TRACE_RECORDER.log(info, isRecord);
+    @SuppressWarnings("unused")
+    public void log(String info, Object... argArray) {
+        TRACE_RECORDER.log(info, argArray);
+    }
+    
+    /**
+     * 不记录信息
+     *
+     * @param info 信息
+     * @since 1.1
+     */
+    public static void nolog(String info) {
+        TRACE_RECORDER.nolog(info);
+    }
+    
+    /**
+     * 不记录格式信息
+     *
+     * @param info     格式信息
+     * @param argArray 参数列表
+     * @since 1.1
+     */
+    @SuppressWarnings("unused")
+    public void nolog(String info, Object... argArray) {
+        TRACE_RECORDER.nolog(info, argArray);
     }
     
     /*

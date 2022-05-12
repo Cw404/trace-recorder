@@ -42,7 +42,7 @@ public class RecordersTest {
     @DisplayName("Base record, more see TraceRecorderTest")
     public void baseRecordTest() {
         Recorders.log("base record");
-        Recorders.log("hide record", false);
+        Recorders.nolog("hide record");
         assertTrue(Recorders.addInfoFilter(mock(InfoFilter.class)));
         assertTrue(Recorders.addInfoEnhancer(mock(InfoEnhancer.class)));
         assertTrue(Recorders.addInfoRecorder(mock(InfoRecorder.class)));
@@ -71,7 +71,7 @@ public class RecordersTest {
           or use assertTrue(Recorders.addFileInfoRecorder(fileName));
          */
         Recorders.log("base record");
-        Recorders.log("hide record", false);
+        Recorders.nolog("hide record");
         
         
         /*
@@ -102,7 +102,7 @@ public class RecordersTest {
          */
         assertTrue(Recorders.addCommonStatisticsInfoEnhancer());
         Recorders.log("base record");
-        Recorders.log("hide record", false);
+        Recorders.nolog("hide record");
         
     }
     

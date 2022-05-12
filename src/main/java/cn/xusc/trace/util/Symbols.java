@@ -32,6 +32,12 @@ import java.util.Objects;
 public final class Symbols {
     
     /**
+     * 禁止实例化
+     */
+    private Symbols() {
+    }
+    
+    /**
      * 空格符号
      */
     private static final Symbol SPACE = new Symbol(" ", 1);
@@ -94,6 +100,8 @@ public final class Symbols {
     /**
      * 生成指定数量符号
      *
+     * @param originSymbol 原始符号
+     * @param size         数量
      * @return 自定义数量符号
      */
     @SuppressWarnings("unused")
