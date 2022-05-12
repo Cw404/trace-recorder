@@ -1,5 +1,11 @@
 Trace-Recorder Changes
 
+Changes in 1.2
+
+ * New methods isn't static at Recorders,
+   since 1.1 has been released to the central repository,
+   So the upgrade was 1.2, this is a bad practice
+
 Changes in 1.1
 
  * Add Formats, bring formatting to the log.

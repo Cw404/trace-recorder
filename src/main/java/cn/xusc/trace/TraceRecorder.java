@@ -210,22 +210,6 @@ public class TraceRecorder {
     }
     
     /**
-     * 根据跳过标记进行记录信息
-     *
-     * @param info     信息
-     * @param isRecord 是否记录
-     *                 true  => HIDE
-     *                 false => NOW
-     *                 if enable ALL, will ignore parameter of isRecord
-     * @deprecated 对格式化记录信息的支持下，为了更明确的语意，1.1版本后请使用{{@link #nolog(String)}}，1.2版本后将进行剔除
-     */
-    @Deprecated
-    public void log(String info, boolean isRecord) {
-        RecordLabel label = isRecord ? RecordLabel.NOW : RecordLabel.HIDE;
-        log(info, Objects.requireNonNullElse(LABEL, label));
-    }
-    
-    /**
      * 不记录信息
      *
      * @param info 信息

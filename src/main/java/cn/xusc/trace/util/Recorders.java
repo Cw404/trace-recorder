@@ -151,7 +151,7 @@ public final class Recorders {
      * @since 1.1
      */
     @SuppressWarnings("unused")
-    public void log(String info, Object... argArray) {
+    public static void log(String info, Object... argArray) {
         TRACE_RECORDER.log(info, argArray);
     }
     
@@ -173,7 +173,7 @@ public final class Recorders {
      * @since 1.1
      */
     @SuppressWarnings("unused")
-    public void nolog(String info, Object... argArray) {
+    public static void nolog(String info, Object... argArray) {
         TRACE_RECORDER.nolog(info, argArray);
     }
     
