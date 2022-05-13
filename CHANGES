@@ -1,5 +1,9 @@
 Trace-Recorder Changes
 
+Changes in 1.2.1
+
+ * Add remove component methods at TraceRecorder and Recorders
+
 Changes in 1.2
 
  * New methods isn't static at Recorders,

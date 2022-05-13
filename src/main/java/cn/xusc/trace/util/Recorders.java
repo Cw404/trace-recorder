@@ -82,6 +82,42 @@ public final class Recorders {
     }
     
     /**
+     * 移除信息过滤器
+     *
+     * @param filter 信息过滤器
+     * @return 移除结果
+     * @since 1.2.1
+     */
+    @SuppressWarnings("unused")
+    public static boolean removeInfoFilter(InfoFilter filter) {
+        return TRACE_RECORDER.removeInfoFilter(filter);
+    }
+    
+    /**
+     * 移除信息增强器
+     *
+     * @param enhancer 信息增强器
+     * @return 移除结果
+     * @since 1.2.1
+     */
+    @SuppressWarnings("unused")
+    public static boolean removeInfoEnhancer(InfoEnhancer enhancer) {
+        return TRACE_RECORDER.removeInfoEnhancer(enhancer);
+    }
+    
+    /**
+     * 移除信息记录器
+     *
+     * @param recorder 信息记录器
+     * @return 移除结果
+     * @since 1.2.1
+     */
+    @SuppressWarnings("unused")
+    public static boolean removeInfoRecorder(InfoRecorder recorder) {
+        return TRACE_RECORDER.removeInfoRecorder(recorder);
+    }
+    
+    /**
      * 记录所有
      *
      * <p>启用记录所有标签</p>

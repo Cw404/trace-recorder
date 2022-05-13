@@ -88,6 +88,30 @@ public class TraceRecorderTest {
     }
     
     @Test
+    @DisplayName("remove a infoFilter")
+    public void removeInfoFilterTest() {
+        InfoFilter infoFilter = mock(InfoFilter.class);
+        recorder.addInfoFilter(infoFilter);
+        assertTrue(recorder.removeInfoFilter(infoFilter));
+    }
+    
+    @Test
+    @DisplayName("remove a infoEnhancer")
+    public void removeInfoEnhancerTest() {
+        InfoEnhancer infoEnhancer = mock(InfoEnhancer.class);
+        recorder.addInfoEnhancer(infoEnhancer);
+        assertTrue(recorder.removeInfoEnhancer(infoEnhancer));
+    }
+    
+    @Test
+    @DisplayName("remove a infoRecorder")
+    public void removeInfoRecorderTest() {
+        InfoRecorder infoRecorder = mock(InfoRecorder.class);
+        recorder.addInfoRecorder(infoRecorder);
+        assertTrue(recorder.removeInfoRecorder(infoRecorder));
+    }
+    
+    @Test
     @DisplayName("enable record all config, will show all info of record")
     public void recordALLConfigTest() {
         assertTrue(recorder.recordALL());

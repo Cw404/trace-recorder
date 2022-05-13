@@ -121,6 +121,39 @@ public class TraceRecorder {
     }
     
     /**
+     * 移除信息过滤器
+     *
+     * @param filter 信息过滤器
+     * @return 移除结果
+     * @since 1.2.1
+     */
+    public boolean removeInfoFilter(InfoFilter filter) {
+        return INFO_FILTERS.remove(filter);
+    }
+    
+    /**
+     * 移除信息增强器
+     *
+     * @param enhancer 信息增强器
+     * @return 移除结果
+     * @since 1.2.1
+     */
+    public boolean removeInfoEnhancer(InfoEnhancer enhancer) {
+        return INFO_ENHANCERS.remove(enhancer);
+    }
+    
+    /**
+     * 移除信息记录器
+     *
+     * @param recorder 信息记录器
+     * @return 移除结果
+     * @since 1.2.1
+     */
+    public boolean removeInfoRecorder(InfoRecorder recorder) {
+        return INFO_RECORDERS.remove(recorder);
+    }
+    
+    /**
      * 记录所有
      *
      * <p>启用记录所有标签</p>
