@@ -1,5 +1,5 @@
 /*
- * Copyright 20022 WangCai.
+ * Copyright 2022 WangCai.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,18 @@ package cn.xusc.trace.util;
 import cn.xusc.trace.EnhanceInfo;
 import cn.xusc.trace.TraceRecorder;
 import cn.xusc.trace.annotation.CloseOrder;
+import cn.xusc.trace.config.TraceRecorderConfig;
 import cn.xusc.trace.enhance.InfoEnhancer;
+import cn.xusc.trace.enhance.ShortClassNameInfoEnhancer;
 import cn.xusc.trace.enhance.StatisticsInfoEnhancer;
+import cn.xusc.trace.enhance.ThreadInfoEnhancer;
+import cn.xusc.trace.exception.TraceException;
 import cn.xusc.trace.filter.InfoFilter;
 import cn.xusc.trace.record.FileInfoRecorder;
 import cn.xusc.trace.record.InfoRecorder;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -49,7 +54,54 @@ public final class Recorders {
     /**
      * 跟踪记录仪（全局）
      */
-    private final static TraceRecorder TRACE_RECORDER = new TraceRecorder();
+    private static TraceRecorder traceRecorder = new TraceRecorder();
+    
+    /**
+     * 异步标识
+     *
+     * @since 2.0
+     */
+    private static boolean asyncIdentify;
+    
+    /**
+     * 启用同步记录
+     *
+     * @return 启用情况
+     * @since 2.0
+     */
+    @SuppressWarnings({"SameReturnValue", "unused"})
+    public static boolean enableSync() {
+        if (Objects.equals(asyncIdentify, true)) {
+            traceRecorder = new TraceRecorder();
+            asyncIdentify = false;
+        }
+        return true;
+    }
+    
+    /**
+     * 启用异步记录
+     *
+     * @return 启用情况
+     * @since 2.0
+     */
+    @SuppressWarnings({"UnusedReturnValue", "SameReturnValue"})
+    public static boolean enableAsync() {
+        if (Objects.equals(asyncIdentify, false)) {
+            traceRecorder = new TraceRecorder(true);
+            asyncIdentify = true;
+        }
+        return true;
+    }
+    
+    /**
+     * 配置构建记录仪
+     *
+     * @param config 配置
+     * @since 2.0
+     */
+    public static void config(TraceRecorderConfig config) {
+        traceRecorder = new TraceRecorder(config);
+    }
     
     /**
      * 添加信息过滤器
@@ -58,7 +110,7 @@ public final class Recorders {
      * @return 添加结果
      */
     public static boolean addInfoFilter(InfoFilter filter) {
-        return TRACE_RECORDER.addInfoFilter(filter);
+        return traceRecorder.addInfoFilter(filter);
     }
     
     /**
@@ -68,7 +120,7 @@ public final class Recorders {
      * @return 添加结果
      */
     public static boolean addInfoEnhancer(InfoEnhancer enhancer) {
-        return TRACE_RECORDER.addInfoEnhancer(enhancer);
+        return traceRecorder.addInfoEnhancer(enhancer);
     }
     
     /**
@@ -78,7 +130,7 @@ public final class Recorders {
      * @return 添加结果
      */
     public static boolean addInfoRecorder(InfoRecorder recorder) {
-        return TRACE_RECORDER.addInfoRecorder(recorder);
+        return traceRecorder.addInfoRecorder(recorder);
     }
     
     /**
@@ -90,7 +142,7 @@ public final class Recorders {
      */
     @SuppressWarnings("unused")
     public static boolean removeInfoFilter(InfoFilter filter) {
-        return TRACE_RECORDER.removeInfoFilter(filter);
+        return traceRecorder.removeInfoFilter(filter);
     }
     
     /**
@@ -102,7 +154,7 @@ public final class Recorders {
      */
     @SuppressWarnings("unused")
     public static boolean removeInfoEnhancer(InfoEnhancer enhancer) {
-        return TRACE_RECORDER.removeInfoEnhancer(enhancer);
+        return traceRecorder.removeInfoEnhancer(enhancer);
     }
     
     /**
@@ -114,7 +166,37 @@ public final class Recorders {
      */
     @SuppressWarnings("unused")
     public static boolean removeInfoRecorder(InfoRecorder recorder) {
-        return TRACE_RECORDER.removeInfoRecorder(recorder);
+        return traceRecorder.removeInfoRecorder(recorder);
+    }
+    
+    /**
+     * 获取信息过滤器集
+     *
+     * @return 信息过滤器集
+     * @since 2.0
+     */
+    public static List<InfoFilter> getInfoFilters() {
+        return traceRecorder.getInfoFilters();
+    }
+    
+    /**
+     * 获取信息增强器集
+     *
+     * @return 信息增强器集
+     * @since 2.0
+     */
+    public static List<InfoEnhancer> getInfoEnhancers() {
+        return traceRecorder.getInfoEnhancers();
+    }
+    
+    /**
+     * 获取信息记录器集
+     *
+     * @return 信息记录器集
+     * @since 2.0
+     */
+    public static List<InfoRecorder> getInfoRecorders() {
+        return traceRecorder.getInfoRecorders();
     }
     
     /**
@@ -125,7 +207,7 @@ public final class Recorders {
      * @return 配置结果
      */
     public static boolean recordALL() {
-        return TRACE_RECORDER.recordALL();
+        return traceRecorder.recordALL();
     }
     
     /**
@@ -136,7 +218,7 @@ public final class Recorders {
      * @return 配置结果
      */
     public static boolean hideALL() {
-        return TRACE_RECORDER.hideALL();
+        return traceRecorder.hideALL();
     }
     
     /**
@@ -149,7 +231,69 @@ public final class Recorders {
      * @return 配置结果
      */
     public static boolean enableShortClassName() {
-        return TRACE_RECORDER.enableShortClassName();
+        return traceRecorder.enableShortClassName();
+    }
+    
+    /**
+     * 禁用短类名
+     *
+     * <p>
+     * {@link ShortClassNameInfoEnhancer}
+     * </p>
+     *
+     * @return 配置结果
+     * @since 2.0
+     */
+    public static boolean disableShortClassName() {
+        return traceRecorder.disableShortClassName();
+    }
+    
+    /**
+     * 获取启用短类名详情
+     *
+     * @return 短类名详情
+     * @since 2.0
+     */
+    public static boolean isEnableShortClassName() {
+        return traceRecorder.isEnableShortClassName();
+    }
+    
+    /**
+     * 启用线程名
+     *
+     * <p>
+     * {@link ThreadInfoEnhancer}
+     * </p>
+     *
+     * @return 配置结果
+     * @since 2.0
+     */
+    public static boolean enableThreadName() {
+        return traceRecorder.enableThreadName();
+    }
+    
+    /**
+     * 禁用线程名
+     *
+     * <p>
+     * {@link ThreadInfoEnhancer}
+     * </p>
+     *
+     * @return 配置结果
+     * @since 2.0
+     */
+    public static boolean disableThreadName() {
+        return traceRecorder.disableThreadName();
+    }
+    
+    /**
+     * 获取启用线程名详情
+     *
+     * @return 线程名详情
+     * @since 2.0
+     */
+    public static boolean isEnableThreadName() {
+        return traceRecorder.isEnableThreadName();
     }
     
     /**
@@ -158,7 +302,7 @@ public final class Recorders {
      * @return 配置结果
      */
     public static boolean enableStackInfo() {
-        return TRACE_RECORDER.enableStackInfo();
+        return traceRecorder.enableStackInfo();
     }
     
     /**
@@ -167,7 +311,17 @@ public final class Recorders {
      * @return 配置结果
      */
     public static boolean disableStackInfo() {
-        return TRACE_RECORDER.disableStackInfo();
+        return traceRecorder.disableStackInfo();
+    }
+    
+    /**
+     * 获取启用堆栈信息增强详情
+     *
+     * @return 堆栈信息增强详情
+     * @since 2.0
+     */
+    public static boolean isEnableStackInfo() {
+        return traceRecorder.isEnableStackInfo();
     }
     
     /**
@@ -176,7 +330,7 @@ public final class Recorders {
      * @param info 信息
      */
     public static void log(String info) {
-        TRACE_RECORDER.log(info);
+        traceRecorder.log(info);
     }
     
     /**
@@ -188,7 +342,7 @@ public final class Recorders {
      */
     @SuppressWarnings("unused")
     public static void log(String info, Object... argArray) {
-        TRACE_RECORDER.log(info, argArray);
+        traceRecorder.log(info, argArray);
     }
     
     /**
@@ -198,7 +352,7 @@ public final class Recorders {
      * @since 1.1
      */
     public static void nolog(String info) {
-        TRACE_RECORDER.nolog(info);
+        traceRecorder.nolog(info);
     }
     
     /**
@@ -210,7 +364,7 @@ public final class Recorders {
      */
     @SuppressWarnings("unused")
     public static void nolog(String info, Object... argArray) {
-        TRACE_RECORDER.nolog(info, argArray);
+        traceRecorder.nolog(info, argArray);
     }
     
     /*
@@ -239,9 +393,9 @@ public final class Recorders {
     public static boolean addFileInfoRecorder(File file) {
         Objects.requireNonNull(file);
         if (file.isDirectory()) {
-            throw new IllegalArgumentException("file can't directory");
+            throw new TraceException("file can't directory");
         }
-        return TRACE_RECORDER.addInfoRecorder(new FileInfoRecorder(file));
+        return traceRecorder.addInfoRecorder(new FileInfoRecorder(file));
     }
     
     /**
@@ -250,7 +404,7 @@ public final class Recorders {
      * @return 添加结果
      */
     public static boolean addCommonStatisticsInfoEnhancer() {
-        return TRACE_RECORDER.addInfoEnhancer(new CommonStatisticsInfoEnhancer());
+        return traceRecorder.addInfoEnhancer(new CommonStatisticsInfoEnhancer());
     }
     
     /**
@@ -292,7 +446,7 @@ public final class Recorders {
                 /*
                   没有记录任何一条显示记录，head没有生成
                  */
-                return "";
+                return Strings.empty();
             }
             
             StringBuilder sb = new StringBuilder();

@@ -1,5 +1,5 @@
 /*
- * Copyright 20022 WangCai.
+ * Copyright 2022 WangCai.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package cn.xusc.trace.enhance;
 
 import cn.xusc.trace.EnhanceInfo;
 import cn.xusc.trace.constant.Temporary;
+import cn.xusc.trace.exception.TraceException;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -48,16 +49,19 @@ public class StackInfoEnhancer implements InfoEnhancer {
           根据增强信息临时值决定是否进行堆栈扫描处理
          */
         if ((boolean) eInfo.getTemporaryValue(Temporary.ENABLE_STACK)) {
-            StackTraceElement[] stackTrace = new RuntimeException().getStackTrace();
+            /*
+              异常从临时值获取，容错异步处理的堆栈
+             */
+            StackTraceElement[] stackTrace = ((Exception) eInfo.getTemporaryValue(Temporary.EXCEPTION)).getStackTrace();
             StackTraceElement stackTraceElement = null;
             for (StackTraceElement stackTraceElementF : stackTrace) {
-                if (Arrays.binarySearch(IGNORE_STACK_PACKAGE_NAME,stackTraceElementF.getClassName()) < 0) {
+                if (Arrays.binarySearch(IGNORE_STACK_PACKAGE_NAME, stackTraceElementF.getClassName()) < 0) {
                     stackTraceElement = stackTraceElementF;
                     break;
                 }
             }
             if (Objects.isNull(stackTraceElement)) {
-                throw new RuntimeException("not found specify stack, stack info: " + Arrays.toString(stackTrace));
+                throw new TraceException("not found specify stack, stack info: " + Arrays.toString(stackTrace));
             }
             eInfo.setClassName(stackTraceElement.getClassName());
             eInfo.setMethodName(stackTraceElement.getMethodName());

@@ -1,13 +1,31 @@
+/*
+ * Copyright 2022 WangCai.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.time.Year
+import java.time.ZoneId
+
 plugins {
     id 'java'
     id 'maven-publish'
 }
 
 group 'cn.xusc'
-version '1.2.1'
+version = new Version(major: 2, minor: 0, revision: 0, snapshot: false)
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
     // 优先本地仓库加载
@@ -20,8 +38,15 @@ repositories {
 }
 
 dependencies {
+    // 高性能的队列
+    implementation 'com.lmax:disruptor:3.4.4'
+    // 简化java对象代码，增加可读性
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
     testImplementation 'org.mockito:mockito-core:4.5.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
@@ -29,15 +54,42 @@ test {
     useJUnitPlatform()
 }
 
+// 增加javadoc和源代码jar的生成
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+// javadoc配置
+javadoc {
+    title = 'Trace-Recorder'
+
+    options.author = true
+    options.bottom = "<i>Copyright &#169; 2022 - ${Year.now(ZoneId.of("Asia/Shanghai"))} WangCai. All Rights Reserved.</i>"
+    options.use = true
+    options.version = true
+    options.showFromPublic()
+}
+
 // 发行
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId = 'cn.xusc'
+            groupId = "${group}"
             artifactId = 'trace-recorder'
             version = "${version}"
 
             from components.java
         }
+    }
+}
+
+// 版本
+class Version {
+    int major, minor = 0, revision = 0
+    boolean snapshot
+
+    String toString() {
+        "$major.$minor${revision == 0 ? '' : '.' + revision}${snapshot ? '-SNAPSHOT' : ''}"
     }
 }

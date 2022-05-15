@@ -1,6 +1,6 @@
 # Trace-Recorder<sup><sup>&nbsp;It's Scalable.</sup></sup>
 
-Simple, Scalable. Trace-Recorder is a trace recorder, mainly in order to better record the source code flow,
+Simple, Scalable, High-Powered. Trace-Recorder is a trace recorder, mainly in order to better record the source code flow,
 can better access to the source code implementation of the basic process and the full process; 
 Records can be better managed with a scalable plug-in architecture.
 
@@ -9,7 +9,7 @@ Records can be better managed with a scalable plug-in architecture.
 
 gradle
 ```gradle
-implementation 'cn.xusc:trace-recorder:1.2'
+implementation 'cn.xusc:trace-recorder:2.0'
 ```
 
 maven
@@ -17,7 +17,7 @@ maven
 <dependency>
     <groupId>cn.xusc</groupId>
     <artifactId>trace-recorder</artifactId>
-    <version>1.2</version>
+    <version>2.0</version>
 </dependency>
 ```
 

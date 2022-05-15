@@ -1,5 +1,5 @@
 /*
- * Copyright 20022 WangCai.
+ * Copyright 2022 WangCai.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -160,7 +160,7 @@ public class EnhanceInfo implements Serializable {
      * 获取临时值
      *
      * @param key 键
-     * @return    临时值
+     * @return 临时值
      */
     public Object getTemporaryValue(String key) {
         return temporaryValue.get(key);
@@ -171,9 +171,27 @@ public class EnhanceInfo implements Serializable {
      *
      * @param key   键
      * @param value 临时值
+     * @throws NullPointerException if {@code key} is null
      */
     public void setTemporaryValue(String key, Object value) {
         Objects.requireNonNull(key);
         this.temporaryValue.put(key, value);
+    }
+    
+    /**
+     * 增强信息详情
+     *
+     * @return 详情
+     */
+    @Override
+    public String toString() {
+        return "EnhanceInfo{" +
+                "className='" + className + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", lineNumber=" + lineNumber +
+                ", info='" + info + '\'' +
+                ", writeInfo='" + writeInfo + '\'' +
+                ", temporaryValue=" + temporaryValue +
+                '}';
     }
 }

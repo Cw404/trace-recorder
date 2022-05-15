@@ -1,5 +1,5 @@
 /*
- * Copyright 20022 WangCai.
+ * Copyright 2022 WangCai.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,25 @@
 
 package cn.xusc.trace.util;
 
-import cn.xusc.trace.enhance.InfoEnhancer;
+import cn.xusc.trace.config.TraceRecorderConfig;
+import cn.xusc.trace.enhance.*;
+import cn.xusc.trace.exception.TraceException;
 import cn.xusc.trace.filter.InfoFilter;
+import cn.xusc.trace.filter.RecordLabelInfoFilter;
+import cn.xusc.trace.record.ConsoleInfoRecorder;
 import cn.xusc.trace.record.InfoRecorder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -42,15 +48,38 @@ public class RecordersTest {
     @DisplayName("Base record, more see TraceRecorderTest")
     public void baseRecordTest() {
         Recorders.log("base record");
+        Recorders.enableAsync();
+        Recorders.log("async record");
+        Recorders.config(TraceRecorderConfig.builder().build());
+        Recorders.log("base {}", "record");
         Recorders.nolog("hide record");
-        assertTrue(Recorders.addInfoFilter(mock(InfoFilter.class)));
-        assertTrue(Recorders.addInfoEnhancer(mock(InfoEnhancer.class)));
-        assertTrue(Recorders.addInfoRecorder(mock(InfoRecorder.class)));
+        Recorders.nolog("hide {}", "record");
+        InfoFilter infoFilter = mock(InfoFilter.class);
+        InfoEnhancer infoEnhancer = mock(InfoEnhancer.class);
+        InfoRecorder infoRecorder = mock(InfoRecorder.class);
+        assertTrue(Recorders.addInfoFilter(infoFilter));
+        assertTrue(Recorders.addInfoEnhancer(infoEnhancer));
+        assertTrue(Recorders.addInfoRecorder(infoRecorder));
+        assertTrue(Recorders.removeInfoFilter(infoFilter));
+        assertTrue(Recorders.removeInfoEnhancer(infoEnhancer));
+        assertTrue(Recorders.removeInfoRecorder(infoRecorder));
+        assertAll(() -> assertInnerIterableClassEquals(Recorders.getInfoFilters().iterator(), List.of(new RecordLabelInfoFilter()).iterator()));
+        assertAll(() -> assertInnerIterableClassEquals(
+                Recorders.getInfoEnhancers().iterator(),
+                List.of(new LineInfoEnhancer(), new StackInfoEnhancer(), new ShortClassNameInfoEnhancer(), new ThreadInfoEnhancer()).iterator()
+        ));
+        assertAll(() -> assertInnerIterableClassEquals(Recorders.getInfoRecorders().iterator(), List.of(new ConsoleInfoRecorder()).iterator()));
         assertTrue(Recorders.recordALL());
         assertTrue(Recorders.hideALL());
         assertTrue(Recorders.enableShortClassName());
+        assertTrue(Recorders.disableShortClassName());
+        assertFalse(Recorders.isEnableShortClassName());
+        assertTrue(Recorders.enableThreadName());
+        assertTrue(Recorders.disableThreadName());
+        assertFalse(Recorders.isEnableThreadName());
         assertTrue(Recorders.enableStackInfo());
         assertTrue(Recorders.disableStackInfo());
+        assertFalse(Recorders.isEnableStackInfo());
     }
     
     @Test
@@ -106,4 +135,28 @@ public class RecordersTest {
         
     }
     
+    @DisplayName("assert inner two iterable is equals -> class equals")
+    private void assertInnerIterableClassEquals(Iterator<?> iterator, Iterator<?> iterator1) {
+        Object value, value1;
+        while (iterator.hasNext() && iterator1.hasNext()) {
+            value = iterator.next();
+            value1 = iterator1.next();
+            if (!Objects.equals(value.getClass(), value1.getClass())) {
+                throw new TraceException(
+                        Formats.format("not match class value at two iterator - [ iterator: {} ,iterator1: {} ]", value.getClass(), value1.getClass())
+                );
+            }
+        }
+        if (iterator.hasNext() || iterator1.hasNext())
+            throw new TraceException(
+                    Formats.format(
+                            "not match size at two iterator - [ iterator hasNext: {} ,iterator1 hasNext: {} ]\n" +
+                                    "iterator: {} ,iterator1: {}",
+                            iterator.hasNext(),
+                            iterator1.hasNext(),
+                            iterator.hasNext() ? iterator.next().getClass() : Strings.empty(),
+                            iterator1.hasNext() ? iterator1.next().getClass() : Strings.empty()
+                    )
+            );
+    }
 }

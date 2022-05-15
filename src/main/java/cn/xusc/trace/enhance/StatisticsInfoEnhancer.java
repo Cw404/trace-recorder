@@ -1,5 +1,5 @@
 /*
- * Copyright 20022 WangCai.
+ * Copyright 2022 WangCai.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ public abstract class StatisticsInfoEnhancer implements InfoEnhancer, Closeable 
      * 子类增强
      *
      * @param eInfo 增强前消息
-     * @return      增强后消息
+     * @return 增强后消息
      */
     protected abstract EnhanceInfo doEnhance(EnhanceInfo eInfo);
     

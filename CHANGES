@@ -1,5 +1,23 @@
 Trace-Recorder Changes
 
+Changes in 2.0
+
+ * Extract the TraceRecorder log processing to the TraceHandler, support sync with async
+
+ * Add TraceRecorderConfig, make TraceRecorder configuration more flexible
+
+ * Add ThreadInfoEnhancer, support thread info log
+
+ * Add TraceException for app level, unified Exception
+
+ * Add Disruptors and TeConsumer, provides easier use for async
+
+ * Add Lists and Strings, provides element print of list
+
+ * fixup correct year for license
+
+ * more javadoc information
+
 Changes in 1.2.1
 
  * Add remove component methods at TraceRecorder and Recorders

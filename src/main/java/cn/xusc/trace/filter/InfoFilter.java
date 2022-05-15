@@ -1,5 +1,5 @@
 /*
- * Copyright 20022 WangCai.
+ * Copyright 2022 WangCai.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public interface InfoFilter {
      *
      * @param info  信息
      * @param label 记录标签
-     * @return      当前信息是否记录的判断值
+     * @return 当前信息是否记录的判断值
      */
     @SuppressWarnings("unused")
     boolean isRecord(String info, RecordLabel label);

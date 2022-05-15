@@ -14,26 +14,31 @@
  * limitations under the License.
  */
 
-package cn.xusc.trace.record;
+package cn.xusc.trace.handle;
 
-import java.io.PrintStream;
+import cn.xusc.trace.TraceRecorder;
+import cn.xusc.trace.constant.RecordLabel;
+import cn.xusc.trace.exception.TraceException;
 
 /**
- * 控制台信息记录器
+ * 同步处理器
  *
  * @author WangCai
- * @since 1.0
+ * @since 2.0
  */
-public class ConsoleInfoRecorder implements InfoRecorder {
+public class SyncTraceHandler extends BaseTraceHandler {
     
     /**
-     * 系统默认输出流
+     * 基本构造
+     *
+     * @param recorder 跟踪记录仪
      */
-    private static final PrintStream print = System.out;
-    
-    @Override
-    public void record(String writeInfo) {
-        print.print(writeInfo);
+    public SyncTraceHandler(TraceRecorder recorder) {
+        super(recorder);
     }
     
+    @Override
+    public void doHandle(String info, RecordLabel label, Object... argArray) {
+        handling(info, label, new TraceException(), argArray);
+    }
 }

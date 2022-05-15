@@ -1,5 +1,5 @@
 /*
- * Copyright 20022 WangCai.
+ * Copyright 2022 WangCai.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,27 @@ public class Temporary {
     public static final String ENABLE_SHORT_CLASS_NAME = "enableShortClassName";
     
     /**
+     * 启用线程名属性名
+     *
+     * @since 2.0
+     */
+    public static final String ENABLE_THREAD_NAME = "enableThreadName";
+    
+    /**
+     * 异常属性名
+     *
+     * @since 2.0
+     */
+    public static final String EXCEPTION = "exception";
+    
+    /**
      * 忽略栈包名
      */
-    public static final String[] IGNORE_STACK_PACKAGE_NAME = new String[]{"cn.xusc.trace.enhance.StackInfoEnhancer","cn.xusc.trace.TraceRecorder","cn.xusc.trace.TraceRecorder","cn.xusc.trace.util.Recorders"};
+    public static final String[] IGNORE_STACK_PACKAGE_NAME = new String[]{
+            "cn.xusc.trace.handle.BaseTraceHandler",
+            "cn.xusc.trace.handle.SyncTraceHandler",
+            "cn.xusc.trace.handle.AsyncTraceHandler",
+            "cn.xusc.trace.TraceRecorder",
+            "cn.xusc.trace.util.Recorders"
+    };
 }

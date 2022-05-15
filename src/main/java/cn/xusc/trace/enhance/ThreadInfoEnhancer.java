@@ -20,41 +20,25 @@ import cn.xusc.trace.EnhanceInfo;
 import cn.xusc.trace.constant.Temporary;
 
 /**
- * 短类名增强器
- *
- * <p>
- * 依赖{@link StackInfoEnhancer}的栈处理
- * </p>
+ * 线程信息增强
  *
  * @author WangCai
- * @since 1.0
+ * @since 2.0
  */
-public class ShortClassNameInfoEnhancer implements InfoEnhancer {
+public class ThreadInfoEnhancer implements InfoEnhancer {
     
     @Override
     public EnhanceInfo enhance(EnhanceInfo eInfo) {
-        /*
-          根据增强信息临时值决定是否进行信息处理
-         */
-        if ((boolean) eInfo.getTemporaryValue(Temporary.ENABLE_STACK) &&
-                (boolean) eInfo.getTemporaryValue(Temporary.ENABLE_SHORT_CLASS_NAME)) {
-            String className = eInfo.getClassName();
-            int pointIndex = className.lastIndexOf(".");
-            if (pointIndex > -1) {
-                eInfo.setClassName(className.substring(pointIndex + 1));
-            }
-        }
         return eInfo;
     }
     
     @Override
     public EnhanceInfo setWriteInfo(EnhanceInfo eInfo) {
         /*
-          根据增强信息临时值决定是否进行堆栈信息填充处理
+          根据增强信息临时值决定是否进行线程信息处理
          */
-        if ((boolean) eInfo.getTemporaryValue(Temporary.ENABLE_STACK) &&
-                (boolean) eInfo.getTemporaryValue(Temporary.ENABLE_SHORT_CLASS_NAME)) {
-            eInfo.setWriteInfo(String.format("%s.%s()[%d] - %s", eInfo.getClassName(), eInfo.getMethodName(),
+        if ((boolean) eInfo.getTemporaryValue(Temporary.ENABLE_THREAD_NAME)) {
+            eInfo.setWriteInfo(String.format("%s %s.%s()[%d] - %s", Thread.currentThread().getName(), eInfo.getClassName(), eInfo.getMethodName(),
                     eInfo.getLineNumber(), eInfo.getInfo()));
         }
         return eInfo;

@@ -1,5 +1,5 @@
 /*
- * Copyright 20022 WangCai.
+ * Copyright 2022 WangCai.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,19 @@
 
 package cn.xusc.trace;
 
+import cn.xusc.trace.config.TraceRecorderConfig;
 import cn.xusc.trace.constant.RecordLabel;
-import cn.xusc.trace.constant.Temporary;
-import cn.xusc.trace.enhance.InfoEnhancer;
-import cn.xusc.trace.enhance.LineInfoEnhancer;
-import cn.xusc.trace.enhance.ShortClassNameInfoEnhancer;
-import cn.xusc.trace.enhance.StackInfoEnhancer;
+import cn.xusc.trace.enhance.*;
+import cn.xusc.trace.exception.TraceException;
 import cn.xusc.trace.filter.InfoFilter;
 import cn.xusc.trace.filter.RecordLabelInfoFilter;
+import cn.xusc.trace.handle.AsyncTraceHandler;
+import cn.xusc.trace.handle.SyncTraceHandler;
+import cn.xusc.trace.handle.TraceHandler;
 import cn.xusc.trace.record.ConsoleInfoRecorder;
 import cn.xusc.trace.record.InfoRecorder;
 import cn.xusc.trace.util.FastList;
-import cn.xusc.trace.util.Formats;
+import cn.xusc.trace.util.Lists;
 
 import java.util.List;
 import java.util.Objects;
@@ -63,6 +64,13 @@ public class TraceRecorder {
     private final List<InfoRecorder> INFO_RECORDERS = new FastList<>(InfoRecorder.class);
     
     /**
+     * 跟踪处理器
+     *
+     * @since 2.0
+     */
+    private final TraceHandler TRACE_HANDLER;
+    
+    /**
      * 记录标签
      */
     private RecordLabel LABEL;
@@ -77,6 +85,13 @@ public class TraceRecorder {
      */
     private boolean enableShortClassName;
     
+    /**
+     * 启用线程名
+     *
+     * @since 2.0
+     */
+    private boolean enableThreadName;
+    
     {
         /*
           初始化基础跟踪记录仪
@@ -85,9 +100,96 @@ public class TraceRecorder {
         INFO_ENHANCERS.add(new LineInfoEnhancer());
         INFO_ENHANCERS.add(new StackInfoEnhancer());
         INFO_ENHANCERS.add(new ShortClassNameInfoEnhancer());
+        INFO_ENHANCERS.add(new ThreadInfoEnhancer());
         INFO_RECORDERS.add(new ConsoleInfoRecorder());
         
         enableStack = true;
+        enableThreadName = true;
+        
+    }
+    
+    /**
+     * 基础构造
+     *
+     * @since 2.0
+     */
+    public TraceRecorder() {
+        TRACE_HANDLER = new SyncTraceHandler(this);
+    }
+    
+    /**
+     * 异步标识构造
+     *
+     * @param enableAsync 异步标识
+     * @since 2.0
+     */
+    public TraceRecorder(boolean enableAsync) {
+        TRACE_HANDLER = enableAsync ? new AsyncTraceHandler(this) : new SyncTraceHandler(this);
+    }
+    
+    /**
+     * 异步处理器的跟踪记录仪构造
+     *
+     * @param taskHandlerSize 任务处理器数量
+     * @throws TraceException if {@code taskHandlerSize} is less 1
+     * @since 2.0
+     */
+    @SuppressWarnings("unused")
+    public TraceRecorder(int taskHandlerSize) {
+        if (taskHandlerSize < 1) {
+            throw new TraceException("taskHandlerSize < 1");
+        }
+        TRACE_HANDLER = new AsyncTraceHandler(this, taskHandlerSize);
+    }
+    
+    /**
+     * 配置构造
+     *
+     * @param config 配置
+     * @since 2.0
+     */
+    public TraceRecorder(TraceRecorderConfig config) {
+        if (!config.getInfoFilters().isEmpty()) {
+            for (InfoFilter infoFilter : config.getInfoFilters()) {
+                addInfoFilter(infoFilter);
+            }
+        }
+        if (!config.getInfoEnhancers().isEmpty()) {
+            for (InfoEnhancer infoEnhancer : config.getInfoEnhancers()) {
+                addInfoEnhancer(infoEnhancer);
+            }
+        }
+        if (!config.getInfoRecorders().isEmpty()) {
+            for (InfoRecorder infoEnhancer : config.getInfoRecorders()) {
+                addInfoRecorder(infoEnhancer);
+            }
+        }
+        /*
+          堆栈信息默认启用
+          短类名默认禁用
+          线程名默认启用
+          记录所有默认禁用
+         */
+        if (!config.isEnableStack()) {
+            disableStackInfo();
+        }
+        if (config.isEnableShortClassName()) {
+            enableShortClassName();
+        }
+        if (!config.isEnableThreadName()) {
+            disableThreadName();
+        }
+        if (config.isEnableRecordAll()) {
+            recordALL();
+        }
+        /*
+          异步
+         */
+        if (config.isEnableAsync()) {
+            TRACE_HANDLER = new AsyncTraceHandler(this, config.getTaskHandlerSize());
+            return;
+        }
+        TRACE_HANDLER = new SyncTraceHandler(this);
     }
     
     /**
@@ -154,6 +256,36 @@ public class TraceRecorder {
     }
     
     /**
+     * 获取信息过滤器集
+     *
+     * @return 信息过滤器集
+     * @since 2.0
+     */
+    public List<InfoFilter> getInfoFilters() {
+        return INFO_FILTERS;
+    }
+    
+    /**
+     * 获取信息增强器集
+     *
+     * @return 信息增强器集
+     * @since 2.0
+     */
+    public List<InfoEnhancer> getInfoEnhancers() {
+        return INFO_ENHANCERS;
+    }
+    
+    /**
+     * 获取信息记录器集
+     *
+     * @return 信息记录器集
+     * @since 2.0
+     */
+    public List<InfoRecorder> getInfoRecorders() {
+        return INFO_RECORDERS;
+    }
+    
+    /**
      * 记录所有
      *
      * <p>启用记录所有标签</p>
@@ -184,12 +316,88 @@ public class TraceRecorder {
      *
      * <p>
      * {@link ShortClassNameInfoEnhancer}
+     * <p>
+     * {@link  #enableShortClassName} = true
      * </p>
      *
      * @return 配置结果
      */
     public boolean enableShortClassName() {
         return enableShortClassName = true;
+    }
+    
+    /**
+     * 禁用短类名
+     *
+     * <p>
+     * {@link ShortClassNameInfoEnhancer}
+     * </p>
+     * <p>
+     * {@link  #enableShortClassName} = false
+     * </p>
+     *
+     * @return 配置结果
+     * @since 2.0
+     */
+    @SuppressWarnings("SameReturnValue")
+    public boolean disableShortClassName() {
+        enableShortClassName = false;
+        return true;
+    }
+    
+    /**
+     * 获取启用短类名详情
+     *
+     * @return 短类名详情
+     * @since 2.0
+     */
+    public boolean isEnableShortClassName() {
+        return enableShortClassName;
+    }
+    
+    /**
+     * 启用线程名
+     *
+     * <p>
+     * {@link ThreadInfoEnhancer}
+     * <p>
+     * {@link  #enableThreadName} = true
+     * </p>
+     *
+     * @return 配置结果
+     * @since 2.0
+     */
+    public boolean enableThreadName() {
+        return enableThreadName = true;
+    }
+    
+    /**
+     * 禁用线程名
+     *
+     * <p>
+     * {@link ThreadInfoEnhancer}
+     * </p>
+     * <p>
+     * {@link  #enableThreadName} = false
+     * </p>
+     *
+     * @return 配置结果
+     * @since 2.0
+     */
+    @SuppressWarnings("SameReturnValue")
+    public boolean disableThreadName() {
+        enableThreadName = false;
+        return true;
+    }
+    
+    /**
+     * 获取启用线程名详情
+     *
+     * @return 线程名详情
+     * @since 2.0
+     */
+    public boolean isEnableThreadName() {
+        return enableThreadName;
     }
     
     /**
@@ -220,6 +428,16 @@ public class TraceRecorder {
     public boolean disableStackInfo() {
         enableStack = false;
         return true;
+    }
+    
+    /**
+     * 获取启用堆栈信息增强详情
+     *
+     * @return 堆栈信息增强详情
+     * @since 2.0
+     */
+    public boolean isEnableStackInfo() {
+        return enableStack;
     }
     
     /**
@@ -267,58 +485,33 @@ public class TraceRecorder {
      * 记录信息
      *
      * <p>
-     * 如果消息在增强器中被当null指针返回，则直接断链返回
+     * 将信息记录交给跟踪处理器进行处理
      * </p>
      *
-     * @param info  信息
-     * @param label 记录标签
+     * @param info     信息
+     * @param label    记录标签
+     * @param argArray 参数列表
      */
     private void log(String info, RecordLabel label, Object... argArray) {
-        boolean isRecord = true;
-        /*
-          过滤信息
-         */
-        for (InfoFilter infoFilter : INFO_FILTERS) {
-            if (!infoFilter.isRecord(info, label)) {
-                /*
-                  此刻，在某个过滤器中过滤掉了
-                 */
-                isRecord = false;
-                break;
-            }
-        }
-        
-        if (isRecord) {
-            if (Objects.nonNull(argArray) && argArray.length > 0) {
-                /*
-                  格式化信息
-                 */
-                info = Formats.format(info, argArray);
-            }
-            EnhanceInfo enhanceInfo = new EnhanceInfo(info);
-            enhanceInfo.setTemporaryValue(Temporary.ENABLE_STACK, enableStack);
-            enhanceInfo.setTemporaryValue(Temporary.ENABLE_SHORT_CLASS_NAME, enableShortClassName);
-            /*
-              信息增强
-             */
-            for (InfoEnhancer infoEnhancer : INFO_ENHANCERS) {
-                enhanceInfo = infoEnhancer.enhance(enhanceInfo);
-                if (Objects.isNull(enhanceInfo)) return;
-                enhanceInfo = infoEnhancer.setWriteInfo(enhanceInfo);
-                if (Objects.isNull(enhanceInfo)) return;
-            }
-            
-            String writeInfo = enhanceInfo.getWriteInfo();
-            if (Objects.nonNull(writeInfo)) {
-                /*
-                  信息记录
-                 */
-                for (InfoRecorder infoRecorder : INFO_RECORDERS) {
-                    infoRecorder.record(writeInfo);
-                }
-            }
-            
-        }
+        TRACE_HANDLER.handle(info, label, argArray);
     }
     
+    /**
+     * 跟踪记录仪详情
+     *
+     * @return 详情
+     */
+    @Override
+    public String toString() {
+        return "TraceRecorder{" +
+                "INFO_FILTERS=" + Lists.classNames(INFO_FILTERS) +
+                ", INFO_ENHANCERS=" + Lists.classNames(INFO_ENHANCERS) +
+                ", INFO_RECORDERS=" + Lists.classNames(INFO_RECORDERS) +
+                ", TRACE_HANDLER=" + TRACE_HANDLER.getClass().getName() +
+                ", LABEL=" + LABEL +
+                ", enableStack=" + enableStack +
+                ", enableShortClassName=" + enableShortClassName +
+                ", enableThreadName=" + enableThreadName +
+                '}';
+    }
 }

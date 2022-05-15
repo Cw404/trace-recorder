@@ -1,5 +1,5 @@
 /*
- * Copyright 20022 WangCai.
+ * Copyright 2022 WangCai.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package cn.xusc.trace.record;
 
 import cn.xusc.trace.annotation.CloseOrder;
+import cn.xusc.trace.exception.TraceException;
 import cn.xusc.trace.util.Runtimes;
 
 import java.io.Closeable;
@@ -46,6 +47,7 @@ public class FileInfoRecorder implements InfoRecorder, Closeable {
      * 构建一个指定{@link File}的文件信息记录器
      *
      * @param file 文件
+     * @throws TraceException if generate IOException or file can't write
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public FileInfoRecorder(File file) {
@@ -53,29 +55,31 @@ public class FileInfoRecorder implements InfoRecorder, Closeable {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new TraceException(e);
             }
         }
         if (!file.canWrite()) {
-            throw new IllegalStateException("target file can't write");
+            throw new TraceException("target file can't write");
         }
         try {
             writer = new FileWriter(file);
             Runtimes.addCleanTask(this);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new TraceException(e);
         }
     }
     
     /**
      * {@inheritDoc}
+     *
+     * @throws TraceException if generate IOException
      */
     @Override
     public void record(String writeInfo) {
         try {
             writer.write(writeInfo);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new TraceException(e);
         }
     }
     

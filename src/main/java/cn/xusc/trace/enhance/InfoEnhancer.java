@@ -1,5 +1,5 @@
 /*
- * Copyright 20022 WangCai.
+ * Copyright 2022 WangCai.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public interface InfoEnhancer {
      * 信息增强
      *
      * @param eInfo 增强前信息
-     * @return      增强后信息
+     * @return 增强后信息
      */
     EnhanceInfo enhance(EnhanceInfo eInfo);
     
@@ -42,7 +42,7 @@ public interface InfoEnhancer {
      * 设置写出消息
      *
      * @param eInfo 增强信息
-     * @return      增强信息
+     * @return 增强信息
      */
     EnhanceInfo setWriteInfo(EnhanceInfo eInfo);
 }
