@@ -24,8 +24,10 @@ import cn.xusc.trace.enhance.InfoEnhancer;
 import cn.xusc.trace.filter.InfoFilter;
 import cn.xusc.trace.record.InfoRecorder;
 import cn.xusc.trace.util.Formats;
+import com.lmax.disruptor.TimeoutException;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 基础处理器
@@ -55,6 +57,16 @@ public abstract class BaseTraceHandler implements TraceHandler {
     @Override
     public void handle(String info, RecordLabel label, Object... argArray) {
         doHandle(info, label, argArray);
+    }
+    
+    @Override
+    public void shutdown() {
+        // nop
+    }
+    
+    @Override
+    public void shutdown(long timeout, TimeUnit timeUnit) throws TimeoutException {
+        // nop
     }
     
     /**

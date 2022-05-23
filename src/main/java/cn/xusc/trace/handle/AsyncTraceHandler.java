@@ -20,6 +20,7 @@ import cn.xusc.trace.TraceRecorder;
 import cn.xusc.trace.constant.RecordLabel;
 import cn.xusc.trace.exception.TraceException;
 import cn.xusc.trace.util.concurrent.Disruptors;
+import com.lmax.disruptor.TimeoutException;
 import com.lmax.disruptor.dsl.Disruptor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,7 @@ import lombok.Setter;
 
 import java.util.Objects;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -142,6 +144,16 @@ public class AsyncTraceHandler extends BaseTraceHandler {
     public void doHandle(String info, RecordLabel label, Object... argArray) {
         Task task = new Task(info, label, new TraceException(), argArray);
         producer.provide(() -> task);
+    }
+    
+    @Override
+    public void shutdown() {
+        DISRUPTOR.shutdown();
+    }
+    
+    @Override
+    public void shutdown(long timeout, TimeUnit timeUnit) throws TimeoutException {
+        DISRUPTOR.shutdown(timeout, timeUnit);
     }
     
     /**

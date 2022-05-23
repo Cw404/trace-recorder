@@ -17,6 +17,9 @@
 package cn.xusc.trace.handle;
 
 import cn.xusc.trace.constant.RecordLabel;
+import com.lmax.disruptor.TimeoutException;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * 跟踪处理器
@@ -34,4 +37,20 @@ public interface TraceHandler {
      * @param argArray 参数列表
      */
     void handle(String info, RecordLabel label, Object... argArray);
+    
+    /**
+     * 处理器关闭
+     *
+     * @since 2.1
+     */
+    void shutdown();
+    
+    /**
+     * 处理器关闭，会处理完指定时间未完成的任务
+     *
+     * @param timeout  时间
+     * @param timeUnit 时间单位
+     * @since 2.1
+     */
+    void shutdown(long timeout, TimeUnit timeUnit) throws TimeoutException;
 }

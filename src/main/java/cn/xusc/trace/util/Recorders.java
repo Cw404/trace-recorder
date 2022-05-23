@@ -28,10 +28,12 @@ import cn.xusc.trace.exception.TraceException;
 import cn.xusc.trace.filter.InfoFilter;
 import cn.xusc.trace.record.FileInfoRecorder;
 import cn.xusc.trace.record.InfoRecorder;
+import com.lmax.disruptor.TimeoutException;
 
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 记录器工具类
@@ -365,6 +367,28 @@ public final class Recorders {
     @SuppressWarnings("unused")
     public static void nolog(String info, Object... argArray) {
         traceRecorder.nolog(info, argArray);
+    }
+    
+    /**
+     * 处理器关闭
+     *
+     * @since 2.1
+     */
+    @SuppressWarnings("unused")
+    public static void shutdown() {
+        traceRecorder.shutdown();
+    }
+    
+    /**
+     * 处理器关闭，会处理完指定时间未完成的任务
+     *
+     * @param timeout  时间
+     * @param timeUnit 时间单位
+     * @since 2.1
+     */
+    @SuppressWarnings("unused")
+    public static void shutdown(long timeout, TimeUnit timeUnit) throws TimeoutException {
+        traceRecorder.shutdown(timeout, timeUnit);
     }
     
     /*

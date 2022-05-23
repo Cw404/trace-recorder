@@ -29,9 +29,11 @@ import cn.xusc.trace.record.ConsoleInfoRecorder;
 import cn.xusc.trace.record.InfoRecorder;
 import cn.xusc.trace.util.FastList;
 import cn.xusc.trace.util.Lists;
+import com.lmax.disruptor.TimeoutException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 跟踪记录仪
@@ -494,6 +496,26 @@ public class TraceRecorder {
      */
     private void log(String info, RecordLabel label, Object... argArray) {
         TRACE_HANDLER.handle(info, label, argArray);
+    }
+    
+    /**
+     * 处理器关闭
+     *
+     * @since 2.1
+     */
+    public void shutdown() {
+        TRACE_HANDLER.shutdown();
+    }
+    
+    /**
+     * 处理器关闭，会处理完指定时间未完成的任务
+     *
+     * @param timeout  时间
+     * @param timeUnit 时间单位
+     * @since 2.1
+     */
+    public void shutdown(long timeout, TimeUnit timeUnit) throws TimeoutException {
+        TRACE_HANDLER.shutdown(timeout, timeUnit);
     }
     
     /**

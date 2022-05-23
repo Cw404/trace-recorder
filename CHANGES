@@ -1,5 +1,8 @@
 Trace-Recorder Changes
 
+Changes in 2.1
+ * Add TraceHandler shutdown methods, support release Disruptor resource for AsyncTraceHandler
+
 Changes in 2.0
 
  * Extract the TraceRecorder log processing to the TraceHandler, support sync with async
