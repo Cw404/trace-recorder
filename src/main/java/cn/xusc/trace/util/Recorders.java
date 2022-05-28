@@ -202,6 +202,16 @@ public final class Recorders {
     }
     
     /**
+     * 重置特殊的结构
+     *
+     * @return 重置后详情
+     * @since 2.2
+     */
+    public static boolean resetSpecial() {
+        return traceRecorder.resetSpecial();
+    }
+    
+    /**
      * 记录所有
      *
      * <p>启用记录所有标签</p>
@@ -384,6 +394,7 @@ public final class Recorders {
      *
      * @param timeout  时间
      * @param timeUnit 时间单位
+     * @throws TimeoutException if a timeout occurs before shutdown completes.
      * @since 2.1
      */
     @SuppressWarnings("unused")

@@ -161,6 +161,16 @@ public class TraceRecorderTest {
     
     @ParameterizedTest
     @MethodSource("generateSyncTraceRecorder")
+    @DisplayName("reset special structure")
+    public void resetSpecialTest(TraceRecorder recorder) {
+        recorder.addInfoFilter(mock(InfoFilter.class));
+        recorder.addInfoEnhancer(mock(InfoEnhancer.class));
+        recorder.addInfoRecorder(mock(InfoRecorder.class));
+        assertTrue(recorder.resetSpecial());
+    }
+    
+    @ParameterizedTest
+    @MethodSource("generateSyncTraceRecorder")
     @DisplayName("enable record all config, will show all info of record")
     public void recordALLConfigTest(TraceRecorder recorder) {
         assertTrue(recorder.recordALL());

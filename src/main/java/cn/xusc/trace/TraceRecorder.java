@@ -29,6 +29,7 @@ import cn.xusc.trace.record.ConsoleInfoRecorder;
 import cn.xusc.trace.record.InfoRecorder;
 import cn.xusc.trace.util.FastList;
 import cn.xusc.trace.util.Lists;
+import cn.xusc.trace.util.Memo;
 import com.lmax.disruptor.TimeoutException;
 
 import java.util.List;
@@ -64,6 +65,20 @@ public class TraceRecorder {
      * 信息记录器链
      */
     private final List<InfoRecorder> INFO_RECORDERS = new FastList<>(InfoRecorder.class);
+    
+    /**
+     * 跟踪记录仪备忘录
+     *
+     * @since 2.2
+     */
+    private Memo memo;
+    
+    /**
+     * 基础记忆标签
+     *
+     * @since 2.2
+     */
+    private String baseLabel;
     
     /**
      * 跟踪处理器
@@ -201,6 +216,7 @@ public class TraceRecorder {
      * @return 添加结果
      */
     public boolean addInfoFilter(InfoFilter filter) {
+        memoryPoint();
         return INFO_FILTERS.add(filter);
     }
     
@@ -211,6 +227,7 @@ public class TraceRecorder {
      * @return 添加结果
      */
     public boolean addInfoEnhancer(InfoEnhancer enhancer) {
+        memoryPoint();
         return INFO_ENHANCERS.add(enhancer);
     }
     
@@ -221,6 +238,7 @@ public class TraceRecorder {
      * @return 添加结果
      */
     public boolean addInfoRecorder(InfoRecorder recorder) {
+        memoryPoint();
         return INFO_RECORDERS.add(recorder);
     }
     
@@ -285,6 +303,49 @@ public class TraceRecorder {
      */
     public List<InfoRecorder> getInfoRecorders() {
         return INFO_RECORDERS;
+    }
+    
+    /**
+     * 记忆点
+     *
+     * @since 2.2
+     */
+    @SuppressWarnings("unchecked")
+    private void memoryPoint() {
+        if (Objects.nonNull(baseLabel)) return;
+        if (Objects.isNull(memo)) memo = new Memo();
+        baseLabel = memo.storage(Lists.merge(getInfoFilters(), getInfoEnhancers(), getInfoRecorders()));
+    }
+    
+    /**
+     * 重置特殊的结构
+     *
+     * <p>
+     * 特殊的结构 -> {@link #memoryPoint()}记忆点数据
+     * </p>
+     *
+     * @return 重置后详情
+     * @since 2.2
+     */
+    @SuppressWarnings({"SameReturnValue", "ConstantConditions"})
+    public boolean resetSpecial() {
+        if (Objects.isNull(baseLabel)) {
+            return true;
+        }
+        List<?> list = (List<?>) memo.read(baseLabel);
+        INFO_FILTERS.clear();
+        INFO_ENHANCERS.clear();
+        INFO_RECORDERS.clear();
+        for (Object component : list) {
+            if (component instanceof InfoFilter) {
+                INFO_FILTERS.add((InfoFilter) component);
+            } else if (component instanceof InfoEnhancer) {
+                INFO_ENHANCERS.add((InfoEnhancer) component);
+            } else {
+                INFO_RECORDERS.add((InfoRecorder) component);
+            }
+        }
+        return true;
     }
     
     /**
@@ -512,6 +573,7 @@ public class TraceRecorder {
      *
      * @param timeout  时间
      * @param timeUnit 时间单位
+     * @throws TimeoutException if a timeout occurs before shutdown completes.
      * @since 2.1
      */
     public void shutdown(long timeout, TimeUnit timeUnit) throws TimeoutException {

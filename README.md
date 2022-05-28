@@ -9,7 +9,7 @@ Records can be better managed with a scalable plug-in architecture.
 
 gradle
 ```gradle
-implementation 'cn.xusc:trace-recorder:2.0'
+implementation 'cn.xusc:trace-recorder:2.2'
 ```
 
 maven
@@ -17,7 +17,7 @@ maven
 <dependency>
     <groupId>cn.xusc</groupId>
     <artifactId>trace-recorder</artifactId>
-    <version>2.0</version>
+    <version>2.2</version>
 </dependency>
 ```
 

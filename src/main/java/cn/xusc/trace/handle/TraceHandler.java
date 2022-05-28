@@ -50,6 +50,7 @@ public interface TraceHandler {
      *
      * @param timeout  时间
      * @param timeUnit 时间单位
+     * @throws TimeoutException if a timeout occurs before shutdown completes.
      * @since 2.1
      */
     void shutdown(long timeout, TimeUnit timeUnit) throws TimeoutException;

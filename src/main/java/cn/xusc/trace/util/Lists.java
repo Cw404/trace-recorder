@@ -16,10 +16,7 @@
 
 package cn.xusc.trace.util;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 
 /**
  * 列表工具类
@@ -64,5 +61,32 @@ public class Lists {
             sj.add(iterator.next().getClass().getName());
         }
         return sj.toString();
+    }
+    
+    /**
+     * 合并列表数据
+     *
+     * @param lists 列表集
+     * @return 合并列表
+     * @since 2.2
+     */
+    public static List<?> merge(List<?>... lists) {
+        if (lists.length == 0) return Collections.emptyList();
+        List<Object> mergeList = new ArrayList<>();
+        if (lists[0] instanceof FastList) {
+            Iterator iterator;
+            for (List fastList : lists) {
+                iterator = fastList.iterator();
+                while (iterator.hasNext()) {
+                    mergeList.add(iterator.next());
+                }
+            }
+            return mergeList;
+        }
+        
+        for (List list : lists) {
+            mergeList.addAll(list);
+        }
+        return mergeList;
     }
 }

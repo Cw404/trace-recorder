@@ -1,5 +1,8 @@
 Trace-Recorder Changes
 
+Changes in 2.2
+ * Add Memo and Randoms, support reset special structure of TraceRecorder
+
 Changes in 2.1
  * Add TraceHandler shutdown methods, support release Disruptor resource for AsyncTraceHandler
 

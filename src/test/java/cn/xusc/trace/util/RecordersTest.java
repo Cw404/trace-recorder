@@ -69,6 +69,7 @@ public class RecordersTest {
                 List.of(new LineInfoEnhancer(), new StackInfoEnhancer(), new ShortClassNameInfoEnhancer(), new ThreadInfoEnhancer()).iterator()
         ));
         assertAll(() -> assertInnerIterableClassEquals(Recorders.getInfoRecorders().iterator(), List.of(new ConsoleInfoRecorder()).iterator()));
+        assertTrue(Recorders.resetSpecial());
         assertTrue(Recorders.recordALL());
         assertTrue(Recorders.hideALL());
         assertTrue(Recorders.enableShortClassName());
