@@ -19,7 +19,9 @@ package cn.xusc.trace;
 import cn.xusc.trace.config.TraceRecorderConfig;
 import cn.xusc.trace.constant.RecordLabel;
 import cn.xusc.trace.enhance.*;
+import cn.xusc.trace.exception.TraceClosedException;
 import cn.xusc.trace.exception.TraceException;
+import cn.xusc.trace.exception.TraceTimeoutException;
 import cn.xusc.trace.filter.InfoFilter;
 import cn.xusc.trace.filter.RecordLabelInfoFilter;
 import cn.xusc.trace.handle.AsyncTraceHandler;
@@ -30,7 +32,6 @@ import cn.xusc.trace.record.InfoRecorder;
 import cn.xusc.trace.util.FastList;
 import cn.xusc.trace.util.Lists;
 import cn.xusc.trace.util.Memo;
-import com.lmax.disruptor.TimeoutException;
 
 import java.util.List;
 import java.util.Objects;
@@ -108,6 +109,13 @@ public class TraceRecorder {
      * @since 2.0
      */
     private boolean enableThreadName;
+    
+    /**
+     * 关闭标识
+     *
+     * @since 2.2.1
+     */
+    private boolean closed;
     
     {
         /*
@@ -216,6 +224,7 @@ public class TraceRecorder {
      * @return 添加结果
      */
     public boolean addInfoFilter(InfoFilter filter) {
+        verifyClosed();
         memoryPoint();
         return INFO_FILTERS.add(filter);
     }
@@ -227,6 +236,7 @@ public class TraceRecorder {
      * @return 添加结果
      */
     public boolean addInfoEnhancer(InfoEnhancer enhancer) {
+        verifyClosed();
         memoryPoint();
         return INFO_ENHANCERS.add(enhancer);
     }
@@ -238,6 +248,7 @@ public class TraceRecorder {
      * @return 添加结果
      */
     public boolean addInfoRecorder(InfoRecorder recorder) {
+        verifyClosed();
         memoryPoint();
         return INFO_RECORDERS.add(recorder);
     }
@@ -250,6 +261,7 @@ public class TraceRecorder {
      * @since 1.2.1
      */
     public boolean removeInfoFilter(InfoFilter filter) {
+        verifyClosed();
         return INFO_FILTERS.remove(filter);
     }
     
@@ -261,6 +273,7 @@ public class TraceRecorder {
      * @since 1.2.1
      */
     public boolean removeInfoEnhancer(InfoEnhancer enhancer) {
+        verifyClosed();
         return INFO_ENHANCERS.remove(enhancer);
     }
     
@@ -272,6 +285,7 @@ public class TraceRecorder {
      * @since 1.2.1
      */
     public boolean removeInfoRecorder(InfoRecorder recorder) {
+        verifyClosed();
         return INFO_RECORDERS.remove(recorder);
     }
     
@@ -282,6 +296,7 @@ public class TraceRecorder {
      * @since 2.0
      */
     public List<InfoFilter> getInfoFilters() {
+        verifyClosed();
         return INFO_FILTERS;
     }
     
@@ -292,6 +307,7 @@ public class TraceRecorder {
      * @since 2.0
      */
     public List<InfoEnhancer> getInfoEnhancers() {
+        verifyClosed();
         return INFO_ENHANCERS;
     }
     
@@ -302,6 +318,7 @@ public class TraceRecorder {
      * @since 2.0
      */
     public List<InfoRecorder> getInfoRecorders() {
+        verifyClosed();
         return INFO_RECORDERS;
     }
     
@@ -329,6 +346,7 @@ public class TraceRecorder {
      */
     @SuppressWarnings({"SameReturnValue", "ConstantConditions"})
     public boolean resetSpecial() {
+        verifyClosed();
         if (Objects.isNull(baseLabel)) {
             return true;
         }
@@ -357,6 +375,7 @@ public class TraceRecorder {
      */
     @SuppressWarnings("SameReturnValue")
     public boolean recordALL() {
+        verifyClosed();
         LABEL = RecordLabel.ALL;
         return true;
     }
@@ -370,6 +389,7 @@ public class TraceRecorder {
      */
     @SuppressWarnings("SameReturnValue")
     public boolean hideALL() {
+        verifyClosed();
         LABEL = RecordLabel.HIDE;
         return true;
     }
@@ -386,6 +406,7 @@ public class TraceRecorder {
      * @return 配置结果
      */
     public boolean enableShortClassName() {
+        verifyClosed();
         return enableShortClassName = true;
     }
     
@@ -404,6 +425,7 @@ public class TraceRecorder {
      */
     @SuppressWarnings("SameReturnValue")
     public boolean disableShortClassName() {
+        verifyClosed();
         enableShortClassName = false;
         return true;
     }
@@ -415,6 +437,7 @@ public class TraceRecorder {
      * @since 2.0
      */
     public boolean isEnableShortClassName() {
+        verifyClosed();
         return enableShortClassName;
     }
     
@@ -431,6 +454,7 @@ public class TraceRecorder {
      * @since 2.0
      */
     public boolean enableThreadName() {
+        verifyClosed();
         return enableThreadName = true;
     }
     
@@ -449,6 +473,7 @@ public class TraceRecorder {
      */
     @SuppressWarnings("SameReturnValue")
     public boolean disableThreadName() {
+        verifyClosed();
         enableThreadName = false;
         return true;
     }
@@ -460,6 +485,7 @@ public class TraceRecorder {
      * @since 2.0
      */
     public boolean isEnableThreadName() {
+        verifyClosed();
         return enableThreadName;
     }
     
@@ -474,6 +500,7 @@ public class TraceRecorder {
      * @return 配置结果
      */
     public boolean enableStackInfo() {
+        verifyClosed();
         return enableStack = true;
     }
     
@@ -489,6 +516,7 @@ public class TraceRecorder {
      */
     @SuppressWarnings("SameReturnValue")
     public boolean disableStackInfo() {
+        verifyClosed();
         enableStack = false;
         return true;
     }
@@ -500,6 +528,7 @@ public class TraceRecorder {
      * @since 2.0
      */
     public boolean isEnableStackInfo() {
+        verifyClosed();
         return enableStack;
     }
     
@@ -509,6 +538,7 @@ public class TraceRecorder {
      * @param info 信息
      */
     public void log(String info) {
+        verifyClosed();
         log(info, Objects.requireNonNullElse(LABEL, RecordLabel.NOW));
     }
     
@@ -520,6 +550,7 @@ public class TraceRecorder {
      * @since 1.1
      */
     public void log(String info, Object... argArray) {
+        verifyClosed();
         log(info, Objects.requireNonNullElse(LABEL, RecordLabel.NOW), argArray);
     }
     
@@ -530,6 +561,7 @@ public class TraceRecorder {
      * @since 1.1
      */
     public void nolog(String info) {
+        verifyClosed();
         log(info, Objects.requireNonNullElse(LABEL, RecordLabel.HIDE));
     }
     
@@ -541,6 +573,7 @@ public class TraceRecorder {
      * @since 1.1
      */
     public void nolog(String info, Object... argArray) {
+        verifyClosed();
         log(info, Objects.requireNonNullElse(LABEL, RecordLabel.HIDE), argArray);
     }
     
@@ -565,6 +598,8 @@ public class TraceRecorder {
      * @since 2.1
      */
     public void shutdown() {
+        verifyClosed();
+        closed = true;
         TRACE_HANDLER.shutdown();
     }
     
@@ -573,11 +608,25 @@ public class TraceRecorder {
      *
      * @param timeout  时间
      * @param timeUnit 时间单位
-     * @throws TimeoutException if a timeout occurs before shutdown completes.
+     * @throws TraceTimeoutException if a timeout occurs before shutdown completes.
      * @since 2.1
      */
-    public void shutdown(long timeout, TimeUnit timeUnit) throws TimeoutException {
+    public void shutdown(long timeout, TimeUnit timeUnit) throws TraceTimeoutException {
+        verifyClosed();
+        closed = true;
         TRACE_HANDLER.shutdown(timeout, timeUnit);
+    }
+    
+    /**
+     * 验证跟踪记录仪是否已关闭
+     *
+     * @throws TraceClosedException if {@code closed} is true
+     * @since 2.2.1
+     */
+    private void verifyClosed() {
+        if (closed) {
+            throw new TraceClosedException("TraceRecorder is closed");
+        }
     }
     
     /**

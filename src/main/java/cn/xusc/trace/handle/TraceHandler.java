@@ -17,7 +17,7 @@
 package cn.xusc.trace.handle;
 
 import cn.xusc.trace.constant.RecordLabel;
-import com.lmax.disruptor.TimeoutException;
+import cn.xusc.trace.exception.TraceTimeoutException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -50,8 +50,8 @@ public interface TraceHandler {
      *
      * @param timeout  时间
      * @param timeUnit 时间单位
-     * @throws TimeoutException if a timeout occurs before shutdown completes.
+     * @throws TraceTimeoutException if a timeout occurs before shutdown completes.
      * @since 2.1
      */
-    void shutdown(long timeout, TimeUnit timeUnit) throws TimeoutException;
+    void shutdown(long timeout, TimeUnit timeUnit) throws TraceTimeoutException;
 }

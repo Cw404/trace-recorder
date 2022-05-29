@@ -19,6 +19,7 @@ package cn.xusc.trace.handle;
 import cn.xusc.trace.TraceRecorder;
 import cn.xusc.trace.constant.RecordLabel;
 import cn.xusc.trace.exception.TraceException;
+import cn.xusc.trace.exception.TraceTimeoutException;
 import cn.xusc.trace.util.concurrent.Disruptors;
 import com.lmax.disruptor.TimeoutException;
 import com.lmax.disruptor.dsl.Disruptor;
@@ -152,8 +153,12 @@ public class AsyncTraceHandler extends BaseTraceHandler {
     }
     
     @Override
-    public void shutdown(long timeout, TimeUnit timeUnit) throws TimeoutException {
-        DISRUPTOR.shutdown(timeout, timeUnit);
+    public void shutdown(long timeout, TimeUnit timeUnit) throws TraceTimeoutException {
+        try {
+            DISRUPTOR.shutdown(timeout, timeUnit);
+        } catch (TimeoutException e) {
+            throw new TraceTimeoutException(e);
+        }
     }
     
     /**

@@ -1,5 +1,10 @@
 Trace-Recorder Changes
 
+Changes in 2.2.1
+ * Fixup TraceRecorder shutdown method direct throws com.lmax.disruptor.TimeoutException trigger compile of question
+
+ * Fixup TraceRecorder shutdown method effectiveness
+
 Changes in 2.2
  * Add Memo and Randoms, support reset special structure of TraceRecorder
 

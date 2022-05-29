@@ -25,10 +25,10 @@ import cn.xusc.trace.enhance.ShortClassNameInfoEnhancer;
 import cn.xusc.trace.enhance.StatisticsInfoEnhancer;
 import cn.xusc.trace.enhance.ThreadInfoEnhancer;
 import cn.xusc.trace.exception.TraceException;
+import cn.xusc.trace.exception.TraceTimeoutException;
 import cn.xusc.trace.filter.InfoFilter;
 import cn.xusc.trace.record.FileInfoRecorder;
 import cn.xusc.trace.record.InfoRecorder;
-import com.lmax.disruptor.TimeoutException;
 
 import java.io.File;
 import java.util.List;
@@ -394,11 +394,11 @@ public final class Recorders {
      *
      * @param timeout  时间
      * @param timeUnit 时间单位
-     * @throws TimeoutException if a timeout occurs before shutdown completes.
+     * @throws TraceTimeoutException if a timeout occurs before shutdown completes.
      * @since 2.1
      */
     @SuppressWarnings("unused")
-    public static void shutdown(long timeout, TimeUnit timeUnit) throws TimeoutException {
+    public static void shutdown(long timeout, TimeUnit timeUnit) throws TraceTimeoutException {
         traceRecorder.shutdown(timeout, timeUnit);
     }
     

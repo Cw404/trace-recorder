@@ -17,17 +17,17 @@
 package cn.xusc.trace.exception;
 
 /**
- * 跟踪异常
+ * 跟踪关闭异常
  *
  * @author WangCai
- * @since 2.0
+ * @since 2.2.1
  */
-public class TraceException extends RuntimeException {
+public class TraceClosedException extends TraceException {
     
     /**
      * 基础构造
      */
-    public TraceException() {
+    public TraceClosedException() {
     }
     
     /**
@@ -35,7 +35,7 @@ public class TraceException extends RuntimeException {
      *
      * @param message 异常信息
      */
-    public TraceException(String message) {
+    public TraceClosedException(String message) {
         super(message);
     }
     
@@ -45,7 +45,7 @@ public class TraceException extends RuntimeException {
      * @param message 异常信息
      * @param cause   原因
      */
-    public TraceException(String message, Throwable cause) {
+    public TraceClosedException(String message, Throwable cause) {
         super(message, cause);
     }
     
@@ -54,7 +54,7 @@ public class TraceException extends RuntimeException {
      *
      * @param cause 原因
      */
-    public TraceException(Throwable cause) {
+    public TraceClosedException(Throwable cause) {
         super(cause);
     }
     
@@ -66,7 +66,7 @@ public class TraceException extends RuntimeException {
      * @param enableSuppression  启用抑制
      * @param writableStackTrace 可写的栈跟踪
      */
-    public TraceException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public TraceClosedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
