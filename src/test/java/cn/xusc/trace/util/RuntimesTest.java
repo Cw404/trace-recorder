@@ -16,7 +16,10 @@
 
 package cn.xusc.trace.util;
 
+import cn.xusc.trace.TraceRecorder;
 import cn.xusc.trace.annotation.CloseOrder;
+import cn.xusc.trace.config.TraceRecorderConfig;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -42,11 +45,23 @@ public class RuntimesTest {
         Runtimes.addCleanTask(new ShowInfoOfJVMCloseFirst());
     }
     
+    private static TraceRecorder recorder;
+    
+    @BeforeEach
+    @DisplayName("init Environment")
+    private void initEnv() {
+        recorder = new TraceRecorder(
+                TraceRecorderConfig.builder()
+                        .enableAsync(false)
+                        .build()
+        );
+    }
+    
     @SuppressWarnings("InnerClassMayBeStatic")
     private class ShowInfoOfJVMClose implements Closeable {
         @Override
         public void close() {
-            Recorders.log("ShowInfoOfJVMClose closed");
+            recorder.log("ShowInfoOfJVMClose closed");
         }
     }
     
@@ -55,7 +70,7 @@ public class RuntimesTest {
     private class ShowInfoOfJVMCloseFirst implements Closeable {
         @Override
         public void close() {
-            Recorders.log("ShowInfoOfJVMCloseFirst closed");
+            recorder.log("ShowInfoOfJVMCloseFirst closed");
         }
     }
     
@@ -64,7 +79,7 @@ public class RuntimesTest {
     private class ShowInfoOfJVMCloseSecond implements Closeable {
         @Override
         public void close() {
-            Recorders.log("ShowInfoOfJVMCloseSecond closed");
+            recorder.log("ShowInfoOfJVMCloseSecond closed");
         }
     }
     

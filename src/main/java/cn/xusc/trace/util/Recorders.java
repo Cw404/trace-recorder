@@ -44,7 +44,9 @@ import java.util.concurrent.TimeUnit;
  *
  * @author WangCai
  * @since 1.0
+ * @deprecated 由于该类只是为了兼容1.0的方便使用，请使用更灵活的方式{@code TraceRecorder} + {@code TraceRecorderConfig}
  */
+@Deprecated
 public final class Recorders {
     
     /**
@@ -439,7 +441,7 @@ public final class Recorders {
      * @return 添加结果
      */
     public static boolean addCommonStatisticsInfoEnhancer() {
-        return traceRecorder.addInfoEnhancer(new CommonStatisticsInfoEnhancer());
+        return traceRecorder.addInfoEnhancer(new CommonStatisticsInfoEnhancer(traceRecorder));
     }
     
     /**
@@ -448,6 +450,10 @@ public final class Recorders {
     @CloseOrder(1)
     private static class CommonStatisticsInfoEnhancer extends StatisticsInfoEnhancer {
         private TraceNode HEAD;
+        
+        public CommonStatisticsInfoEnhancer(TraceRecorder recorder) {
+            super(recorder);
+        }
         
         @Override
         protected EnhanceInfo doEnhance(EnhanceInfo eInfo) {

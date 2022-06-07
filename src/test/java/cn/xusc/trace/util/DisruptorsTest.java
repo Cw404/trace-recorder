@@ -16,9 +16,12 @@
 
 package cn.xusc.trace.util;
 
+import cn.xusc.trace.TraceRecorder;
+import cn.xusc.trace.config.TraceRecorderConfig;
 import cn.xusc.trace.util.concurrent.Disruptors;
 import cn.xusc.trace.util.function.TeConsumer;
 import com.lmax.disruptor.dsl.Disruptor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -114,11 +117,23 @@ public class DisruptorsTest {
                 .provide(supplier, count);
     }
     
+    private static TraceRecorder recorder;
+    
+    @BeforeEach
+    @DisplayName("init Environment")
+    private void initEnv() {
+        recorder = new TraceRecorder(
+                TraceRecorderConfig.builder()
+                        .enableAsync(false)
+                        .build()
+        );
+    }
+    
     @DisplayName("generate a group of shared args")
     private static Stream<Arguments> generateSharedArgs() {
         AtomicInteger ai = new AtomicInteger(0);
         TeConsumer<? super Disruptors.GeneralEvent, ? super Long, ? super Boolean> teConsumer = (event, sequence, endOfBatch) ->
-                Recorders.log("thread: {} - value: {}", Thread.currentThread().getName(), event.get());
+                recorder.log("thread: {} - value: {}", Thread.currentThread().getName(), event.get());
         Supplier supplier = ai::incrementAndGet;
         return Stream.of(
                 Arguments.arguments(2, teConsumer, supplier, 2)
@@ -129,7 +144,7 @@ public class DisruptorsTest {
     private static Stream<Arguments> generateNoSharedArgs() {
         AtomicInteger ai = new AtomicInteger(0);
         Consumer<? super Disruptors.GeneralEvent> consumer = (event) ->
-                Recorders.log("thread: {} - value: {}", Thread.currentThread().getName(), event.get());
+                recorder.log("thread: {} - value: {}", Thread.currentThread().getName(), event.get());
         Supplier supplier = ai::incrementAndGet;
         return Stream.of(
                 Arguments.arguments(2, consumer, supplier, 2)

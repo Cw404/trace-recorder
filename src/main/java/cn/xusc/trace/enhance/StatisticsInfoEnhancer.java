@@ -17,7 +17,7 @@
 package cn.xusc.trace.enhance;
 
 import cn.xusc.trace.EnhanceInfo;
-import cn.xusc.trace.util.Recorders;
+import cn.xusc.trace.TraceRecorder;
 import cn.xusc.trace.util.Runtimes;
 
 import java.io.Closeable;
@@ -39,12 +39,26 @@ import java.util.Objects;
  */
 public abstract class StatisticsInfoEnhancer implements InfoEnhancer, Closeable {
     
+    /**
+     * 跟踪记录仪
+     */
+    private final TraceRecorder TRACE_RECORDER;
+    
+    /**
+     * 是否关闭
+     */
     private boolean isClose;
     
     /**
-     * 默认抽象构造
+     * 应用跟踪记录仪进行详细信息记录
+     *
+     * @param traceRecorder 跟踪记录仪
+     * @throws NullPointerException if {@code traceRecorder} is null
      */
-    public StatisticsInfoEnhancer() {
+    public StatisticsInfoEnhancer(TraceRecorder traceRecorder) {
+        Objects.requireNonNull(traceRecorder);
+        this.TRACE_RECORDER = traceRecorder;
+        
         /*
           注册JVM关闭显示统计信息钩子
          */
@@ -87,8 +101,8 @@ public abstract class StatisticsInfoEnhancer implements InfoEnhancer, Closeable 
         /*
           最终统计不需要开启堆栈信息增强
          */
-        Recorders.disableStackInfo();
-        Recorders.log(showInfo);
+        TRACE_RECORDER.disableStackInfo();
+        TRACE_RECORDER.log(showInfo);
     }
     
     /**

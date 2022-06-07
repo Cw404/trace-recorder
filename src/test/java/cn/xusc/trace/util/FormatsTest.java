@@ -16,6 +16,9 @@
 
 package cn.xusc.trace.util;
 
+import cn.xusc.trace.TraceRecorder;
+import cn.xusc.trace.config.TraceRecorderConfig;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -26,21 +29,33 @@ import org.junit.jupiter.api.Test;
  */
 public class FormatsTest {
     
+    private static TraceRecorder recorder;
+    
+    @BeforeEach
+    @DisplayName("init Environment")
+    private void initEnv() {
+        recorder = new TraceRecorder(
+                TraceRecorderConfig.builder()
+                        .enableAsync(false)
+                        .build()
+        );
+    }
+    
     @Test
     @DisplayName("Single value format")
     public void singleValueFormatTest() {
-        Recorders.log(Formats.format("{}", "hello Formats"));
+        recorder.log(Formats.format("{}", "hello Formats"));
     }
     
     @Test
     @DisplayName("Multiple value format")
     public void multipleValueFormatTest() {
-        Recorders.log(Formats.format("{} {}", "hello", "Formats"));
+        recorder.log(Formats.format("{} {}", "hello", "Formats"));
     }
     
     @Test
     @DisplayName("Multiple value format of escape")
     public void multipleValueFormatOfEscapeTest() {
-        Recorders.log(Formats.format("\\{} {} {}", "hello", "Formats"));
+        recorder.log(Formats.format("\\{} {} {}", "hello", "Formats"));
     }
 }

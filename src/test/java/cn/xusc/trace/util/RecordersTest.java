@@ -41,7 +41,9 @@ import static org.mockito.Mockito.mock;
  * 记录器工具类测试
  *
  * @author wangcai
+ * @deprecated {@link Recorders}
  */
+@Deprecated
 public class RecordersTest {
     
     @Test
