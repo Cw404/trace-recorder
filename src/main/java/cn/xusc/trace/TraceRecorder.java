@@ -61,7 +61,7 @@ public class TraceRecorder {
     /**
      * 信息增强器链
      */
-    private final List<InfoEnhancer> INFO_ENHANCERS = new FastList<>(InfoEnhancer.class);
+    private final List<InfoEnhancer> INFO_ENHANCERS = new FastList<>(InfoEnhancer.class, 8);
     /**
      * 信息记录器链
      */
@@ -80,6 +80,13 @@ public class TraceRecorder {
      * @since 2.2
      */
     private String baseLabel;
+    
+    /**
+     * 脏的信息增强器链标识
+     *
+     * @since 2.4
+     */
+    private boolean dirtyInfoEnhancers;
     
     /**
      * 跟踪处理器
@@ -185,8 +192,8 @@ public class TraceRecorder {
             }
         }
         if (!config.getInfoRecorders().isEmpty()) {
-            for (InfoRecorder infoEnhancer : config.getInfoRecorders()) {
-                addInfoRecorder(infoEnhancer);
+            for (InfoRecorder infoRecorder : config.getInfoRecorders()) {
+                addInfoRecorder(infoRecorder);
             }
         }
         /*
@@ -232,12 +239,36 @@ public class TraceRecorder {
     /**
      * 添加信息增强器
      *
+     * <p>
+     * 通过脏的信息增强器链标识确保用户永远增强的是原信息
+     * </p>
+     *
      * @param enhancer 信息增强器
      * @return 添加结果
      */
     public boolean addInfoEnhancer(InfoEnhancer enhancer) {
         verifyClosed();
         memoryPoint();
+        /*
+          信息增强器变脏分两个阶段：
+          - 第一阶段（首次变脏）：
+               - 直接清空整个增强器链
+          - 第二阶段（交替性变脏）
+               - 清空尾部内设数量的增强器
+         */
+        if (!dirtyInfoEnhancers) {
+            List<?> list = (List<?>) memo.read(baseLabel);
+            list = Lists.statistic(list, component -> component instanceof InfoEnhancer);
+            int size = list.size();
+            if (size == INFO_ENHANCERS.size()) {
+                INFO_ENHANCERS.clear();
+            } else {
+                for (int i = 0; i < size; i++) {
+                    ((FastList) INFO_ENHANCERS).removeLast();
+                }
+            }
+            dirtyInfoEnhancers = true;
+        }
         return INFO_ENHANCERS.add(enhancer);
     }
     
@@ -308,6 +339,15 @@ public class TraceRecorder {
      */
     public List<InfoEnhancer> getInfoEnhancers() {
         verifyClosed();
+        if (dirtyInfoEnhancers) {
+            /*
+              脏恢复
+             */
+            List<?> list = (List<?>) memo.read(baseLabel);
+            Lists.statistic(list, component -> component instanceof InfoEnhancer)
+                    .forEach(component -> INFO_ENHANCERS.add((InfoEnhancer) component));
+            dirtyInfoEnhancers = false;
+        }
         return INFO_ENHANCERS;
     }
     

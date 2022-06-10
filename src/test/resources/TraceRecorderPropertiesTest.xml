@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>more see cn.xusc.trace.util.TraceRecorderProperties</comment>
+    <entry key="cn.xusc.trace.config.TraceRecorderConfig.enableStack">true</entry>
+    <entry key="cn.xusc.trace.config.TraceRecorderConfig.enableThreadName">true</entry>
+    <entry key="cn.xusc.trace.config.TraceRecorderConfig.enableAsync">false</entry>
+    <entry key="cn.xusc.trace.config.TraceRecorderConfig.infoEnhancers">
+        cn.xusc.trace.util.need.enhance.PrefixInfoEnhancerTest
+    </entry>
+</properties>

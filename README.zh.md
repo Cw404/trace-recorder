@@ -8,7 +8,7 @@
 
 gradle
 ```gradle
-implementation 'cn.xusc:trace-recorder:2.2'
+implementation 'cn.xusc:trace-recorder:2.4'
 ```
 
 maven
@@ -16,7 +16,7 @@ maven
 <dependency>
     <groupId>cn.xusc</groupId>
     <artifactId>trace-recorder</artifactId>
-    <version>2.2</version>
+    <version>2.4</version>
 </dependency>
 ```
 

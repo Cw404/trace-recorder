@@ -17,6 +17,10 @@
 
 package cn.xusc.trace.util;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -69,5 +73,47 @@ public class Strings {
         Objects.requireNonNull(str1);
         
         return str.equals(str1);
+    }
+    
+    /**
+     * 根据指定分隔符分割字符串
+     *
+     * @param originStr 原字符串
+     * @param separator 分隔符
+     * @return 分割后的字符串列表
+     * @throws NullPointerException if {@code originStr} is null.
+     * @since 2.4
+     */
+    public static List<String> split(String originStr, char separator) {
+        Objects.requireNonNull(originStr);
+        
+        if (isEmpty(originStr)) {
+            return Collections.emptyList();
+        }
+        
+        FastList<String> splits = new FastList<>(String.class, 16);
+        StringReader reader = new StringReader(originStr);
+        StringBuilder sb = new StringBuilder();
+        int read;
+        char readChar;
+        try {
+            while (reader.ready()) {
+                if ((read = reader.read()) == -1) {
+                    break;
+                }
+                if ((readChar = (char) read) == separator) {
+                    splits.add(sb.toString());
+                    sb = new StringBuilder();
+                    continue;
+                }
+                sb.append(readChar);
+            }
+            
+            if (sb.length() > 0) splits.add(sb.toString());
+        } catch (IOException e) {
+            // not to this
+        }
+        
+        return splits;
     }
 }

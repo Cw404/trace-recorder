@@ -17,6 +17,7 @@
 package cn.xusc.trace.util;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * 列表工具类
@@ -88,5 +89,29 @@ public class Lists {
             mergeList.addAll(list);
         }
         return mergeList;
+    }
+    
+    /**
+     * 统计列表中符合条件的列表数据
+     *
+     * @param list      列表数据
+     * @param condition 条件
+     * @param <T>       列表对象类型
+     * @return 列表中符合条件的列表数据
+     * @throws NullPointerException if {@code list} is null.
+     * @throws NullPointerException if {@code condition} is null.
+     * @since 2.4
+     */
+    public static <T> List<T> statistic(List<T> list, Predicate<T> condition) {
+        Objects.requireNonNull(list);
+        Objects.requireNonNull(condition);
+        
+        ArrayList<T> statisticResult = new ArrayList<>();
+        for (T statisticObj : list) {
+            if (condition.test(statisticObj)) {
+                statisticResult.add(statisticObj);
+            }
+        }
+        return statisticResult;
     }
 }

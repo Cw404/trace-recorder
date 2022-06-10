@@ -1,5 +1,11 @@
 Trace-Recorder Changes
 
+Changes in 2.4
+
+ * Add TraceRecorderProperties, support from properties file and xml file to generate TraceRecorderConfig
+
+ * Change InfoEnhancer chain definition for TraceRecorder, internal InfoEnhancer should be later than external InfoEnhancer
+
 Changes in 2.3
 
  * Discard Recorders, uncontrolled
