@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util;
 
 import java.util.Objects;
@@ -29,13 +28,12 @@ import java.util.Objects;
  * @since 1.1
  */
 public final class Formats {
-    
+
     /**
      * 禁止实例化
      */
-    private Formats() {
-    }
-    
+    private Formats() {}
+
     /**
      * 分割符
      */
@@ -44,7 +42,7 @@ public final class Formats {
      * 转义符
      */
     private static final char ESCAPE = '\\';
-    
+
     /**
      * 格式化消息
      *
@@ -53,9 +51,9 @@ public final class Formats {
      * @return 格式化消息
      */
     public static String format(String messagePattern, Object arg) {
-        return format(messagePattern, new Object[]{arg});
+        return format(messagePattern, new Object[] { arg });
     }
-    
+
     /**
      * 格式化消息
      *
@@ -70,7 +68,7 @@ public final class Formats {
     public static String format(String messagePattern, Object... argArray) {
         Objects.requireNonNull(messagePattern);
         Objects.requireNonNull(argArray);
-        
+
         int mLength = messagePattern.length();
         if (mLength < SEPARATOR.length()) {
             /*
@@ -78,7 +76,7 @@ public final class Formats {
              */
             return messagePattern;
         }
-        
+
         StringBuilder sb = new StringBuilder(mLength + 50);
         int start = 0, end, index = 0;
         while ((end = messagePattern.indexOf(SEPARATOR, start)) > -1) {
@@ -86,7 +84,7 @@ public final class Formats {
                 sb.append(messagePattern, start, start = end + 1);
                 continue;
             }
-            
+
             sb.append(messagePattern, start, end);
             sb.append(argArray[index++]);
             start = end + 2;
@@ -97,7 +95,7 @@ public final class Formats {
                 break;
             }
         }
-        
+
         return start == 0 ? messagePattern : sb.append(messagePattern, start, mLength).toString();
     }
 }

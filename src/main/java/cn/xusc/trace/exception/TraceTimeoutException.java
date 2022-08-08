@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.exception;
 
 /**
@@ -23,13 +22,12 @@ package cn.xusc.trace.exception;
  * @since 2.2.1
  */
 public class TraceTimeoutException extends TraceException {
-    
+
     /**
      * 基础构造
      */
-    public TraceTimeoutException() {
-    }
-    
+    public TraceTimeoutException() {}
+
     /**
      * 异常信息的构造
      *
@@ -38,7 +36,7 @@ public class TraceTimeoutException extends TraceException {
     public TraceTimeoutException(String message) {
         super(message);
     }
-    
+
     /**
      * 异常信息和原因的构造
      *
@@ -48,7 +46,7 @@ public class TraceTimeoutException extends TraceException {
     public TraceTimeoutException(String message, Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * 原因的构造
      *
@@ -57,7 +55,7 @@ public class TraceTimeoutException extends TraceException {
     public TraceTimeoutException(Throwable cause) {
         super(cause);
     }
-    
+
     /**
      * 详细的构造
      *
@@ -66,7 +64,12 @@ public class TraceTimeoutException extends TraceException {
      * @param enableSuppression  启用抑制
      * @param writableStackTrace 可写的栈跟踪
      */
-    public TraceTimeoutException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public TraceTimeoutException(
+        String message,
+        Throwable cause,
+        boolean enableSuppression,
+        boolean writableStackTrace
+    ) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

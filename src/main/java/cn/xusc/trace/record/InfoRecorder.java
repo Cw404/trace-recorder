@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.record;
 
 /**
@@ -23,7 +22,6 @@ package cn.xusc.trace.record;
  * @since 1.0
  */
 public interface InfoRecorder {
-    
     /**
      * 信息记录
      *

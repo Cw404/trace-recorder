@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util;
 
 import cn.xusc.trace.TraceRecorder;
@@ -28,31 +27,27 @@ import org.junit.jupiter.api.Test;
  * @author wangcai
  */
 public class FormatsTest {
-    
+
     private static TraceRecorder recorder;
-    
+
     @BeforeEach
     @DisplayName("init Environment")
     private void initEnv() {
-        recorder = new TraceRecorder(
-                TraceRecorderConfig.builder()
-                        .enableAsync(false)
-                        .build()
-        );
+        recorder = new TraceRecorder(TraceRecorderConfig.builder().enableAsync(false).build());
     }
-    
+
     @Test
     @DisplayName("Single value format")
     public void singleValueFormatTest() {
         recorder.log(Formats.format("{}", "hello Formats"));
     }
-    
+
     @Test
     @DisplayName("Multiple value format")
     public void multipleValueFormatTest() {
         recorder.log(Formats.format("{} {}", "hello", "Formats"));
     }
-    
+
     @Test
     @DisplayName("Multiple value format of escape")
     public void multipleValueFormatOfEscapeTest() {

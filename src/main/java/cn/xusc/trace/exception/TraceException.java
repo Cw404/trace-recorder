@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.exception;
 
 /**
@@ -23,13 +22,12 @@ package cn.xusc.trace.exception;
  * @since 2.0
  */
 public class TraceException extends RuntimeException {
-    
+
     /**
      * 基础构造
      */
-    public TraceException() {
-    }
-    
+    public TraceException() {}
+
     /**
      * 异常信息的构造
      *
@@ -38,7 +36,7 @@ public class TraceException extends RuntimeException {
     public TraceException(String message) {
         super(message);
     }
-    
+
     /**
      * 异常信息和原因的构造
      *
@@ -48,7 +46,7 @@ public class TraceException extends RuntimeException {
     public TraceException(String message, Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * 原因的构造
      *
@@ -57,7 +55,7 @@ public class TraceException extends RuntimeException {
     public TraceException(Throwable cause) {
         super(cause);
     }
-    
+
     /**
      * 详细的构造
      *

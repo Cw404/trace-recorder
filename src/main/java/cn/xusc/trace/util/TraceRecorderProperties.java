@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util;
 
 import cn.xusc.trace.config.TraceRecorderConfig;
@@ -21,7 +20,6 @@ import cn.xusc.trace.enhance.InfoEnhancer;
 import cn.xusc.trace.exception.TraceException;
 import cn.xusc.trace.filter.InfoFilter;
 import cn.xusc.trace.record.InfoRecorder;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -39,29 +37,29 @@ import java.util.Properties;
  * @since 2.4
  */
 public final class TraceRecorderProperties extends Properties {
-    
+
     /**
      * 配置类名
      */
     private static final String CONFIG_CLASSNAME = "cn.xusc.trace.config.TraceRecorderConfig";
-    
+
     /**
      * 分割符
      */
     private static final char SEPARATOR = ',';
-    
+
     /**
      * 是否已加载
      */
     private boolean isLoad;
-    
+
     /**
      * 基础构造
      */
     public TraceRecorderProperties() {
         super();
     }
-    
+
     /**
      * 初始化容量的构造
      *
@@ -70,7 +68,7 @@ public final class TraceRecorderProperties extends Properties {
     public TraceRecorderProperties(int initialCapacity) {
         super(initialCapacity);
     }
-    
+
     /**
      * 带有默认属性的构造
      *
@@ -79,7 +77,7 @@ public final class TraceRecorderProperties extends Properties {
     public TraceRecorderProperties(Properties defaults) {
         super(defaults);
     }
-    
+
     /**
      * 获取配置
      *
@@ -88,21 +86,22 @@ public final class TraceRecorderProperties extends Properties {
      */
     public synchronized TraceRecorderConfig config() {
         if (isLoad) {
-            return TraceRecorderConfig.builder()
-                    .infoFilters(innerInfoFilters())
-                    .infoEnhancers(innerInfoEnhancers())
-                    .infoRecorders(innerInfoRecorders())
-                    .enableStack(innerEnableStack())
-                    .enableShortClassName(innerEnableShortClassName())
-                    .enableThreadName(innerEnableThreadName())
-                    .enableRecordAll(innerEnableRecordAll())
-                    .enableAsync(innerEnableAsync())
-                    .taskHandlerSize(innerTaskHandlerSize())
-                    .build();
+            return TraceRecorderConfig
+                .builder()
+                .infoFilters(innerInfoFilters())
+                .infoEnhancers(innerInfoEnhancers())
+                .infoRecorders(innerInfoRecorders())
+                .enableStack(innerEnableStack())
+                .enableShortClassName(innerEnableShortClassName())
+                .enableThreadName(innerEnableThreadName())
+                .enableRecordAll(innerEnableRecordAll())
+                .enableAsync(innerEnableAsync())
+                .taskHandlerSize(innerTaskHandlerSize())
+                .build();
         }
         throw new TraceException("not load TraceRecorder properties");
     }
-    
+
     /**
      * 内部获取配置消息过滤器列表
      *
@@ -113,14 +112,14 @@ public final class TraceRecorderProperties extends Properties {
         if (Objects.isNull(infoFiltersStr)) {
             return null;
         }
-        
+
         List<InfoFilter> infoFilters = new FastList<>(InfoFilter.class, 8);
         for (String infoFilterClass : Strings.split(infoFiltersStr.trim(), SEPARATOR)) {
             infoFilters.add((InfoFilter) loadAndInstance(infoFilterClass));
         }
         return infoFilters;
     }
-    
+
     /**
      * 内部获取配置消息增强器列表
      *
@@ -131,14 +130,14 @@ public final class TraceRecorderProperties extends Properties {
         if (Objects.isNull(infoEnhancersStr)) {
             return null;
         }
-        
+
         List<InfoEnhancer> infoEnhancers = new FastList<>(InfoEnhancer.class, 8);
         for (String infoEnhancerClass : Strings.split(infoEnhancersStr.trim(), SEPARATOR)) {
             infoEnhancers.add((InfoEnhancer) loadAndInstance(infoEnhancerClass));
         }
         return infoEnhancers;
     }
-    
+
     /**
      * 内部获取配置消息记录器列表
      *
@@ -149,14 +148,14 @@ public final class TraceRecorderProperties extends Properties {
         if (Objects.isNull(infoRecordersStr)) {
             return null;
         }
-        
+
         List<InfoRecorder> infoRecorders = new FastList<>(InfoRecorder.class, 8);
         for (String infoRecorderClass : Strings.split(infoRecordersStr.trim(), SEPARATOR)) {
             infoRecorders.add((InfoRecorder) loadAndInstance(infoRecorderClass));
         }
         return infoRecorders;
     }
-    
+
     /**
      * 内部获取启用堆栈信息
      *
@@ -165,7 +164,7 @@ public final class TraceRecorderProperties extends Properties {
     private boolean innerEnableStack() {
         return Boolean.valueOf(getProperty(parseConfigPropertiesName("enableStack")));
     }
-    
+
     /**
      * 内部获取启用短类名
      *
@@ -174,7 +173,7 @@ public final class TraceRecorderProperties extends Properties {
     private boolean innerEnableShortClassName() {
         return Boolean.valueOf(getProperty(parseConfigPropertiesName("enableShortClassName")));
     }
-    
+
     /**
      * 内部获取启用线程名
      *
@@ -183,7 +182,7 @@ public final class TraceRecorderProperties extends Properties {
     private boolean innerEnableThreadName() {
         return Boolean.valueOf(getProperty(parseConfigPropertiesName("enableThreadName")));
     }
-    
+
     /**
      * 内部获取启用记录所有
      *
@@ -192,7 +191,7 @@ public final class TraceRecorderProperties extends Properties {
     private boolean innerEnableRecordAll() {
         return Boolean.valueOf(getProperty(parseConfigPropertiesName("enableRecordAll")));
     }
-    
+
     /**
      * 内部获取启用异步记录
      *
@@ -201,7 +200,7 @@ public final class TraceRecorderProperties extends Properties {
     private boolean innerEnableAsync() {
         return Boolean.valueOf(getProperty(parseConfigPropertiesName("enableAsync")));
     }
-    
+
     /**
      * 内部获取任务处理器数量
      *
@@ -214,7 +213,7 @@ public final class TraceRecorderProperties extends Properties {
             return 0;
         }
     }
-    
+
     /**
      * 解析配置属性名
      *
@@ -224,7 +223,7 @@ public final class TraceRecorderProperties extends Properties {
     private String parseConfigPropertiesName(String propertiesName) {
         return CONFIG_CLASSNAME + "." + propertiesName;
     }
-    
+
     /**
      * 加载类并实例化对象
      *
@@ -248,7 +247,7 @@ public final class TraceRecorderProperties extends Properties {
             throw new TraceException(e);
         }
     }
-    
+
     /**
      * 根据统一资源定位符进行加载
      *
@@ -260,19 +259,19 @@ public final class TraceRecorderProperties extends Properties {
         Objects.requireNonNull(url, "url parameter is null");
         load(url.openStream());
     }
-    
+
     @Override
     public synchronized void load(Reader reader) throws IOException {
         super.load(reader);
         isLoad = true;
     }
-    
+
     @Override
     public synchronized void load(InputStream inStream) throws IOException {
         super.load(inStream);
         isLoad = true;
     }
-    
+
     /**
      * 根据xml统一资源定位符进行加载
      *
@@ -285,7 +284,7 @@ public final class TraceRecorderProperties extends Properties {
         Objects.requireNonNull(url, "url parameter is null");
         loadFromXML(url.openStream());
     }
-    
+
     @Override
     public synchronized void loadFromXML(InputStream in) throws IOException {
         super.loadFromXML(in);

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util.function;
 
 import java.util.Objects;
@@ -31,7 +30,6 @@ import java.util.function.Consumer;
  */
 @FunctionalInterface
 public interface TeConsumer<T, U, O> {
-    
     /**
      * 对给定的参数执行此操作
      *
@@ -40,7 +38,7 @@ public interface TeConsumer<T, U, O> {
      * @param o 第三个输入参数
      */
     void accept(T t, U u, O o);
-    
+
     /**
      * 链接一个{@code TeConsumer} 三元消费操作，并返回一个带有执行顺序的三元消费者
      *
@@ -51,7 +49,7 @@ public interface TeConsumer<T, U, O> {
     @SuppressWarnings("unused")
     default TeConsumer<T, U, O> andThen(TeConsumer<? super T, ? super U, ? super O> after) {
         Objects.requireNonNull(after);
-        
+
         return (l, c, r) -> {
             accept(l, c, r);
             after.accept(l, c, r);

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util;
 
 import java.util.*;
@@ -26,13 +25,12 @@ import java.util.function.Predicate;
  * @since 2.0
  */
 public class Lists {
-    
+
     /**
      * 禁止实例化
      */
-    private Lists() {
-    }
-    
+    private Lists() {}
+
     /**
      * 获取列表元素的类名
      *
@@ -45,7 +43,7 @@ public class Lists {
         }
         return classNames(list.iterator());
     }
-    
+
     /**
      * 获取迭代器的元素类名
      *
@@ -56,14 +54,14 @@ public class Lists {
         if (Objects.isNull(iterator)) {
             return Strings.empty();
         }
-        
+
         StringJoiner sj = new StringJoiner(", ", "[", "]");
         while (iterator.hasNext()) {
             sj.add(iterator.next().getClass().getName());
         }
         return sj.toString();
     }
-    
+
     /**
      * 合并列表数据
      *
@@ -84,13 +82,13 @@ public class Lists {
             }
             return mergeList;
         }
-        
+
         for (List list : lists) {
             mergeList.addAll(list);
         }
         return mergeList;
     }
-    
+
     /**
      * 统计列表中符合条件的列表数据
      *
@@ -105,7 +103,7 @@ public class Lists {
     public static <T> List<T> statistic(List<T> list, Predicate<T> condition) {
         Objects.requireNonNull(list);
         Objects.requireNonNull(condition);
-        
+
         ArrayList<T> statisticResult = new ArrayList<>();
         for (T statisticObj : list) {
             if (condition.test(statisticObj)) {

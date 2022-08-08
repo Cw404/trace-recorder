@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util;
 
 import java.util.Objects;
@@ -30,13 +29,12 @@ import java.util.Objects;
  * @since 1.0
  */
 public final class Symbols {
-    
+
     /**
      * 禁止实例化
      */
-    private Symbols() {
-    }
-    
+    private Symbols() {}
+
     /**
      * 空格符号
      */
@@ -57,7 +55,7 @@ public final class Symbols {
      * 连接符号
      */
     private static final Symbol CONNECTIVE = new Symbol("-", 1);
-    
+
     /**
      * 获取空格符
      *
@@ -67,7 +65,7 @@ public final class Symbols {
     public static String space() {
         return SPACE.getSymbol();
     }
-    
+
     /**
      * 获取制表符号
      *
@@ -77,7 +75,7 @@ public final class Symbols {
     public static String tab() {
         return TAB.getSymbol();
     }
-    
+
     /**
      * 获取换行符号
      *
@@ -86,7 +84,7 @@ public final class Symbols {
     public static String lineSeparator() {
         return LINE_SEPARATOR.getSymbol();
     }
-    
+
     /**
      * 获取连接符号
      *
@@ -96,7 +94,7 @@ public final class Symbols {
     public static String connective() {
         return CONNECTIVE.getSymbol();
     }
-    
+
     /**
      * 生成指定数量符号
      *
@@ -108,12 +106,12 @@ public final class Symbols {
     public static String generate(String originSymbol, int size) {
         return new Symbol(originSymbol, size).getSymbol();
     }
-    
+
     /**
      * 符号
      */
     private static class Symbol {
-        
+
         /**
          * 原始符号
          */
@@ -126,7 +124,7 @@ public final class Symbols {
          * 最终符号
          */
         private String ultimateSymbol;
-        
+
         /**
          * 初始化符号
          *
@@ -137,7 +135,7 @@ public final class Symbols {
             this.originSymbol = originSymbol;
             this.size = size;
         }
-        
+
         /**
          * 获取符号
          *

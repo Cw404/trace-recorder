@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.enhance;
 
 import cn.xusc.trace.EnhanceInfo;
 import cn.xusc.trace.constant.Temporary;
 import cn.xusc.trace.exception.TraceException;
-
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -30,19 +28,19 @@ import java.util.Objects;
  * @since 1.0
  */
 public class StackInfoEnhancer implements InfoEnhancer {
-    
+
     /**
      * 忽略的栈包名
      */
     private static final String[] IGNORE_STACK_PACKAGE_NAME = Temporary.IGNORE_STACK_PACKAGE_NAME;
-    
+
     static {
         /*
           为二分查找前进行排序
          */
         Arrays.sort(IGNORE_STACK_PACKAGE_NAME);
     }
-    
+
     @Override
     public EnhanceInfo enhance(EnhanceInfo eInfo) {
         /*
@@ -69,15 +67,22 @@ public class StackInfoEnhancer implements InfoEnhancer {
         }
         return eInfo;
     }
-    
+
     @Override
     public EnhanceInfo setWriteInfo(EnhanceInfo eInfo) {
         /*
           根据增强信息临时值决定是否进行堆栈信息填充处理
          */
         if ((boolean) eInfo.getTemporaryValue(Temporary.ENABLE_STACK)) {
-            eInfo.setWriteInfo(String.format("%s.%s()[%d] - %s", eInfo.getClassName(), eInfo.getMethodName(),
-                    eInfo.getLineNumber(), eInfo.getInfo()));
+            eInfo.setWriteInfo(
+                String.format(
+                    "%s.%s()[%d] - %s",
+                    eInfo.getClassName(),
+                    eInfo.getMethodName(),
+                    eInfo.getLineNumber(),
+                    eInfo.getInfo()
+                )
+            );
         }
         return eInfo;
     }

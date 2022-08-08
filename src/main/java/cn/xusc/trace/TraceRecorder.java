@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace;
 
 import cn.xusc.trace.config.TraceRecorderConfig;
@@ -32,7 +31,6 @@ import cn.xusc.trace.record.InfoRecorder;
 import cn.xusc.trace.util.FastList;
 import cn.xusc.trace.util.Lists;
 import cn.xusc.trace.util.Memo;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -53,7 +51,7 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0
  */
 public class TraceRecorder {
-    
+
     /**
      * 信息过滤器链
      */
@@ -66,64 +64,64 @@ public class TraceRecorder {
      * 信息记录器链
      */
     private final List<InfoRecorder> INFO_RECORDERS = new FastList<>(InfoRecorder.class);
-    
+
     /**
      * 跟踪记录仪备忘录
      *
      * @since 2.2
      */
     private Memo memo;
-    
+
     /**
      * 基础记忆标签
      *
      * @since 2.2
      */
     private String baseLabel;
-    
+
     /**
      * 脏的信息增强器链标识
      *
      * @since 2.4
      */
     private boolean dirtyInfoEnhancers;
-    
+
     /**
      * 跟踪处理器
      *
      * @since 2.0
      */
     private final TraceHandler TRACE_HANDLER;
-    
+
     /**
      * 记录标签
      */
     private RecordLabel LABEL;
-    
+
     /**
      * 启用堆栈信息
      */
     private boolean enableStack;
-    
+
     /**
      * 启用短类名
      */
     private boolean enableShortClassName;
-    
+
     /**
      * 启用线程名
      *
      * @since 2.0
      */
     private boolean enableThreadName;
-    
+
     /**
      * 关闭标识
      *
      * @since 2.2.1
      */
     private boolean closed;
-    
+
     {
         /*
           初始化基础跟踪记录仪
@@ -134,12 +132,11 @@ public class TraceRecorder {
         INFO_ENHANCERS.add(new ShortClassNameInfoEnhancer());
         INFO_ENHANCERS.add(new ThreadInfoEnhancer());
         INFO_RECORDERS.add(new ConsoleInfoRecorder());
-        
+
         enableStack = true;
         enableThreadName = true;
-        
     }
-    
+
     /**
      * 基础构造
      *
@@ -148,7 +145,7 @@ public class TraceRecorder {
     public TraceRecorder() {
         TRACE_HANDLER = new SyncTraceHandler(this);
     }
-    
+
     /**
      * 异步标识构造
      *
@@ -158,7 +155,7 @@ public class TraceRecorder {
     public TraceRecorder(boolean enableAsync) {
         TRACE_HANDLER = enableAsync ? new AsyncTraceHandler(this) : new SyncTraceHandler(this);
     }
-    
+
     /**
      * 异步处理器的跟踪记录仪构造
      *
@@ -173,7 +170,7 @@ public class TraceRecorder {
         }
         TRACE_HANDLER = new AsyncTraceHandler(this, taskHandlerSize);
     }
-    
+
     /**
      * 配置构造
      *
@@ -223,7 +220,7 @@ public class TraceRecorder {
         }
         TRACE_HANDLER = new SyncTraceHandler(this);
     }
-    
+
     /**
      * 添加信息过滤器
      *
@@ -235,7 +232,7 @@ public class TraceRecorder {
         memoryPoint();
         return INFO_FILTERS.add(filter);
     }
-    
+
     /**
      * 添加信息增强器
      *
@@ -271,7 +268,7 @@ public class TraceRecorder {
         }
         return INFO_ENHANCERS.add(enhancer);
     }
-    
+
     /**
      * 添加信息记录器
      *
@@ -283,7 +280,7 @@ public class TraceRecorder {
         memoryPoint();
         return INFO_RECORDERS.add(recorder);
     }
-    
+
     /**
      * 移除信息过滤器
      *
@@ -295,7 +292,7 @@ public class TraceRecorder {
         verifyClosed();
         return INFO_FILTERS.remove(filter);
     }
-    
+
     /**
      * 移除信息增强器
      *
@@ -307,7 +304,7 @@ public class TraceRecorder {
         verifyClosed();
         return INFO_ENHANCERS.remove(enhancer);
     }
-    
+
     /**
      * 移除信息记录器
      *
@@ -319,7 +316,7 @@ public class TraceRecorder {
         verifyClosed();
         return INFO_RECORDERS.remove(recorder);
     }
-    
+
     /**
      * 获取信息过滤器集
      *
@@ -330,7 +327,7 @@ public class TraceRecorder {
         verifyClosed();
         return INFO_FILTERS;
     }
-    
+
     /**
      * 获取信息增强器集
      *
@@ -344,13 +341,14 @@ public class TraceRecorder {
               脏恢复
              */
             List<?> list = (List<?>) memo.read(baseLabel);
-            Lists.statistic(list, component -> component instanceof InfoEnhancer)
-                    .forEach(component -> INFO_ENHANCERS.add((InfoEnhancer) component));
+            Lists
+                .statistic(list, component -> component instanceof InfoEnhancer)
+                .forEach(component -> INFO_ENHANCERS.add((InfoEnhancer) component));
             dirtyInfoEnhancers = false;
         }
         return INFO_ENHANCERS;
     }
-    
+
     /**
      * 获取信息记录器集
      *
@@ -361,7 +359,7 @@ public class TraceRecorder {
         verifyClosed();
         return INFO_RECORDERS;
     }
-    
+
     /**
      * 记忆点
      *
@@ -373,7 +371,7 @@ public class TraceRecorder {
         if (Objects.isNull(memo)) memo = new Memo();
         baseLabel = memo.storage(Lists.merge(getInfoFilters(), getInfoEnhancers(), getInfoRecorders()));
     }
-    
+
     /**
      * 重置特殊的结构
      *
@@ -384,7 +382,7 @@ public class TraceRecorder {
      * @return 重置后详情
      * @since 2.2
      */
-    @SuppressWarnings({"SameReturnValue", "ConstantConditions"})
+    @SuppressWarnings({ "SameReturnValue", "ConstantConditions" })
     public boolean resetSpecial() {
         verifyClosed();
         if (Objects.isNull(baseLabel)) {
@@ -405,7 +403,7 @@ public class TraceRecorder {
         }
         return true;
     }
-    
+
     /**
      * 记录所有
      *
@@ -419,7 +417,7 @@ public class TraceRecorder {
         LABEL = RecordLabel.ALL;
         return true;
     }
-    
+
     /**
      * 隐藏所有
      *
@@ -433,7 +431,7 @@ public class TraceRecorder {
         LABEL = RecordLabel.HIDE;
         return true;
     }
-    
+
     /**
      * 启用短类名
      *
@@ -449,7 +447,7 @@ public class TraceRecorder {
         verifyClosed();
         return enableShortClassName = true;
     }
-    
+
     /**
      * 禁用短类名
      *
@@ -469,7 +467,7 @@ public class TraceRecorder {
         enableShortClassName = false;
         return true;
     }
-    
+
     /**
      * 获取启用短类名详情
      *
@@ -480,7 +478,7 @@ public class TraceRecorder {
         verifyClosed();
         return enableShortClassName;
     }
-    
+
     /**
      * 启用线程名
      *
@@ -497,7 +495,7 @@ public class TraceRecorder {
         verifyClosed();
         return enableThreadName = true;
     }
-    
+
     /**
      * 禁用线程名
      *
@@ -517,7 +515,7 @@ public class TraceRecorder {
         enableThreadName = false;
         return true;
     }
-    
+
     /**
      * 获取启用线程名详情
      *
@@ -528,7 +526,7 @@ public class TraceRecorder {
         verifyClosed();
         return enableThreadName;
     }
-    
+
     /**
      * 启用堆栈信息增强
      * <p>
@@ -543,7 +541,7 @@ public class TraceRecorder {
         verifyClosed();
         return enableStack = true;
     }
-    
+
     /**
      * 禁用堆栈信息增强
      * <p>
@@ -560,7 +558,7 @@ public class TraceRecorder {
         enableStack = false;
         return true;
     }
-    
+
     /**
      * 获取启用堆栈信息增强详情
      *
@@ -571,7 +569,7 @@ public class TraceRecorder {
         verifyClosed();
         return enableStack;
     }
-    
+
     /**
      * 记录信息
      *
@@ -581,7 +579,7 @@ public class TraceRecorder {
         verifyClosed();
         log(info, Objects.requireNonNullElse(LABEL, RecordLabel.NOW));
     }
-    
+
     /**
      * 记录格式信息
      *
@@ -593,7 +591,7 @@ public class TraceRecorder {
         verifyClosed();
         log(info, Objects.requireNonNullElse(LABEL, RecordLabel.NOW), argArray);
     }
-    
+
     /**
      * 不记录信息
      *
@@ -604,7 +602,7 @@ public class TraceRecorder {
         verifyClosed();
         log(info, Objects.requireNonNullElse(LABEL, RecordLabel.HIDE));
     }
-    
+
     /**
      * 不记录格式信息
      *
@@ -616,7 +614,7 @@ public class TraceRecorder {
         verifyClosed();
         log(info, Objects.requireNonNullElse(LABEL, RecordLabel.HIDE), argArray);
     }
-    
+
     /**
      * 记录信息
      *
@@ -631,7 +629,7 @@ public class TraceRecorder {
     private void log(String info, RecordLabel label, Object... argArray) {
         TRACE_HANDLER.handle(info, label, argArray);
     }
-    
+
     /**
      * 处理器关闭
      *
@@ -642,7 +640,7 @@ public class TraceRecorder {
         closed = true;
         TRACE_HANDLER.shutdown();
     }
-    
+
     /**
      * 处理器关闭，会处理完指定时间未完成的任务
      *
@@ -656,7 +654,7 @@ public class TraceRecorder {
         closed = true;
         TRACE_HANDLER.shutdown(timeout, timeUnit);
     }
-    
+
     /**
      * 验证跟踪记录仪是否已关闭
      *
@@ -668,7 +666,7 @@ public class TraceRecorder {
             throw new TraceClosedException("TraceRecorder is closed");
         }
     }
-    
+
     /**
      * 跟踪记录仪详情
      *
@@ -676,15 +674,25 @@ public class TraceRecorder {
      */
     @Override
     public String toString() {
-        return "TraceRecorder{" +
-                "INFO_FILTERS=" + Lists.classNames(INFO_FILTERS) +
-                ", INFO_ENHANCERS=" + Lists.classNames(INFO_ENHANCERS) +
-                ", INFO_RECORDERS=" + Lists.classNames(INFO_RECORDERS) +
-                ", TRACE_HANDLER=" + TRACE_HANDLER.getClass().getName() +
-                ", LABEL=" + LABEL +
-                ", enableStack=" + enableStack +
-                ", enableShortClassName=" + enableShortClassName +
-                ", enableThreadName=" + enableThreadName +
-                '}';
+        return (
+            "TraceRecorder{" +
+            "INFO_FILTERS=" +
+            Lists.classNames(INFO_FILTERS) +
+            ", INFO_ENHANCERS=" +
+            Lists.classNames(INFO_ENHANCERS) +
+            ", INFO_RECORDERS=" +
+            Lists.classNames(INFO_RECORDERS) +
+            ", TRACE_HANDLER=" +
+            TRACE_HANDLER.getClass().getName() +
+            ", LABEL=" +
+            LABEL +
+            ", enableStack=" +
+            enableStack +
+            ", enableShortClassName=" +
+            enableShortClassName +
+            ", enableThreadName=" +
+            enableThreadName +
+            '}'
+        );
     }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.handle;
 
 import cn.xusc.trace.TraceRecorder;
@@ -23,14 +22,13 @@ import cn.xusc.trace.exception.TraceTimeoutException;
 import cn.xusc.trace.util.concurrent.Disruptors;
 import com.lmax.disruptor.TimeoutException;
 import com.lmax.disruptor.dsl.Disruptor;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Objects;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 异步处理器
@@ -39,27 +37,27 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since 2.0
  */
 public class AsyncTraceHandler extends BaseTraceHandler {
-    
+
     /**
      * {@link Disruptor}
      */
     private final Disruptor<Disruptors.GeneralEvent> DISRUPTOR;
-    
+
     /**
      * 缓冲大小
      */
     private static final int BUFFER_SIZE = 2 << 4;
-    
+
     /**
      * 通用生产者
      */
     private Disruptors.GeneralProducer producer;
-    
+
     /**
      * 任务处理者数量
      */
     private final int TASK_HANDLER_SIZE;
-    
+
     /**
      * 基本构造
      *
@@ -72,7 +70,7 @@ public class AsyncTraceHandler extends BaseTraceHandler {
         initConsumerModel(DISRUPTOR);
         initProducerModel(DISRUPTOR);
     }
-    
+
     /**
      * 指定任务处理器数量构造
      *
@@ -90,7 +88,7 @@ public class AsyncTraceHandler extends BaseTraceHandler {
         initConsumerModel(DISRUPTOR);
         initProducerModel(DISRUPTOR);
     }
-    
+
     /**
      * 初始化消费者模型
      *
@@ -113,7 +111,7 @@ public class AsyncTraceHandler extends BaseTraceHandler {
               构建有事件竞争的消费者处理集群
              */
             for (int i = 0; i < TASK_HANDLER_SIZE; i++) {
-                consumer.addConsumptionPatterns((event) -> {
+                consumer.addConsumptionPatterns(event -> {
                     Task task = (Task) event.get();
                     handling(task.getInfo(), task.getLabel(), task.getException(), task.getArgArray());
                 });
@@ -121,7 +119,7 @@ public class AsyncTraceHandler extends BaseTraceHandler {
         }
         consumer.consume();
     }
-    
+
     /**
      * 初始化生产者模型
      *
@@ -130,7 +128,7 @@ public class AsyncTraceHandler extends BaseTraceHandler {
     private void initProducerModel(Disruptor<Disruptors.GeneralEvent> disruptor) {
         this.producer = Disruptors.producer(disruptor);
     }
-    
+
     /**
      * 信息处理
      *
@@ -146,12 +144,12 @@ public class AsyncTraceHandler extends BaseTraceHandler {
         Task task = new Task(info, label, new TraceException(), argArray);
         producer.provide(() -> task);
     }
-    
+
     @Override
     public void shutdown() {
         DISRUPTOR.shutdown();
     }
-    
+
     @Override
     public void shutdown(long timeout, TimeUnit timeUnit) throws TraceTimeoutException {
         try {
@@ -160,7 +158,7 @@ public class AsyncTraceHandler extends BaseTraceHandler {
             throw new TraceTimeoutException(e);
         }
     }
-    
+
     /**
      * 异步处理器详情
      *
@@ -169,13 +167,18 @@ public class AsyncTraceHandler extends BaseTraceHandler {
     @Override
     public String toString() {
         String producerStatue = Objects.nonNull(producer) ? "true" : "false";
-        return "AsyncTraceHandler{" +
-                "DISRUPTOR=" + DISRUPTOR +
-                ", producer=" + producerStatue +
-                ", TASK_HANDLER_SIZE=" + TASK_HANDLER_SIZE +
-                '}';
+        return (
+            "AsyncTraceHandler{" +
+            "DISRUPTOR=" +
+            DISRUPTOR +
+            ", producer=" +
+            producerStatue +
+            ", TASK_HANDLER_SIZE=" +
+            TASK_HANDLER_SIZE +
+            '}'
+        );
     }
-    
+
     /**
      * 任务
      *
@@ -187,7 +190,7 @@ public class AsyncTraceHandler extends BaseTraceHandler {
     @Getter
     @AllArgsConstructor
     private class Task {
-        
+
         /**
          * 信息
          */
@@ -205,32 +208,32 @@ public class AsyncTraceHandler extends BaseTraceHandler {
          */
         private Object[] argArray;
     }
-    
+
     /**
      * 任务处理者工厂
      */
     private class TaskHandlerFactory implements ThreadFactory {
-        
+
         /**
          * 原子性编号生成器
          */
         private final AtomicLong AL = new AtomicLong(1);
-        
+
         @Override
         public Thread newThread(Runnable r) {
             return new TaskHandler(r, "TaskHandler-" + AL.getAndIncrement());
         }
     }
-    
+
     /**
      * 任务处理者
      */
     private class TaskHandler extends Thread {
-        
+
         public TaskHandler(Runnable target, String name) {
             super(target, name);
         }
-        
+
         @SuppressWarnings("EmptyMethod")
         @Override
         public void run() {

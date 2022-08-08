@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.handle;
 
 import cn.xusc.trace.constant.RecordLabel;
 import cn.xusc.trace.exception.TraceTimeoutException;
-
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -28,7 +26,6 @@ import java.util.concurrent.TimeUnit;
  * @since 2.0
  */
 public interface TraceHandler {
-    
     /**
      * 信息处理
      *
@@ -37,14 +34,14 @@ public interface TraceHandler {
      * @param argArray 参数列表
      */
     void handle(String info, RecordLabel label, Object... argArray);
-    
+
     /**
      * 处理器关闭
      *
      * @since 2.1
      */
     void shutdown();
-    
+
     /**
      * 处理器关闭，会处理完指定时间未完成的任务
      *

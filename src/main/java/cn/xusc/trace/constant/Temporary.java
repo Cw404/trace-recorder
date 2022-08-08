@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.constant;
 
 /**
@@ -27,39 +26,39 @@ package cn.xusc.trace.constant;
  * @since 1.0
  */
 public class Temporary {
-    
+
     /**
      * 启用栈属性名
      */
     public static final String ENABLE_STACK = "enableStack";
-    
+
     /**
      * 启用短类名属性名
      */
     public static final String ENABLE_SHORT_CLASS_NAME = "enableShortClassName";
-    
+
     /**
      * 启用线程名属性名
      *
      * @since 2.0
      */
     public static final String ENABLE_THREAD_NAME = "enableThreadName";
-    
+
     /**
      * 异常属性名
      *
      * @since 2.0
      */
     public static final String EXCEPTION = "exception";
-    
+
     /**
      * 忽略栈包名
      */
-    public static final String[] IGNORE_STACK_PACKAGE_NAME = new String[]{
-            "cn.xusc.trace.handle.BaseTraceHandler",
-            "cn.xusc.trace.handle.SyncTraceHandler",
-            "cn.xusc.trace.handle.AsyncTraceHandler",
-            "cn.xusc.trace.TraceRecorder",
-            "cn.xusc.trace.util.Recorders"
+    public static final String[] IGNORE_STACK_PACKAGE_NAME = new String[] {
+        "cn.xusc.trace.handle.BaseTraceHandler",
+        "cn.xusc.trace.handle.SyncTraceHandler",
+        "cn.xusc.trace.handle.AsyncTraceHandler",
+        "cn.xusc.trace.TraceRecorder",
+        "cn.xusc.trace.util.Recorders",
     };
 }

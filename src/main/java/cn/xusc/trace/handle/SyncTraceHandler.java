@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.handle;
 
 import cn.xusc.trace.TraceRecorder;
@@ -27,7 +26,7 @@ import cn.xusc.trace.exception.TraceException;
  * @since 2.0
  */
 public class SyncTraceHandler extends BaseTraceHandler {
-    
+
     /**
      * 基本构造
      *
@@ -36,7 +35,7 @@ public class SyncTraceHandler extends BaseTraceHandler {
     public SyncTraceHandler(TraceRecorder recorder) {
         super(recorder);
     }
-    
+
     @Override
     public void doHandle(String info, RecordLabel label, Object... argArray) {
         handling(info, label, new TraceException(), argArray);

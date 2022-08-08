@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace;
 
 import java.io.Serializable;
@@ -28,9 +27,9 @@ import java.util.Objects;
  * @since 1.0
  */
 public class EnhanceInfo implements Serializable {
-    
+
     private static final long serialVersionUID = -2646424027034058288L;
-    
+
     /**
      * 记录的类名
      */
@@ -55,7 +54,7 @@ public class EnhanceInfo implements Serializable {
      * 临时存储的值
      */
     private final Map<String, Object> temporaryValue = new HashMap<>();
-    
+
     /**
      * 包含消息的构造
      *
@@ -64,7 +63,7 @@ public class EnhanceInfo implements Serializable {
     public EnhanceInfo(String info) {
         this.info = info;
     }
-    
+
     /**
      * 获取类名
      *
@@ -73,7 +72,7 @@ public class EnhanceInfo implements Serializable {
     public String getClassName() {
         return className;
     }
-    
+
     /**
      * 设置类名
      *
@@ -82,7 +81,7 @@ public class EnhanceInfo implements Serializable {
     public void setClassName(String className) {
         this.className = className;
     }
-    
+
     /**
      * 获取方法名
      *
@@ -91,7 +90,7 @@ public class EnhanceInfo implements Serializable {
     public String getMethodName() {
         return methodName;
     }
-    
+
     /**
      * 设置方法名
      *
@@ -100,7 +99,7 @@ public class EnhanceInfo implements Serializable {
     public void setMethodName(String methodName) {
         this.methodName = methodName;
     }
-    
+
     /**
      * 获取行号
      *
@@ -109,8 +108,7 @@ public class EnhanceInfo implements Serializable {
     public int getLineNumber() {
         return lineNumber;
     }
-    
-    
+
     /**
      * 设置行号
      *
@@ -119,7 +117,7 @@ public class EnhanceInfo implements Serializable {
     public void setLineNumber(int lineNumber) {
         this.lineNumber = lineNumber;
     }
-    
+
     /**
      * 获取信息
      *
@@ -128,7 +126,7 @@ public class EnhanceInfo implements Serializable {
     public String getInfo() {
         return info;
     }
-    
+
     /**
      * 设置消息
      *
@@ -137,7 +135,7 @@ public class EnhanceInfo implements Serializable {
     public void setInfo(String info) {
         this.info = info;
     }
-    
+
     /**
      * 获取写消息
      *
@@ -146,7 +144,7 @@ public class EnhanceInfo implements Serializable {
     public String getWriteInfo() {
         return writeInfo;
     }
-    
+
     /**
      * 设置写消息
      *
@@ -155,7 +153,7 @@ public class EnhanceInfo implements Serializable {
     public void setWriteInfo(String writeInfo) {
         this.writeInfo = writeInfo;
     }
-    
+
     /**
      * 获取临时值
      *
@@ -165,7 +163,7 @@ public class EnhanceInfo implements Serializable {
     public Object getTemporaryValue(String key) {
         return temporaryValue.get(key);
     }
-    
+
     /**
      * 设置临时值
      *
@@ -177,7 +175,7 @@ public class EnhanceInfo implements Serializable {
         Objects.requireNonNull(key);
         this.temporaryValue.put(key, value);
     }
-    
+
     /**
      * 增强信息详情
      *
@@ -185,13 +183,25 @@ public class EnhanceInfo implements Serializable {
      */
     @Override
     public String toString() {
-        return "EnhanceInfo{" +
-                "className='" + className + '\'' +
-                ", methodName='" + methodName + '\'' +
-                ", lineNumber=" + lineNumber +
-                ", info='" + info + '\'' +
-                ", writeInfo='" + writeInfo + '\'' +
-                ", temporaryValue=" + temporaryValue +
-                '}';
+        return (
+            "EnhanceInfo{" +
+            "className='" +
+            className +
+            '\'' +
+            ", methodName='" +
+            methodName +
+            '\'' +
+            ", lineNumber=" +
+            lineNumber +
+            ", info='" +
+            info +
+            '\'' +
+            ", writeInfo='" +
+            writeInfo +
+            '\'' +
+            ", temporaryValue=" +
+            temporaryValue +
+            '}'
+        );
     }
 }

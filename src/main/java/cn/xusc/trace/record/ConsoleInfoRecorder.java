@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.record;
 
 import java.io.PrintStream;
@@ -25,15 +24,14 @@ import java.io.PrintStream;
  * @since 1.0
  */
 public class ConsoleInfoRecorder implements InfoRecorder {
-    
+
     /**
      * 系统默认输出流
      */
     private static final PrintStream print = System.out;
-    
+
     @Override
     public void record(String writeInfo) {
         print.print(writeInfo);
     }
-    
 }

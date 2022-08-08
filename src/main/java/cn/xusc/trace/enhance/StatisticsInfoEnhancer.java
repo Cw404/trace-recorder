@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.enhance;
 
 import cn.xusc.trace.EnhanceInfo;
 import cn.xusc.trace.TraceRecorder;
 import cn.xusc.trace.util.Runtimes;
-
 import java.io.Closeable;
 import java.util.Objects;
 
@@ -38,17 +36,17 @@ import java.util.Objects;
  * @since 1.0
  */
 public abstract class StatisticsInfoEnhancer implements InfoEnhancer, Closeable {
-    
+
     /**
      * 跟踪记录仪
      */
     private final TraceRecorder TRACE_RECORDER;
-    
+
     /**
      * 是否关闭
      */
     private boolean isClose;
-    
+
     /**
      * 应用跟踪记录仪进行详细信息记录
      *
@@ -58,13 +56,13 @@ public abstract class StatisticsInfoEnhancer implements InfoEnhancer, Closeable 
     public StatisticsInfoEnhancer(TraceRecorder traceRecorder) {
         Objects.requireNonNull(traceRecorder);
         this.TRACE_RECORDER = traceRecorder;
-        
+
         /*
           注册JVM关闭显示统计信息钩子
          */
         Runtimes.addCleanTask(this);
     }
-    
+
     @Override
     public EnhanceInfo enhance(EnhanceInfo eInfo) {
         if (isClose) {
@@ -75,7 +73,7 @@ public abstract class StatisticsInfoEnhancer implements InfoEnhancer, Closeable 
         }
         return doEnhance(eInfo);
     }
-    
+
     @Override
     public EnhanceInfo setWriteInfo(EnhanceInfo eInfo) {
         if (isClose) {
@@ -86,7 +84,7 @@ public abstract class StatisticsInfoEnhancer implements InfoEnhancer, Closeable 
         }
         return eInfo;
     }
-    
+
     @Override
     public void close() {
         isClose = true;
@@ -97,14 +95,14 @@ public abstract class StatisticsInfoEnhancer implements InfoEnhancer, Closeable 
              */
             return;
         }
-    
+
         /*
           最终统计不需要开启堆栈信息增强
          */
         TRACE_RECORDER.disableStackInfo();
         TRACE_RECORDER.log(showInfo);
     }
-    
+
     /**
      * 子类增强
      *
@@ -112,7 +110,7 @@ public abstract class StatisticsInfoEnhancer implements InfoEnhancer, Closeable 
      * @return 增强后消息
      */
     protected abstract EnhanceInfo doEnhance(EnhanceInfo eInfo);
-    
+
     /**
      * 显示信息
      *
