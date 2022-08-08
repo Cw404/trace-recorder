@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.enhance;
 
 import cn.xusc.trace.EnhanceInfo;
@@ -29,7 +28,6 @@ import cn.xusc.trace.EnhanceInfo;
  * @since 1.0
  */
 public interface InfoEnhancer {
-    
     /**
      * 信息增强
      *
@@ -37,7 +35,7 @@ public interface InfoEnhancer {
      * @return 增强后信息
      */
     EnhanceInfo enhance(EnhanceInfo eInfo);
-    
+
     /**
      * 设置写出消息
      *

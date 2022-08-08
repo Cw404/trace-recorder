@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.enhance;
 
 import cn.xusc.trace.EnhanceInfo;
@@ -26,20 +25,28 @@ import cn.xusc.trace.constant.Temporary;
  * @since 2.0
  */
 public class ThreadInfoEnhancer implements InfoEnhancer {
-    
+
     @Override
     public EnhanceInfo enhance(EnhanceInfo eInfo) {
         return eInfo;
     }
-    
+
     @Override
     public EnhanceInfo setWriteInfo(EnhanceInfo eInfo) {
         /*
           根据增强信息临时值决定是否进行线程信息处理
          */
         if ((boolean) eInfo.getTemporaryValue(Temporary.ENABLE_THREAD_NAME)) {
-            eInfo.setWriteInfo(String.format("%s %s.%s()[%d] - %s", Thread.currentThread().getName(), eInfo.getClassName(), eInfo.getMethodName(),
-                    eInfo.getLineNumber(), eInfo.getInfo()));
+            eInfo.setWriteInfo(
+                String.format(
+                    "%s %s.%s()[%d] - %s",
+                    Thread.currentThread().getName(),
+                    eInfo.getClassName(),
+                    eInfo.getMethodName(),
+                    eInfo.getLineNumber(),
+                    eInfo.getInfo()
+                )
+            );
         }
         return eInfo;
     }

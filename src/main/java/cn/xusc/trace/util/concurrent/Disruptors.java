@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util.concurrent;
 
 import cn.xusc.trace.exception.TraceException;
@@ -22,7 +21,6 @@ import com.lmax.disruptor.*;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import com.lmax.disruptor.util.DaemonThreadFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,13 +40,12 @@ import java.util.function.Supplier;
  * @since 2.0
  */
 public final class Disruptors {
-    
+
     /**
      * 禁止实例化
      */
-    private Disruptors() {
-    }
-    
+    private Disruptors() {}
+
     /**
      * 生成Disruptor
      *
@@ -59,7 +56,7 @@ public final class Disruptors {
     public static Disruptor<GeneralEvent> generate(int bufferSize) {
         return doGenerate(bufferSize, DaemonThreadFactory.INSTANCE, false, new BlockingWaitStrategy());
     }
-    
+
     /**
      * 生成Disruptor
      *
@@ -70,10 +67,14 @@ public final class Disruptors {
      * @throws TraceException       if {@code bufferSize} is less 1
      * @throws NullPointerException if {@code threadFactory} is null
      */
-    public static Disruptor<GeneralEvent> generate(int bufferSize, ThreadFactory threadFactory, boolean isMultipleProducer) {
+    public static Disruptor<GeneralEvent> generate(
+        int bufferSize,
+        ThreadFactory threadFactory,
+        boolean isMultipleProducer
+    ) {
         return doGenerate(bufferSize, threadFactory, isMultipleProducer, new BlockingWaitStrategy());
     }
-    
+
     /**
      * 生成Disruptor
      *
@@ -87,10 +88,15 @@ public final class Disruptors {
      * @throws NullPointerException if {@code waitStrategy} is null
      */
     @SuppressWarnings("unused")
-    public static Disruptor<GeneralEvent> generate(int bufferSize, ThreadFactory threadFactory, boolean isMultipleProducer, WaitStrategy waitStrategy) {
+    public static Disruptor<GeneralEvent> generate(
+        int bufferSize,
+        ThreadFactory threadFactory,
+        boolean isMultipleProducer,
+        WaitStrategy waitStrategy
+    ) {
         return doGenerate(bufferSize, threadFactory, isMultipleProducer, waitStrategy);
     }
-    
+
     /**
      * 真正生成Disruptor
      *
@@ -104,22 +110,27 @@ public final class Disruptors {
      * @throws NullPointerException if {@code waitStrategy} is null
      */
     @SuppressWarnings("unchecked")
-    private static Disruptor<GeneralEvent> doGenerate(int bufferSize, ThreadFactory threadFactory, boolean isMultipleProducer, WaitStrategy waitStrategy) {
+    private static Disruptor<GeneralEvent> doGenerate(
+        int bufferSize,
+        ThreadFactory threadFactory,
+        boolean isMultipleProducer,
+        WaitStrategy waitStrategy
+    ) {
         if (bufferSize < 1) {
             throw new TraceException("bufferSize < 1");
         }
         Objects.requireNonNull(threadFactory);
         Objects.requireNonNull(waitStrategy);
-        
+
         return new Disruptor(
-                new GeneralEventFactory(),
-                bufferSize,
-                threadFactory,
-                isMultipleProducer ? ProducerType.MULTI : ProducerType.SINGLE,
-                waitStrategy
+            new GeneralEventFactory(),
+            bufferSize,
+            threadFactory,
+            isMultipleProducer ? ProducerType.MULTI : ProducerType.SINGLE,
+            waitStrategy
         );
     }
-    
+
     /**
      * 生成一个通用生产者
      *
@@ -131,7 +142,7 @@ public final class Disruptors {
     public static GeneralProducer producer(Disruptor<GeneralEvent> disruptor) {
         return new GeneralProducer(disruptor);
     }
-    
+
     /**
      * 生成一个通用消费者
      *
@@ -142,19 +153,19 @@ public final class Disruptors {
     public static GeneralConsumer consumer(Disruptor<GeneralEvent> disruptor) {
         return new GeneralConsumer(disruptor);
     }
-    
+
     /**
      * 通用生产者
      *
      * <p>生产事件</p>
      */
     public static class GeneralProducer<T> {
-        
+
         /**
          * {@link RingBuffer}
          */
         private final RingBuffer<GeneralEvent> RING_BUFFER;
-        
+
         /**
          * 基础构造
          *
@@ -163,10 +174,10 @@ public final class Disruptors {
          */
         public GeneralProducer(Disruptor<GeneralEvent> disruptor) {
             Objects.requireNonNull(disruptor);
-            
+
             this.RING_BUFFER = disruptor.getRingBuffer();
         }
-        
+
         /**
          * 提供一个提供者
          *
@@ -174,14 +185,14 @@ public final class Disruptors {
          * @return 当前通用生产者
          * @throws NullPointerException if {@code supplier} is null
          */
-        @SuppressWarnings({"unchecked", "UnusedReturnValue"})
+        @SuppressWarnings({ "unchecked", "UnusedReturnValue" })
         public GeneralProducer<T> provide(Supplier<T> supplier) {
             Objects.requireNonNull(supplier);
-            
+
             RING_BUFFER.publishEvent((event, sequence, supplier1) -> event.set(supplier1.get()), supplier);
             return this;
         }
-        
+
         /**
          * 提供{@code count}数量的相同提供者
          *
@@ -191,7 +202,7 @@ public final class Disruptors {
          * @throws NullPointerException if {@code supplier} is null
          * @throws TraceException       if {@code count} is less 1
          */
-        @SuppressWarnings({"unchecked", "UnusedReturnValue"})
+        @SuppressWarnings({ "unchecked", "UnusedReturnValue" })
         public GeneralProducer<T> provide(Supplier<T> supplier, int count) {
             Objects.requireNonNull(supplier);
             if (count < 1) {
@@ -203,12 +214,12 @@ public final class Disruptors {
             return this;
         }
     }
-    
+
     /**
      * 通用消费者
      */
     public static class GeneralConsumer {
-        
+
         /**
          * {@link Disruptor}
          */
@@ -221,7 +232,7 @@ public final class Disruptors {
          * 有竞争的工作处理器集
          */
         private final List<WorkHandler<GeneralEvent>> WORK_HANDLERS;
-        
+
         /**
          * 基础构造
          *
@@ -230,12 +241,12 @@ public final class Disruptors {
          */
         public GeneralConsumer(Disruptor<GeneralEvent> disruptor) {
             Objects.requireNonNull(disruptor);
-            
+
             this.DISRUPTOR = disruptor;
             this.EVENT_HANDLERS = new ArrayList<>();
             this.WORK_HANDLERS = new ArrayList<>();
         }
-        
+
         /**
          * 添加一个消费方式
          *
@@ -244,12 +255,14 @@ public final class Disruptors {
          * @param teConsumer 消费者接口
          * @return 当前通用消费者
          */
-        public GeneralConsumer addConsumptionPatterns(TeConsumer<? super GeneralEvent, ? super Long, ? super Boolean> teConsumer) {
+        public GeneralConsumer addConsumptionPatterns(
+            TeConsumer<? super GeneralEvent, ? super Long, ? super Boolean> teConsumer
+        ) {
             EventHandler<GeneralEvent> handler = teConsumer::accept;
             EVENT_HANDLERS.add(handler);
             return this;
         }
-        
+
         /**
          * 添加一个消费方式
          *
@@ -263,7 +276,7 @@ public final class Disruptors {
             WORK_HANDLERS.add(handler);
             return this;
         }
-        
+
         /**
          * 消费
          *
@@ -277,16 +290,16 @@ public final class Disruptors {
             if (!WORK_HANDLERS.isEmpty()) {
                 DISRUPTOR.handleEventsWithWorkerPool(WORK_HANDLERS.toArray(new WorkHandler[0]));
             }
-            
+
             DISRUPTOR.start();
         }
     }
-    
+
     /**
      * 通用事件工厂
      */
     private static class GeneralEventFactory implements EventFactory<GeneralEvent> {
-        
+
         /**
          * 实例化{@code GeneralEvent}对象
          *
@@ -297,19 +310,19 @@ public final class Disruptors {
             return new GeneralEvent();
         }
     }
-    
+
     /**
      * 通用事件
      *
      * @param <T> 事件对象 or 事件值
      */
     public static class GeneralEvent<T> {
-        
+
         /**
          * 事件对象 or 事件值
          */
         private T value;
-        
+
         /**
          * 设置事件值
          *
@@ -318,7 +331,7 @@ public final class Disruptors {
         public void set(T value) {
             this.value = value;
         }
-        
+
         /**
          * 获取事件值
          *

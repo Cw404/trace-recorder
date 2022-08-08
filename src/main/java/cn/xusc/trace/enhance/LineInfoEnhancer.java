@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.enhance;
 
 import cn.xusc.trace.EnhanceInfo;
 import cn.xusc.trace.util.Symbols;
-
 import java.util.Objects;
 
 /**
@@ -32,13 +30,13 @@ import java.util.Objects;
  * @since 1.0
  */
 public class LineInfoEnhancer implements InfoEnhancer {
-    
+
     @Override
     public EnhanceInfo enhance(EnhanceInfo eInfo) {
         eInfo.setInfo(eInfo.getInfo() + Symbols.lineSeparator());
         return eInfo;
     }
-    
+
     @Override
     public EnhanceInfo setWriteInfo(EnhanceInfo eInfo) {
         if (Objects.nonNull(eInfo.getInfo())) {

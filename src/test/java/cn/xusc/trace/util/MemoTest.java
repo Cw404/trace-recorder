@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * 备忘录测试
@@ -29,26 +28,26 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author wangcai
  */
 public class MemoTest {
-    
+
     /**
      * 备忘录
      */
     private Memo memo;
-    
+
     @BeforeEach
     public void initEnvironment() {
         memo = new Memo<>();
     }
-    
+
     @ParameterizedTest
-    @ValueSource(strings = {"1", "2", "3"})
+    @ValueSource(strings = { "1", "2", "3" })
     @DisplayName("Storage value")
     public void storageValue(String value) {
         assertNotNull(memo.storage(value));
     }
-    
+
     @ParameterizedTest
-    @ValueSource(strings = {"1", "2", "3"})
+    @ValueSource(strings = { "1", "2", "3" })
     @DisplayName("Read value, by storage label")
     public void readValue(String value) {
         String label = memo.storage(value);

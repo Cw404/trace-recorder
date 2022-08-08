@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util;
 
 import java.util.UUID;
@@ -25,14 +24,12 @@ import java.util.UUID;
  * @since 2.2
  */
 public final class Randoms {
-    
+
     /**
      * 禁止实例化
      */
-    private Randoms() {
-    
-    }
-    
+    private Randoms() {}
+
     /**
      * 获取一个唯一标识符字符串
      *
@@ -41,7 +38,7 @@ public final class Randoms {
     public static String uuid() {
         return UUID.randomUUID().toString();
     }
-    
+
     /**
      * 获取一个破折号转化的唯一标识符字符串
      *

@@ -13,31 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.xusc.trace.constant;
-
-/**
- * 记录标签
- *
- * <p>
- * {@link #ALL}  记录所有
- * {@link #NOW}  记录目前
- * {@link #HIDE} 记录隐藏
- * </p>
- *
- * @author WangCai
- * @since 1.0
- */
-public enum RecordLabel {
-    /**
-     * 记录所有
-     */
-    ALL,
-    /**
-     * 记录目前
-     */
-    NOW,
-    /**
-     * 记录隐藏
-     */
-    HIDE,
-}

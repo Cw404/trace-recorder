@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.record;
 
 import cn.xusc.trace.annotation.CloseOrder;
 import cn.xusc.trace.exception.TraceException;
 import cn.xusc.trace.util.Runtimes;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,12 +35,12 @@ import java.io.IOException;
  */
 @CloseOrder
 public class FileInfoRecorder implements InfoRecorder, Closeable {
-    
+
     /**
      * 文件写出器
      */
     private final FileWriter writer;
-    
+
     /**
      * 构建一个指定{@link File}的文件信息记录器
      *
@@ -68,7 +66,7 @@ public class FileInfoRecorder implements InfoRecorder, Closeable {
             throw new TraceException(e);
         }
     }
-    
+
     /**
      * {@inheritDoc}
      *
@@ -82,7 +80,7 @@ public class FileInfoRecorder implements InfoRecorder, Closeable {
             throw new TraceException(e);
         }
     }
-    
+
     /**
      * 关闭{@link #writer}
      */

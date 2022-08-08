@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.filter;
 
 import cn.xusc.trace.constant.RecordLabel;
@@ -25,7 +24,7 @@ import cn.xusc.trace.constant.RecordLabel;
  * @since 1.0
  */
 public class RecordLabelInfoFilter implements InfoFilter {
-    
+
     @SuppressWarnings("unused")
     @Override
     public boolean isRecord(String info, RecordLabel label) {

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.enhance;
 
 import cn.xusc.trace.EnhanceInfo;
@@ -30,14 +29,16 @@ import cn.xusc.trace.constant.Temporary;
  * @since 1.0
  */
 public class ShortClassNameInfoEnhancer implements InfoEnhancer {
-    
+
     @Override
     public EnhanceInfo enhance(EnhanceInfo eInfo) {
         /*
           根据增强信息临时值决定是否进行信息处理
          */
-        if ((boolean) eInfo.getTemporaryValue(Temporary.ENABLE_STACK) &&
-                (boolean) eInfo.getTemporaryValue(Temporary.ENABLE_SHORT_CLASS_NAME)) {
+        if (
+            (boolean) eInfo.getTemporaryValue(Temporary.ENABLE_STACK) &&
+            (boolean) eInfo.getTemporaryValue(Temporary.ENABLE_SHORT_CLASS_NAME)
+        ) {
             String className = eInfo.getClassName();
             int pointIndex = className.lastIndexOf(".");
             if (pointIndex > -1) {
@@ -46,16 +47,25 @@ public class ShortClassNameInfoEnhancer implements InfoEnhancer {
         }
         return eInfo;
     }
-    
+
     @Override
     public EnhanceInfo setWriteInfo(EnhanceInfo eInfo) {
         /*
           根据增强信息临时值决定是否进行堆栈信息填充处理
          */
-        if ((boolean) eInfo.getTemporaryValue(Temporary.ENABLE_STACK) &&
-                (boolean) eInfo.getTemporaryValue(Temporary.ENABLE_SHORT_CLASS_NAME)) {
-            eInfo.setWriteInfo(String.format("%s.%s()[%d] - %s", eInfo.getClassName(), eInfo.getMethodName(),
-                    eInfo.getLineNumber(), eInfo.getInfo()));
+        if (
+            (boolean) eInfo.getTemporaryValue(Temporary.ENABLE_STACK) &&
+            (boolean) eInfo.getTemporaryValue(Temporary.ENABLE_SHORT_CLASS_NAME)
+        ) {
+            eInfo.setWriteInfo(
+                String.format(
+                    "%s.%s()[%d] - %s",
+                    eInfo.getClassName(),
+                    eInfo.getMethodName(),
+                    eInfo.getLineNumber(),
+                    eInfo.getInfo()
+                )
+            );
         }
         return eInfo;
     }

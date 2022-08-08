@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util;
 
 import cn.xusc.trace.annotation.CloseOrder;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -30,22 +28,21 @@ import java.util.Objects;
  * @since 1.0
  */
 public final class Runtimes {
-    
+
     /**
      * 禁止实例化
      */
-    private Runtimes() {
-    }
-    
+    private Runtimes() {}
+
     /**
      * 关闭处理队列
      */
     private static final List<AutoCloseable> CLOSEABLES = new ArrayList<>();
-    
+
     static {
         Runtime.getRuntime().addShutdownHook(new ShowdownCleaner());
     }
-    
+
     /**
      * 添加一个清理任务
      *
@@ -58,26 +55,29 @@ public final class Runtimes {
     @SuppressWarnings("ConstantConditions")
     public static void addCleanTask(AutoCloseable closeable) {
         CLOSEABLES.add(closeable);
-        
+
         /*
           确保顺序准确；没有自定义顺序，默认排列最前
          */
         if (CLOSEABLES.size() > 0) {
-            CLOSEABLES.sort(Comparator.comparing(closeable1 -> {
-                CloseOrder closeOrder = closeable1.getClass().getAnnotation(CloseOrder.class);
-                return Objects.isNull(closeOrder) ? Integer.MIN_VALUE : closeOrder.value();
-            }));
+            CLOSEABLES.sort(
+                Comparator.comparing(closeable1 -> {
+                    CloseOrder closeOrder = closeable1.getClass().getAnnotation(CloseOrder.class);
+                    return Objects.isNull(closeOrder) ? Integer.MIN_VALUE : closeOrder.value();
+                })
+            );
         }
     }
-    
+
     /**
      * JVM关闭时的清理线程
      */
     private static class ShowdownCleaner extends Thread {
+
         @Override
         public void run() {
             FastList<Exception> exceptions = new FastList<>(Exception.class);
-            
+
             for (AutoCloseable closeable : CLOSEABLES) {
                 try {
                     closeable.close();

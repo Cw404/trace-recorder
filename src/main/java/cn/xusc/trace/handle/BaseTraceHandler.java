@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.handle;
 
 import cn.xusc.trace.EnhanceInfo;
@@ -25,7 +24,6 @@ import cn.xusc.trace.exception.TraceTimeoutException;
 import cn.xusc.trace.filter.InfoFilter;
 import cn.xusc.trace.record.InfoRecorder;
 import cn.xusc.trace.util.Formats;
-
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -36,12 +34,12 @@ import java.util.concurrent.TimeUnit;
  * @since 2.0
  */
 public abstract class BaseTraceHandler implements TraceHandler {
-    
+
     /**
      * 跟踪记录仪
      */
     protected final TraceRecorder RECORDER;
-    
+
     /**
      * 基本构造
      *
@@ -50,25 +48,25 @@ public abstract class BaseTraceHandler implements TraceHandler {
      */
     public BaseTraceHandler(TraceRecorder recorder) {
         Objects.requireNonNull(recorder);
-        
+
         this.RECORDER = recorder;
     }
-    
+
     @Override
     public void handle(String info, RecordLabel label, Object... argArray) {
         doHandle(info, label, argArray);
     }
-    
+
     @Override
     public void shutdown() {
         // nop
     }
-    
+
     @Override
     public void shutdown(long timeout, TimeUnit timeUnit) throws TraceTimeoutException {
         // nop
     }
-    
+
     /**
      * 信息处理
      *
@@ -77,7 +75,7 @@ public abstract class BaseTraceHandler implements TraceHandler {
      * @param argArray 参数列表
      */
     protected abstract void doHandle(String info, RecordLabel label, Object... argArray);
-    
+
     /**
      * 处理信息流转
      *
@@ -100,7 +98,7 @@ public abstract class BaseTraceHandler implements TraceHandler {
                 break;
             }
         }
-        
+
         if (isRecord) {
             if (Objects.nonNull(argArray) && argArray.length > 0) {
                 /*
@@ -122,7 +120,7 @@ public abstract class BaseTraceHandler implements TraceHandler {
                 enhanceInfo = infoEnhancer.setWriteInfo(enhanceInfo);
                 if (Objects.isNull(enhanceInfo)) return;
             }
-            
+
             String writeInfo = enhanceInfo.getWriteInfo();
             if (Objects.nonNull(writeInfo)) {
                 /*
@@ -132,7 +130,6 @@ public abstract class BaseTraceHandler implements TraceHandler {
                     infoRecorder.record(writeInfo);
                 }
             }
-            
         }
     }
 }

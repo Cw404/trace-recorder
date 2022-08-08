@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.config;
 
 import cn.xusc.trace.enhance.InfoEnhancer;
@@ -21,13 +20,12 @@ import cn.xusc.trace.exception.TraceException;
 import cn.xusc.trace.filter.InfoFilter;
 import cn.xusc.trace.record.InfoRecorder;
 import cn.xusc.trace.util.Lists;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 跟踪记录仪配置
@@ -43,7 +41,7 @@ import java.util.Objects;
 @Getter
 @Builder
 public class TraceRecorderConfig {
-    
+
     /**
      * 信息过滤器链
      */
@@ -56,22 +54,22 @@ public class TraceRecorderConfig {
      * 信息记录器链
      */
     private List<InfoRecorder> infoRecorders;
-    
+
     /**
      * 启用堆栈信息
      */
     private boolean enableStack;
-    
+
     /**
      * 启用短类名
      */
     private boolean enableShortClassName;
-    
+
     /**
      * 启用线程名
      */
     private boolean enableThreadName;
-    
+
     /**
      * 启用记录所有
      *
@@ -80,7 +78,7 @@ public class TraceRecorderConfig {
      * </p>
      */
     private boolean enableRecordAll;
-    
+
     /**
      * 启用异步记录
      *
@@ -89,7 +87,7 @@ public class TraceRecorderConfig {
      * @see <a href="#cn.xusc.trace.handle.SyncTraceHandler">SyncTraceHandler</a>、<a href="#cn.xusc.trace.handle.AsyncTraceHandler">AsyncTraceHandler</a>
      */
     private boolean enableAsync;
-    
+
     /**
      * 任务处理器数量
      *
@@ -98,7 +96,7 @@ public class TraceRecorderConfig {
      * @see <a href="#cn.xusc.trace.handle.AsyncTraceHandler">AsyncTraceHandler</a>
      */
     private int taskHandlerSize;
-    
+
     /**
      * 主构建器
      *
@@ -113,15 +111,22 @@ public class TraceRecorderConfig {
      * @param taskHandlerSize      任务处理器数量
      * @throws TraceException if {@code taskHandlerSize} is less 1
      */
-    @SuppressWarnings({"unchecked", "unused"})
-    public TraceRecorderConfig(List<InfoFilter> infoFilters, List<InfoEnhancer> infoEnhancers,
-                               List<InfoRecorder> infoRecorders, boolean enableStack,
-                               boolean enableShortClassName, boolean enableThreadName,
-                               boolean enableRecordAll, boolean enableAsync, int taskHandlerSize) {
+    @SuppressWarnings({ "unchecked", "unused" })
+    public TraceRecorderConfig(
+        List<InfoFilter> infoFilters,
+        List<InfoEnhancer> infoEnhancers,
+        List<InfoRecorder> infoRecorders,
+        boolean enableStack,
+        boolean enableShortClassName,
+        boolean enableThreadName,
+        boolean enableRecordAll,
+        boolean enableAsync,
+        int taskHandlerSize
+    ) {
         if (enableAsync && taskHandlerSize < 1) {
             throw new TraceException("async case, taskHandlerSize must to greater 0");
         }
-        
+
         this.infoFilters = Objects.isNull(infoFilters) ? Collections.EMPTY_LIST : infoFilters;
         this.infoEnhancers = Objects.isNull(infoEnhancers) ? Collections.EMPTY_LIST : infoEnhancers;
         this.infoRecorders = Objects.isNull(infoRecorders) ? Collections.EMPTY_LIST : infoRecorders;
@@ -132,7 +137,7 @@ public class TraceRecorderConfig {
         this.enableAsync = enableAsync;
         this.taskHandlerSize = taskHandlerSize;
     }
-    
+
     /**
      * 跟踪记录仪配置详情
      *
@@ -140,16 +145,27 @@ public class TraceRecorderConfig {
      */
     @Override
     public String toString() {
-        return "TraceRecorderConfig{" +
-                "infoFilters=" + Lists.classNames(infoFilters) +
-                ", infoEnhancers=" + Lists.classNames(infoEnhancers) +
-                ", infoRecorders=" + Lists.classNames(infoRecorders) +
-                ", enableStack=" + enableStack +
-                ", enableShortClassName=" + enableShortClassName +
-                ", enableThreadName=" + enableThreadName +
-                ", enableRecordAll=" + enableRecordAll +
-                ", enableAsync=" + enableAsync +
-                ", taskHandlerSize=" + taskHandlerSize +
-                '}';
+        return (
+            "TraceRecorderConfig{" +
+            "infoFilters=" +
+            Lists.classNames(infoFilters) +
+            ", infoEnhancers=" +
+            Lists.classNames(infoEnhancers) +
+            ", infoRecorders=" +
+            Lists.classNames(infoRecorders) +
+            ", enableStack=" +
+            enableStack +
+            ", enableShortClassName=" +
+            enableShortClassName +
+            ", enableThreadName=" +
+            enableThreadName +
+            ", enableRecordAll=" +
+            enableRecordAll +
+            ", enableAsync=" +
+            enableAsync +
+            ", taskHandlerSize=" +
+            taskHandlerSize +
+            '}'
+        );
     }
 }

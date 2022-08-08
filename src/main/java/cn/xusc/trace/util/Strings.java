@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package cn.xusc.trace.util;
 
 import java.io.IOException;
@@ -30,15 +28,14 @@ import java.util.Objects;
  * @since 2.0
  */
 public class Strings {
-    
+
     private static final String EMPTY = "";
-    
+
     /**
      * 禁止实例化
      */
-    private Strings() {
-    }
-    
+    private Strings() {}
+
     /**
      * 空字符串
      *
@@ -47,7 +44,7 @@ public class Strings {
     public static String empty() {
         return EMPTY;
     }
-    
+
     /**
      * 是否为空字符串
      *
@@ -58,7 +55,7 @@ public class Strings {
     public static boolean isEmpty(String str) {
         return EMPTY.equals(str);
     }
-    
+
     /**
      * 字符串是否相等
      *
@@ -71,10 +68,10 @@ public class Strings {
     public static boolean equals(String str, String str1) {
         Objects.requireNonNull(str);
         Objects.requireNonNull(str1);
-        
+
         return str.equals(str1);
     }
-    
+
     /**
      * 根据指定分隔符分割字符串
      *
@@ -86,11 +83,11 @@ public class Strings {
      */
     public static List<String> split(String originStr, char separator) {
         Objects.requireNonNull(originStr);
-        
+
         if (isEmpty(originStr)) {
             return Collections.emptyList();
         }
-        
+
         FastList<String> splits = new FastList<>(String.class, 16);
         StringReader reader = new StringReader(originStr);
         StringBuilder sb = new StringBuilder();
@@ -108,12 +105,12 @@ public class Strings {
                 }
                 sb.append(readChar);
             }
-            
+
             if (sb.length() > 0) splits.add(sb.toString());
         } catch (IOException e) {
             // not to this
         }
-        
+
         return splits;
     }
 }

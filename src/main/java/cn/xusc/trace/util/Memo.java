@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util;
 
 import cn.xusc.trace.exception.TraceException;
-
 import java.util.Iterator;
 import java.util.Objects;
 
@@ -28,19 +26,17 @@ import java.util.Objects;
  * @since 2.2
  */
 public final class Memo<T> {
-    
+
     /**
      * 最近的回忆点
      */
     private RecallPoint head;
-    
+
     /**
      * 默认构造
      */
-    public Memo() {
-    
-    }
-    
+    public Memo() {}
+
     /**
      * 存储事物并获取对应回忆点标签
      *
@@ -51,7 +47,7 @@ public final class Memo<T> {
     @SuppressWarnings("unchecked")
     public String storage(T value) {
         Objects.requireNonNull(value);
-        
+
         RecallPoint h = head;
         String label = computeLabel();
         if (Objects.isNull(h)) {
@@ -62,7 +58,7 @@ public final class Memo<T> {
         head = h;
         return label;
     }
-    
+
     /**
      * 根据回忆点获取对应事物值
      *
@@ -74,10 +70,10 @@ public final class Memo<T> {
     @SuppressWarnings("unchecked")
     public T read(String label) {
         Objects.requireNonNull(label);
-        
+
         RecallPoint h = head;
         if (Objects.isNull(h)) throw new TraceException("no store value");
-        
+
         for (Object point : h) {
             RecallPoint rp = (RecallPoint) point;
             if (Objects.equals(rp.LABEL, label)) {
@@ -86,7 +82,7 @@ public final class Memo<T> {
         }
         return null;
     }
-    
+
     /**
      * 计算标签
      *
@@ -95,13 +91,14 @@ public final class Memo<T> {
     public String computeLabel() {
         return Randoms.uuid("");
     }
-    
+
     /**
      * 回忆点
      *
      * @param <T> 事物值
      */
     private class RecallPoint<T> implements Iterable<T> {
+
         /**
          * 回忆点标签
          */
@@ -114,7 +111,7 @@ public final class Memo<T> {
          * 上一个回忆点
          */
         private final RecallPoint PRE;
-        
+
         /**
          * 回忆点构造
          *
@@ -127,7 +124,7 @@ public final class Memo<T> {
             this.VALUE = value;
             this.PRE = pre;
         }
-        
+
         /**
          * 迭代当前回忆点
          *
@@ -136,17 +133,16 @@ public final class Memo<T> {
         @Override
         public Iterator<T> iterator() {
             return new Iterator() {
-                
                 /**
                  * 当前回忆点
                  */
                 private RecallPoint point = RecallPoint.this;
-                
+
                 @Override
                 public boolean hasNext() {
                     return Objects.nonNull(point);
                 }
-                
+
                 @Override
                 public T next() {
                     RecallPoint recall = point;

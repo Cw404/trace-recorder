@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import cn.xusc.trace.TraceRecorder;
 import cn.xusc.trace.config.TraceRecorderConfig;
+import java.io.IOException;
+import java.net.URL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import java.io.IOException;
-import java.net.URL;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * 跟踪记录仪属性测试
@@ -34,18 +32,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author wangcai
  */
 public class TraceRecorderPropertiesTest {
-    
+
     /**
      * 跟踪记录仪属性
      */
     private TraceRecorderProperties properties;
-    
+
     @BeforeEach
     @DisplayName("init Environment")
     public void initEnv() {
         properties = new TraceRecorderProperties();
     }
-    
+
     @ParameterizedTest
     @ValueSource(strings = "TraceRecorderPropertiesTest.properties")
     public void loadPropertiesTest(String propertiesPath) throws IOException {
@@ -53,7 +51,7 @@ public class TraceRecorderPropertiesTest {
         properties.load(resource);
         assertNotNull(properties.config());
     }
-    
+
     @ParameterizedTest
     @ValueSource(strings = "TraceRecorderPropertiesTest.xml")
     public void loadXmlTest(String xmlPath) throws IOException {
@@ -61,7 +59,7 @@ public class TraceRecorderPropertiesTest {
         properties.loadFromXML(resource);
         assertNotNull(properties.config());
     }
-    
+
     @ParameterizedTest
     @ValueSource(strings = "TraceRecorderPropertiesTest.properties")
     public void useTest(String propertiesPath) throws IOException {

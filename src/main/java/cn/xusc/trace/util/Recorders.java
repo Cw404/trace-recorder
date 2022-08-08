@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util;
 
 import cn.xusc.trace.EnhanceInfo;
@@ -29,7 +28,6 @@ import cn.xusc.trace.exception.TraceTimeoutException;
 import cn.xusc.trace.filter.InfoFilter;
 import cn.xusc.trace.record.FileInfoRecorder;
 import cn.xusc.trace.record.InfoRecorder;
-
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
@@ -48,32 +46,31 @@ import java.util.concurrent.TimeUnit;
  */
 @Deprecated
 public final class Recorders {
-    
+
     /**
      * 禁止实例化
      */
-    private Recorders() {
-    }
-    
+    private Recorders() {}
+
     /**
      * 跟踪记录仪（全局）
      */
     private static TraceRecorder traceRecorder = new TraceRecorder();
-    
+
     /**
      * 异步标识
      *
      * @since 2.0
      */
     private static boolean asyncIdentify;
-    
+
     /**
      * 启用同步记录
      *
      * @return 启用情况
      * @since 2.0
      */
-    @SuppressWarnings({"SameReturnValue", "unused"})
+    @SuppressWarnings({ "SameReturnValue", "unused" })
     public static boolean enableSync() {
         if (Objects.equals(asyncIdentify, true)) {
             traceRecorder = new TraceRecorder();
@@ -81,14 +78,14 @@ public final class Recorders {
         }
         return true;
     }
-    
+
     /**
      * 启用异步记录
      *
      * @return 启用情况
      * @since 2.0
      */
-    @SuppressWarnings({"UnusedReturnValue", "SameReturnValue"})
+    @SuppressWarnings({ "UnusedReturnValue", "SameReturnValue" })
     public static boolean enableAsync() {
         if (Objects.equals(asyncIdentify, false)) {
             traceRecorder = new TraceRecorder(true);
@@ -96,7 +93,7 @@ public final class Recorders {
         }
         return true;
     }
-    
+
     /**
      * 配置构建记录仪
      *
@@ -106,7 +103,7 @@ public final class Recorders {
     public static void config(TraceRecorderConfig config) {
         traceRecorder = new TraceRecorder(config);
     }
-    
+
     /**
      * 添加信息过滤器
      *
@@ -116,7 +113,7 @@ public final class Recorders {
     public static boolean addInfoFilter(InfoFilter filter) {
         return traceRecorder.addInfoFilter(filter);
     }
-    
+
     /**
      * 添加信息增强器
      *
@@ -126,7 +123,7 @@ public final class Recorders {
     public static boolean addInfoEnhancer(InfoEnhancer enhancer) {
         return traceRecorder.addInfoEnhancer(enhancer);
     }
-    
+
     /**
      * 添加信息记录器
      *
@@ -136,7 +133,7 @@ public final class Recorders {
     public static boolean addInfoRecorder(InfoRecorder recorder) {
         return traceRecorder.addInfoRecorder(recorder);
     }
-    
+
     /**
      * 移除信息过滤器
      *
@@ -148,7 +145,7 @@ public final class Recorders {
     public static boolean removeInfoFilter(InfoFilter filter) {
         return traceRecorder.removeInfoFilter(filter);
     }
-    
+
     /**
      * 移除信息增强器
      *
@@ -160,7 +157,7 @@ public final class Recorders {
     public static boolean removeInfoEnhancer(InfoEnhancer enhancer) {
         return traceRecorder.removeInfoEnhancer(enhancer);
     }
-    
+
     /**
      * 移除信息记录器
      *
@@ -172,7 +169,7 @@ public final class Recorders {
     public static boolean removeInfoRecorder(InfoRecorder recorder) {
         return traceRecorder.removeInfoRecorder(recorder);
     }
-    
+
     /**
      * 获取信息过滤器集
      *
@@ -182,7 +179,7 @@ public final class Recorders {
     public static List<InfoFilter> getInfoFilters() {
         return traceRecorder.getInfoFilters();
     }
-    
+
     /**
      * 获取信息增强器集
      *
@@ -192,7 +189,7 @@ public final class Recorders {
     public static List<InfoEnhancer> getInfoEnhancers() {
         return traceRecorder.getInfoEnhancers();
     }
-    
+
     /**
      * 获取信息记录器集
      *
@@ -202,7 +199,7 @@ public final class Recorders {
     public static List<InfoRecorder> getInfoRecorders() {
         return traceRecorder.getInfoRecorders();
     }
-    
+
     /**
      * 重置特殊的结构
      *
@@ -212,7 +209,7 @@ public final class Recorders {
     public static boolean resetSpecial() {
         return traceRecorder.resetSpecial();
     }
-    
+
     /**
      * 记录所有
      *
@@ -223,7 +220,7 @@ public final class Recorders {
     public static boolean recordALL() {
         return traceRecorder.recordALL();
     }
-    
+
     /**
      * 隐藏所有
      *
@@ -234,7 +231,7 @@ public final class Recorders {
     public static boolean hideALL() {
         return traceRecorder.hideALL();
     }
-    
+
     /**
      * 启用短类名
      *
@@ -247,7 +244,7 @@ public final class Recorders {
     public static boolean enableShortClassName() {
         return traceRecorder.enableShortClassName();
     }
-    
+
     /**
      * 禁用短类名
      *
@@ -261,7 +258,7 @@ public final class Recorders {
     public static boolean disableShortClassName() {
         return traceRecorder.disableShortClassName();
     }
-    
+
     /**
      * 获取启用短类名详情
      *
@@ -271,7 +268,7 @@ public final class Recorders {
     public static boolean isEnableShortClassName() {
         return traceRecorder.isEnableShortClassName();
     }
-    
+
     /**
      * 启用线程名
      *
@@ -285,7 +282,7 @@ public final class Recorders {
     public static boolean enableThreadName() {
         return traceRecorder.enableThreadName();
     }
-    
+
     /**
      * 禁用线程名
      *
@@ -299,7 +296,7 @@ public final class Recorders {
     public static boolean disableThreadName() {
         return traceRecorder.disableThreadName();
     }
-    
+
     /**
      * 获取启用线程名详情
      *
@@ -309,7 +306,7 @@ public final class Recorders {
     public static boolean isEnableThreadName() {
         return traceRecorder.isEnableThreadName();
     }
-    
+
     /**
      * 启用堆栈
      *
@@ -318,7 +315,7 @@ public final class Recorders {
     public static boolean enableStackInfo() {
         return traceRecorder.enableStackInfo();
     }
-    
+
     /**
      * 禁用堆栈信息
      *
@@ -327,7 +324,7 @@ public final class Recorders {
     public static boolean disableStackInfo() {
         return traceRecorder.disableStackInfo();
     }
-    
+
     /**
      * 获取启用堆栈信息增强详情
      *
@@ -337,7 +334,7 @@ public final class Recorders {
     public static boolean isEnableStackInfo() {
         return traceRecorder.isEnableStackInfo();
     }
-    
+
     /**
      * 记录信息
      *
@@ -346,7 +343,7 @@ public final class Recorders {
     public static void log(String info) {
         traceRecorder.log(info);
     }
-    
+
     /**
      * 记录格式信息
      *
@@ -358,7 +355,7 @@ public final class Recorders {
     public static void log(String info, Object... argArray) {
         traceRecorder.log(info, argArray);
     }
-    
+
     /**
      * 不记录信息
      *
@@ -368,7 +365,7 @@ public final class Recorders {
     public static void nolog(String info) {
         traceRecorder.nolog(info);
     }
-    
+
     /**
      * 不记录格式信息
      *
@@ -380,7 +377,7 @@ public final class Recorders {
     public static void nolog(String info, Object... argArray) {
         traceRecorder.nolog(info, argArray);
     }
-    
+
     /**
      * 处理器关闭
      *
@@ -390,7 +387,7 @@ public final class Recorders {
     public static void shutdown() {
         traceRecorder.shutdown();
     }
-    
+
     /**
      * 处理器关闭，会处理完指定时间未完成的任务
      *
@@ -403,11 +400,11 @@ public final class Recorders {
     public static void shutdown(long timeout, TimeUnit timeUnit) throws TraceTimeoutException {
         traceRecorder.shutdown(timeout, timeUnit);
     }
-    
+
     /*
       =========================== extension ===========================
      */
-    
+
     /**
      * 添加文件信息记录器
      *
@@ -419,7 +416,7 @@ public final class Recorders {
         Objects.requireNonNull(fileName);
         return addFileInfoRecorder(new File(fileName));
     }
-    
+
     /**
      * 添加文件信息记录器
      *
@@ -434,7 +431,7 @@ public final class Recorders {
         }
         return traceRecorder.addInfoRecorder(new FileInfoRecorder(file));
     }
-    
+
     /**
      * 添加通用统计信息增强器
      *
@@ -443,18 +440,19 @@ public final class Recorders {
     public static boolean addCommonStatisticsInfoEnhancer() {
         return traceRecorder.addInfoEnhancer(new CommonStatisticsInfoEnhancer(traceRecorder));
     }
-    
+
     /**
      * 通用统计信息增强器
      */
     @CloseOrder(1)
     private static class CommonStatisticsInfoEnhancer extends StatisticsInfoEnhancer {
+
         private TraceNode HEAD;
-        
+
         public CommonStatisticsInfoEnhancer(TraceRecorder recorder) {
             super(recorder);
         }
-        
+
         @Override
         protected EnhanceInfo doEnhance(EnhanceInfo eInfo) {
             TraceNode head = HEAD;
@@ -467,7 +465,7 @@ public final class Recorders {
                 HEAD.setCount(1);
                 return eInfo;
             }
-            
+
             /*
               increment count
              */
@@ -479,7 +477,7 @@ public final class Recorders {
             } while (Objects.nonNull(head = head.getNext()));
             return eInfo;
         }
-        
+
         @Override
         protected String showInfo() {
             TraceNode head = HEAD;
@@ -489,18 +487,18 @@ public final class Recorders {
                  */
                 return Strings.empty();
             }
-            
+
             StringBuilder sb = new StringBuilder();
             String lineSeparator = Symbols.lineSeparator();
             sb.append("--------------------").append(lineSeparator);
             do {
                 sb.append(String.format("%s - %d", head.getClassName(), head.getCount())).append(lineSeparator);
             } while (Objects.nonNull(head = head.getNext()));
-            
+
             sb.append("--------------------").append(lineSeparator);
             return sb.toString();
         }
-        
+
         /**
          * 跟踪锚点节点
          *
@@ -508,44 +506,43 @@ public final class Recorders {
          */
         @SuppressWarnings("InnerClassMayBeStatic")
         private class TraceNode {
+
             private String className;
             private long count;
+
             @SuppressWarnings("unused")
             private TraceNode next;
-            
-            public TraceNode() {
-            }
-            
+
+            public TraceNode() {}
+
             public String getClassName() {
                 return className;
             }
-            
+
             public void setClassName(String className) {
                 this.className = className;
             }
-            
+
             public long getCount() {
                 return count;
             }
-            
+
             public void setCount(long count) {
                 this.count = count;
             }
-            
+
             public void increment() {
                 this.count++;
             }
-            
+
             public TraceNode getNext() {
                 return next;
             }
-            
+
             @SuppressWarnings("unused")
             public boolean hasNext() {
                 return next != null;
             }
         }
     }
-    
-    
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.util.need.enhance;
 
 import cn.xusc.trace.EnhanceInfo;
@@ -25,13 +24,13 @@ import cn.xusc.trace.enhance.InfoEnhancer;
  * @author wangcai
  */
 public class PrefixInfoEnhancerTest implements InfoEnhancer {
-    
+
     @Override
     public EnhanceInfo enhance(EnhanceInfo eInfo) {
         eInfo.setInfo("prefix:" + eInfo.getInfo());
         return eInfo;
     }
-    
+
     @Override
     public EnhanceInfo setWriteInfo(EnhanceInfo eInfo) {
         eInfo.setWriteInfo(eInfo.getInfo());

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cn.xusc.trace.annotation;
 
 import java.lang.annotation.*;
@@ -28,7 +27,6 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Documented
 public @interface CloseOrder {
-    
     /**
      * 排序值
      *
