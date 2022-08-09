@@ -111,7 +111,6 @@ public class TraceRecorderConfig {
      * @param taskHandlerSize      任务处理器数量
      * @throws TraceException if {@code taskHandlerSize} is less 1
      */
-    @SuppressWarnings({ "unchecked", "unused" })
     public TraceRecorderConfig(
         List<InfoFilter> infoFilters,
         List<InfoEnhancer> infoEnhancers,

@@ -44,7 +44,6 @@ public final class Memo<T> {
      * @return 回忆点标签
      * @throws NullPointerException if {@code value} is null
      */
-    @SuppressWarnings("unchecked")
     public String storage(T value) {
         Objects.requireNonNull(value);
 
@@ -67,7 +66,6 @@ public final class Memo<T> {
      * @throws NullPointerException if {@code label} is null
      * @throws TraceException       if {@code head} is null
      */
-    @SuppressWarnings("unchecked")
     public T read(String label) {
         Objects.requireNonNull(label);
 

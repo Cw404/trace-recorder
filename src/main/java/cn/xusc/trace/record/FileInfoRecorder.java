@@ -22,6 +22,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 文件信息记录器
@@ -42,13 +43,26 @@ public class FileInfoRecorder implements InfoRecorder, Closeable {
     private final FileWriter writer;
 
     /**
+     * 构建一个指定{@code filePath}的文件信息记录器
+     *
+     * @param filePath 文件路径
+     * @throws TraceException if generate IOException or file can't write
+     * @throws NullPointerException if {@code file} is null
+     * @since 2.5
+     */
+    public FileInfoRecorder(String filePath) {
+        this(new File(Objects.requireNonNull(filePath)));
+    }
+
+    /**
      * 构建一个指定{@link File}的文件信息记录器
      *
      * @param file 文件
      * @throws TraceException if generate IOException or file can't write
+     * @throws NullPointerException if {@code file} is null
      */
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public FileInfoRecorder(File file) {
+        Objects.requireNonNull(file);
         if (!file.exists()) {
             try {
                 file.createNewFile();

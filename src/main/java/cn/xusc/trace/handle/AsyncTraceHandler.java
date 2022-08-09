@@ -138,7 +138,6 @@ public class AsyncTraceHandler extends BaseTraceHandler {
      * @param label    记录标签
      * @param argArray 参数列表
      */
-    @SuppressWarnings("unchecked")
     @Override
     public void doHandle(String info, RecordLabel label, Object... argArray) {
         Task task = new Task(info, label, new TraceException(), argArray);
@@ -234,7 +233,6 @@ public class AsyncTraceHandler extends BaseTraceHandler {
             super(target, name);
         }
 
-        @SuppressWarnings("EmptyMethod")
         @Override
         public void run() {
             super.run();
