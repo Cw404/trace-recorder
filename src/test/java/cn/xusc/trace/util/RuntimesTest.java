@@ -51,7 +51,6 @@ public class RuntimesTest {
         recorder = new TraceRecorder(TraceRecorderConfig.builder().enableAsync(false).build());
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
     private class ShowInfoOfJVMClose implements Closeable {
 
         @Override
@@ -60,7 +59,6 @@ public class RuntimesTest {
         }
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
     @CloseOrder(1)
     private class ShowInfoOfJVMCloseFirst implements Closeable {
 
@@ -70,7 +68,6 @@ public class RuntimesTest {
         }
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
     @CloseOrder(2)
     private class ShowInfoOfJVMCloseSecond implements Closeable {
 

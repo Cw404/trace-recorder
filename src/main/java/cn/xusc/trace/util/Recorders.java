@@ -70,7 +70,6 @@ public final class Recorders {
      * @return 启用情况
      * @since 2.0
      */
-    @SuppressWarnings({ "SameReturnValue", "unused" })
     public static boolean enableSync() {
         if (Objects.equals(asyncIdentify, true)) {
             traceRecorder = new TraceRecorder();
@@ -85,7 +84,6 @@ public final class Recorders {
      * @return 启用情况
      * @since 2.0
      */
-    @SuppressWarnings({ "UnusedReturnValue", "SameReturnValue" })
     public static boolean enableAsync() {
         if (Objects.equals(asyncIdentify, false)) {
             traceRecorder = new TraceRecorder(true);
@@ -141,7 +139,6 @@ public final class Recorders {
      * @return 移除结果
      * @since 1.2.1
      */
-    @SuppressWarnings("unused")
     public static boolean removeInfoFilter(InfoFilter filter) {
         return traceRecorder.removeInfoFilter(filter);
     }
@@ -153,7 +150,6 @@ public final class Recorders {
      * @return 移除结果
      * @since 1.2.1
      */
-    @SuppressWarnings("unused")
     public static boolean removeInfoEnhancer(InfoEnhancer enhancer) {
         return traceRecorder.removeInfoEnhancer(enhancer);
     }
@@ -165,7 +161,6 @@ public final class Recorders {
      * @return 移除结果
      * @since 1.2.1
      */
-    @SuppressWarnings("unused")
     public static boolean removeInfoRecorder(InfoRecorder recorder) {
         return traceRecorder.removeInfoRecorder(recorder);
     }
@@ -351,7 +346,6 @@ public final class Recorders {
      * @param argArray 参数列表
      * @since 1.1
      */
-    @SuppressWarnings("unused")
     public static void log(String info, Object... argArray) {
         traceRecorder.log(info, argArray);
     }
@@ -373,7 +367,6 @@ public final class Recorders {
      * @param argArray 参数列表
      * @since 1.1
      */
-    @SuppressWarnings("unused")
     public static void nolog(String info, Object... argArray) {
         traceRecorder.nolog(info, argArray);
     }
@@ -383,7 +376,6 @@ public final class Recorders {
      *
      * @since 2.1
      */
-    @SuppressWarnings("unused")
     public static void shutdown() {
         traceRecorder.shutdown();
     }
@@ -396,7 +388,6 @@ public final class Recorders {
      * @throws TraceTimeoutException if a timeout occurs before shutdown completes.
      * @since 2.1
      */
-    @SuppressWarnings("unused")
     public static void shutdown(long timeout, TimeUnit timeUnit) throws TraceTimeoutException {
         traceRecorder.shutdown(timeout, timeUnit);
     }
@@ -411,7 +402,6 @@ public final class Recorders {
      * @param fileName 记录文件名
      * @return 添加结果
      */
-    @SuppressWarnings("unused")
     public static boolean addFileInfoRecorder(String fileName) {
         Objects.requireNonNull(fileName);
         return addFileInfoRecorder(new File(fileName));
@@ -504,13 +494,11 @@ public final class Recorders {
          *
          * <p>类锚点总数跟踪</p>
          */
-        @SuppressWarnings("InnerClassMayBeStatic")
         private class TraceNode {
 
             private String className;
             private long count;
 
-            @SuppressWarnings("unused")
             private TraceNode next;
 
             public TraceNode() {}
@@ -539,7 +527,6 @@ public final class Recorders {
                 return next;
             }
 
-            @SuppressWarnings("unused")
             public boolean hasNext() {
                 return next != null;
             }

@@ -46,7 +46,6 @@ public interface TeConsumer<T, U, O> {
      * @return 一个带有执行顺序的三元消费者
      * @throws NullPointerException if {@code after} is null
      */
-    @SuppressWarnings("unused")
     default TeConsumer<T, U, O> andThen(TeConsumer<? super T, ? super U, ? super O> after) {
         Objects.requireNonNull(after);
 

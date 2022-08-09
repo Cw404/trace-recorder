@@ -51,7 +51,6 @@ public class Strings {
      * @param str 判断字符串
      * @return 是否为空结果
      */
-    @SuppressWarnings("unused")
     public static boolean isEmpty(String str) {
         return EMPTY.equals(str);
     }
@@ -64,7 +63,6 @@ public class Strings {
      * @return 字符串是否相等结果
      * @throws NullPointerException if {@code str} or {@code str1} is null
      */
-    @SuppressWarnings("unused")
     public static boolean equals(String str, String str1) {
         Objects.requireNonNull(str);
         Objects.requireNonNull(str1);

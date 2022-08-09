@@ -61,7 +61,6 @@ public final class Symbols {
      *
      * @return 空格符
      */
-    @SuppressWarnings("unused")
     public static String space() {
         return SPACE.getSymbol();
     }
@@ -71,7 +70,6 @@ public final class Symbols {
      *
      * @return 制表符
      */
-    @SuppressWarnings("unused")
     public static String tab() {
         return TAB.getSymbol();
     }
@@ -90,7 +88,6 @@ public final class Symbols {
      *
      * @return 连接符
      */
-    @SuppressWarnings("unused")
     public static String connective() {
         return CONNECTIVE.getSymbol();
     }
@@ -102,7 +99,6 @@ public final class Symbols {
      * @param size         数量
      * @return 自定义数量符号
      */
-    @SuppressWarnings("unused")
     public static String generate(String originSymbol, int size) {
         return new Symbol(originSymbol, size).getSymbol();
     }

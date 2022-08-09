@@ -57,7 +57,6 @@ public final class FastList<T> implements List<T>, RandomAccess, Serializable {
      * Construct a FastList with a default size of 32.
      * @param clazz the Class stored in the collection
      */
-    @SuppressWarnings("unchecked")
     public FastList(Class<?> clazz)
     {
         this.elementData = (T[]) Array.newInstance(clazz, 32);
@@ -69,7 +68,6 @@ public final class FastList<T> implements List<T>, RandomAccess, Serializable {
      * @param clazz the Class stored in the collection
      * @param capacity the initial size of the FastList
      */
-    @SuppressWarnings({"unchecked", "unused"})
     public FastList(Class<?> clazz, int capacity)
     {
         this.elementData = (T[]) Array.newInstance(clazz, capacity);
@@ -93,7 +91,6 @@ public final class FastList<T> implements List<T>, RandomAccess, Serializable {
              */
             final var oldCapacity = elementData.length;
             final var newCapacity = oldCapacity << 1;
-            @SuppressWarnings("unchecked")
             final var newElementData = (T[]) Array.newInstance(clazz, newCapacity);
             System.arraycopy(elementData, 0, newElementData, 0, oldCapacity);
             newElementData[size++] = element;

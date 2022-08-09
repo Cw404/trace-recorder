@@ -38,7 +38,6 @@ import org.junit.jupiter.params.provider.ValueSource;
  *
  * @author wangcai
  */
-@SuppressWarnings("unchecked")
 public class DisruptorsTest {
 
     @ParameterizedTest

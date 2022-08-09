@@ -87,7 +87,6 @@ public final class Disruptors {
      * @throws NullPointerException if {@code threadFactory} is null
      * @throws NullPointerException if {@code waitStrategy} is null
      */
-    @SuppressWarnings("unused")
     public static Disruptor<GeneralEvent> generate(
         int bufferSize,
         ThreadFactory threadFactory,
@@ -109,7 +108,6 @@ public final class Disruptors {
      * @throws NullPointerException if {@code threadFactory} is null
      * @throws NullPointerException if {@code waitStrategy} is null
      */
-    @SuppressWarnings("unchecked")
     private static Disruptor<GeneralEvent> doGenerate(
         int bufferSize,
         ThreadFactory threadFactory,
@@ -138,7 +136,6 @@ public final class Disruptors {
      * @return 通用生产者
      * @throws NullPointerException if {@code disruptor} is null
      */
-    @SuppressWarnings("unchecked")
     public static GeneralProducer producer(Disruptor<GeneralEvent> disruptor) {
         return new GeneralProducer(disruptor);
     }
@@ -185,7 +182,6 @@ public final class Disruptors {
          * @return 当前通用生产者
          * @throws NullPointerException if {@code supplier} is null
          */
-        @SuppressWarnings({ "unchecked", "UnusedReturnValue" })
         public GeneralProducer<T> provide(Supplier<T> supplier) {
             Objects.requireNonNull(supplier);
 
@@ -202,7 +198,6 @@ public final class Disruptors {
          * @throws NullPointerException if {@code supplier} is null
          * @throws TraceException       if {@code count} is less 1
          */
-        @SuppressWarnings({ "unchecked", "UnusedReturnValue" })
         public GeneralProducer<T> provide(Supplier<T> supplier, int count) {
             Objects.requireNonNull(supplier);
             if (count < 1) {
@@ -282,7 +277,6 @@ public final class Disruptors {
          *
          * <p>处理事件分发，并启动消费</p>
          */
-        @SuppressWarnings("unchecked")
         public void consume() {
             if (!EVENT_HANDLERS.isEmpty()) {
                 DISRUPTOR.handleEventsWith(EVENT_HANDLERS.toArray(new EventHandler[0]));

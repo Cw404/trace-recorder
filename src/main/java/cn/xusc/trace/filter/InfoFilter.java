@@ -31,6 +31,5 @@ public interface InfoFilter {
      * @param label 记录标签
      * @return 当前信息是否记录的判断值
      */
-    @SuppressWarnings("unused")
     boolean isRecord(String info, RecordLabel label);
 }

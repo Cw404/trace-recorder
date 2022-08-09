@@ -25,7 +25,6 @@ import cn.xusc.trace.constant.RecordLabel;
  */
 public class RecordLabelInfoFilter implements InfoFilter {
 
-    @SuppressWarnings("unused")
     @Override
     public boolean isRecord(String info, RecordLabel label) {
         if (label == RecordLabel.ALL) {

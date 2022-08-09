@@ -163,7 +163,6 @@ public class TraceRecorder {
      * @throws TraceException if {@code taskHandlerSize} is less 1
      * @since 2.0
      */
-    @SuppressWarnings("unused")
     public TraceRecorder(int taskHandlerSize) {
         if (taskHandlerSize < 1) {
             throw new TraceException("taskHandlerSize < 1");
@@ -365,7 +364,6 @@ public class TraceRecorder {
      *
      * @since 2.2
      */
-    @SuppressWarnings("unchecked")
     private void memoryPoint() {
         if (Objects.nonNull(baseLabel)) return;
         if (Objects.isNull(memo)) memo = new Memo();
@@ -382,7 +380,6 @@ public class TraceRecorder {
      * @return 重置后详情
      * @since 2.2
      */
-    @SuppressWarnings({ "SameReturnValue", "ConstantConditions" })
     public boolean resetSpecial() {
         verifyClosed();
         if (Objects.isNull(baseLabel)) {
@@ -411,7 +408,6 @@ public class TraceRecorder {
      *
      * @return 配置结果
      */
-    @SuppressWarnings("SameReturnValue")
     public boolean recordALL() {
         verifyClosed();
         LABEL = RecordLabel.ALL;
@@ -425,7 +421,6 @@ public class TraceRecorder {
      *
      * @return 配置结果
      */
-    @SuppressWarnings("SameReturnValue")
     public boolean hideALL() {
         verifyClosed();
         LABEL = RecordLabel.HIDE;
@@ -461,7 +456,6 @@ public class TraceRecorder {
      * @return 配置结果
      * @since 2.0
      */
-    @SuppressWarnings("SameReturnValue")
     public boolean disableShortClassName() {
         verifyClosed();
         enableShortClassName = false;
@@ -509,7 +503,6 @@ public class TraceRecorder {
      * @return 配置结果
      * @since 2.0
      */
-    @SuppressWarnings("SameReturnValue")
     public boolean disableThreadName() {
         verifyClosed();
         enableThreadName = false;
@@ -552,7 +545,6 @@ public class TraceRecorder {
      *
      * @return 配置结果
      */
-    @SuppressWarnings("SameReturnValue")
     public boolean disableStackInfo() {
         verifyClosed();
         enableStack = false;

@@ -52,7 +52,6 @@ public final class Runtimes {
      *
      * @param closeable 关闭对象
      */
-    @SuppressWarnings("ConstantConditions")
     public static void addCleanTask(AutoCloseable closeable) {
         CLOSEABLES.add(closeable);
 
