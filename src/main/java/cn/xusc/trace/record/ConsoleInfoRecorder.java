@@ -28,10 +28,10 @@ public class ConsoleInfoRecorder implements InfoRecorder {
     /**
      * 系统默认输出流
      */
-    private static final PrintStream print = System.out;
+    private static final PrintStream PRINT = System.out;
 
     @Override
     public void record(String writeInfo) {
-        print.print(writeInfo);
+        PRINT.print(writeInfo);
     }
 }

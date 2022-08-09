@@ -89,8 +89,8 @@ public class RecordersTest {
             )
         );
         assertTrue(Recorders.resetSpecial());
-        assertTrue(Recorders.recordALL());
-        assertTrue(Recorders.hideALL());
+        assertTrue(Recorders.recordAll());
+        assertTrue(Recorders.hideAll());
         assertTrue(Recorders.enableShortClassName());
         assertTrue(Recorders.disableShortClassName());
         assertFalse(Recorders.isEnableShortClassName());

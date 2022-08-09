@@ -35,7 +35,7 @@ import java.util.Objects;
  * @author WangCai
  * @since 1.0
  */
-public abstract class StatisticsInfoEnhancer implements InfoEnhancer, Closeable {
+public abstract class AbstractStatisticsInfoEnhancer implements InfoEnhancer, Closeable {
 
     /**
      * 跟踪记录仪
@@ -53,7 +53,7 @@ public abstract class StatisticsInfoEnhancer implements InfoEnhancer, Closeable 
      * @param traceRecorder 跟踪记录仪
      * @throws NullPointerException if {@code traceRecorder} is null
      */
-    public StatisticsInfoEnhancer(TraceRecorder traceRecorder) {
+    public AbstractStatisticsInfoEnhancer(TraceRecorder traceRecorder) {
         Objects.requireNonNull(traceRecorder);
         this.TRACE_RECORDER = traceRecorder;
 

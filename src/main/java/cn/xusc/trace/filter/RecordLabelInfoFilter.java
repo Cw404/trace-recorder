@@ -29,6 +29,8 @@ public class RecordLabelInfoFilter implements InfoFilter {
     public boolean isRecord(String info, RecordLabel label) {
         if (label == RecordLabel.ALL) {
             return true;
-        } else return label != RecordLabel.HIDE;
+        } else {
+            return label != RecordLabel.HIDE;
+        }
     }
 }

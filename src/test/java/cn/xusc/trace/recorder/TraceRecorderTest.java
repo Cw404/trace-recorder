@@ -190,7 +190,7 @@ public class TraceRecorderTest {
     @MethodSource("generateSyncTraceRecorder")
     @DisplayName("enable record all config, will show all info of record")
     public void recordALLConfigTest(TraceRecorder recorder) {
-        assertTrue(recorder.recordALL());
+        assertTrue(recorder.recordAll());
         recorder.log("show one");
         recorder.nolog("hide two");
     }
@@ -199,7 +199,7 @@ public class TraceRecorderTest {
     @MethodSource("generateSyncTraceRecorder")
     @DisplayName("enable hide all config, will hide all info of record")
     public void hideALLConfigTest(TraceRecorder recorder) {
-        assertTrue(recorder.hideALL());
+        assertTrue(recorder.hideAll());
         recorder.log("show one");
         recorder.nolog("hide two");
     }

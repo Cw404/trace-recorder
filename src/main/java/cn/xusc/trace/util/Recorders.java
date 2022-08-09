@@ -19,9 +19,9 @@ import cn.xusc.trace.EnhanceInfo;
 import cn.xusc.trace.TraceRecorder;
 import cn.xusc.trace.annotation.CloseOrder;
 import cn.xusc.trace.config.TraceRecorderConfig;
+import cn.xusc.trace.enhance.AbstractStatisticsInfoEnhancer;
 import cn.xusc.trace.enhance.InfoEnhancer;
 import cn.xusc.trace.enhance.ShortClassNameInfoEnhancer;
-import cn.xusc.trace.enhance.StatisticsInfoEnhancer;
 import cn.xusc.trace.enhance.ThreadInfoEnhancer;
 import cn.xusc.trace.exception.TraceException;
 import cn.xusc.trace.exception.TraceTimeoutException;
@@ -212,8 +212,8 @@ public final class Recorders {
      *
      * @return 配置结果
      */
-    public static boolean recordALL() {
-        return traceRecorder.recordALL();
+    public static boolean recordAll() {
+        return traceRecorder.recordAll();
     }
 
     /**
@@ -223,8 +223,8 @@ public final class Recorders {
      *
      * @return 配置结果
      */
-    public static boolean hideALL() {
-        return traceRecorder.hideALL();
+    public static boolean hideAll() {
+        return traceRecorder.hideAll();
     }
 
     /**
@@ -435,9 +435,9 @@ public final class Recorders {
      * 通用统计信息增强器
      */
     @CloseOrder(1)
-    private static class CommonStatisticsInfoEnhancer extends StatisticsInfoEnhancer {
+    private static class CommonStatisticsInfoEnhancer extends AbstractStatisticsInfoEnhancer {
 
-        private TraceNode HEAD;
+        private TraceNode head;
 
         public CommonStatisticsInfoEnhancer(TraceRecorder recorder) {
             super(recorder);
@@ -445,14 +445,14 @@ public final class Recorders {
 
         @Override
         protected EnhanceInfo doEnhance(EnhanceInfo eInfo) {
-            TraceNode head = HEAD;
+            TraceNode head = this.head;
             if (Objects.isNull(head)) {
                 /*
                   first , initialize
                  */
-                HEAD = new TraceNode();
-                HEAD.setClassName(eInfo.getClassName());
-                HEAD.setCount(1);
+                this.head = new TraceNode();
+                this.head.setClassName(eInfo.getClassName());
+                this.head.setCount(1);
                 return eInfo;
             }
 
@@ -470,7 +470,7 @@ public final class Recorders {
 
         @Override
         protected String showInfo() {
-            TraceNode head = HEAD;
+            TraceNode head = this.head;
             if (Objects.isNull(head)) {
                 /*
                   没有记录任何一条显示记录，head没有生成
