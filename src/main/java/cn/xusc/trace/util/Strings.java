@@ -104,7 +104,9 @@ public class Strings {
                 sb.append(readChar);
             }
 
-            if (sb.length() > 0) splits.add(sb.toString());
+            if (sb.length() > 0) {
+                splits.add(sb.toString());
+            }
         } catch (IOException e) {
             // not to this
         }

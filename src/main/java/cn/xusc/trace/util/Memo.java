@@ -70,7 +70,9 @@ public final class Memo<T> {
         Objects.requireNonNull(label);
 
         RecallPoint h = head;
-        if (Objects.isNull(h)) throw new TraceException("no store value");
+        if (Objects.isNull(h)) {
+            throw new TraceException("no store value");
+        }
 
         for (Object point : h) {
             RecallPoint rp = (RecallPoint) point;

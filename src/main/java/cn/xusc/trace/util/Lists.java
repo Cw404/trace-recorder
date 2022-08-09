@@ -70,7 +70,9 @@ public class Lists {
      * @since 2.2
      */
     public static List<?> merge(List<?>... lists) {
-        if (lists.length == 0) return Collections.emptyList();
+        if (lists.length == 0) {
+            return Collections.emptyList();
+        }
         List<Object> mergeList = new ArrayList<>();
         if (lists[0] instanceof FastList) {
             Iterator iterator;

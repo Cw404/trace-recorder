@@ -96,7 +96,7 @@ public class TraceRecorder {
     /**
      * 记录标签
      */
-    private RecordLabel LABEL;
+    private RecordLabel label;
 
     /**
      * 启用堆栈信息
@@ -208,7 +208,7 @@ public class TraceRecorder {
             disableThreadName();
         }
         if (config.isEnableRecordAll()) {
-            recordALL();
+            recordAll();
         }
         /*
           异步
@@ -365,8 +365,12 @@ public class TraceRecorder {
      * @since 2.2
      */
     private void memoryPoint() {
-        if (Objects.nonNull(baseLabel)) return;
-        if (Objects.isNull(memo)) memo = new Memo();
+        if (Objects.nonNull(baseLabel)) {
+            return;
+        }
+        if (Objects.isNull(memo)) {
+            memo = new Memo();
+        }
         baseLabel = memo.storage(Lists.merge(getInfoFilters(), getInfoEnhancers(), getInfoRecorders()));
     }
 
@@ -408,9 +412,9 @@ public class TraceRecorder {
      *
      * @return 配置结果
      */
-    public boolean recordALL() {
+    public boolean recordAll() {
         verifyClosed();
-        LABEL = RecordLabel.ALL;
+        label = RecordLabel.ALL;
         return true;
     }
 
@@ -421,9 +425,9 @@ public class TraceRecorder {
      *
      * @return 配置结果
      */
-    public boolean hideALL() {
+    public boolean hideAll() {
         verifyClosed();
-        LABEL = RecordLabel.HIDE;
+        label = RecordLabel.HIDE;
         return true;
     }
 
@@ -569,7 +573,7 @@ public class TraceRecorder {
      */
     public void log(String info) {
         verifyClosed();
-        log(info, Objects.requireNonNullElse(LABEL, RecordLabel.NOW));
+        log(info, Objects.requireNonNullElse(label, RecordLabel.NOW));
     }
 
     /**
@@ -581,7 +585,7 @@ public class TraceRecorder {
      */
     public void log(String info, Object... argArray) {
         verifyClosed();
-        log(info, Objects.requireNonNullElse(LABEL, RecordLabel.NOW), argArray);
+        log(info, Objects.requireNonNullElse(label, RecordLabel.NOW), argArray);
     }
 
     /**
@@ -592,7 +596,7 @@ public class TraceRecorder {
      */
     public void nolog(String info) {
         verifyClosed();
-        log(info, Objects.requireNonNullElse(LABEL, RecordLabel.HIDE));
+        log(info, Objects.requireNonNullElse(label, RecordLabel.HIDE));
     }
 
     /**
@@ -604,7 +608,7 @@ public class TraceRecorder {
      */
     public void nolog(String info, Object... argArray) {
         verifyClosed();
-        log(info, Objects.requireNonNullElse(LABEL, RecordLabel.HIDE), argArray);
+        log(info, Objects.requireNonNullElse(label, RecordLabel.HIDE), argArray);
     }
 
     /**
@@ -677,7 +681,7 @@ public class TraceRecorder {
             ", TRACE_HANDLER=" +
             TRACE_HANDLER.getClass().getName() +
             ", LABEL=" +
-            LABEL +
+            label +
             ", enableStack=" +
             enableStack +
             ", enableShortClassName=" +

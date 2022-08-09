@@ -116,9 +116,13 @@ public abstract class BaseTraceHandler implements TraceHandler {
              */
             for (InfoEnhancer infoEnhancer : RECORDER.getInfoEnhancers()) {
                 enhanceInfo = infoEnhancer.enhance(enhanceInfo);
-                if (Objects.isNull(enhanceInfo)) return;
+                if (Objects.isNull(enhanceInfo)) {
+                    return;
+                }
                 enhanceInfo = infoEnhancer.setWriteInfo(enhanceInfo);
-                if (Objects.isNull(enhanceInfo)) return;
+                if (Objects.isNull(enhanceInfo)) {
+                    return;
+                }
             }
 
             String writeInfo = enhanceInfo.getWriteInfo();
