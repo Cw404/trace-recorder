@@ -1,0 +1,21 @@
+ch:
+- feat:新增的功能
+- fix:功能问题修复
+- modify:文件的变更
+- refactor:功能的重构
+- optimize:优化的内容
+- explain:新增说明文件
+- upgrade:升级的依赖包
+- upgrade fix:升级依赖包的问题修复
+
+--------------------------------------------------------------------------------
+
+en:
+- feat:New features
+- fix:Functional problem repair
+- modify:Changes to files
+- refactor:Refactoring of functions
+- optimize:Optimized content
+- explain:New description file
+- upgrade:Upgraded dependency packages
+- upgrade fix:Upgrade dependency pack issue fixed
