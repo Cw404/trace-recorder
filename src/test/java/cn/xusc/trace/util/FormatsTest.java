@@ -32,7 +32,7 @@ public class FormatsTest {
 
     @BeforeEach
     @DisplayName("init Environment")
-    private void initEnv() {
+    public void initEnv() {
         recorder = new TraceRecorder(TraceRecorderConfig.builder().enableAsync(false).build());
     }
 
