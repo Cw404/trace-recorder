@@ -20,12 +20,12 @@ import cn.xusc.trace.enhance.InfoEnhancer;
 import cn.xusc.trace.exception.TraceException;
 import cn.xusc.trace.filter.InfoFilter;
 import cn.xusc.trace.record.InfoRecorder;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -289,5 +289,47 @@ public final class TraceRecorderProperties extends Properties {
     public synchronized void loadFromXML(InputStream in) throws IOException {
         super.loadFromXML(in);
         isLoad = true;
+    }
+
+    /**
+     * 简易的加载
+     *
+     * @param t 资源对象
+     * @return 当前跟踪记录仪属性
+     * @param <T> 资源对象类型
+     * @throws IOException          if an I/O exception occurs.
+     * @throws NullPointerException if {@code t} is null.
+     * @since 2.5
+     */
+    public synchronized <T> TraceRecorderProperties easyLoad(T t) throws IOException {
+        Objects.requireNonNull(t, "t parameter is null");
+        if (t instanceof URL) {
+            URL url = (URL) t;
+            if (Objects.equals(Files.probeContentType(Paths.get(url.getPath())), "application/xml")) {
+                loadFromXML(url);
+            } else {
+                load(url);
+            }
+        } else if (t instanceof Reader) {
+            load((Reader) t);
+        } else if (t instanceof InputStream) {
+            InputStream inputStream = (InputStream) t;
+            /*
+            构建可重复读的输入流
+             */
+            InputStream repeatableReadableInputStream = new ByteArrayInputStream(inputStream.readAllBytes());
+            try {
+                loadFromXML(repeatableReadableInputStream);
+            } catch (Exception e) {
+                /*
+                properties文件无法被xml解析加载，这里继续进行加载
+                 */
+                repeatableReadableInputStream.reset();
+                load(repeatableReadableInputStream);
+            }
+        } else {
+            throw new TraceException("not support load mode");
+        }
+        return this;
     }
 }
