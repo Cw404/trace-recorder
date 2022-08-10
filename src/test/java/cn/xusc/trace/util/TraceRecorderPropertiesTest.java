@@ -18,7 +18,7 @@ package cn.xusc.trace.util;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import cn.xusc.trace.TraceRecorder;
-import cn.xusc.trace.config.TraceRecorderConfig;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,6 +46,7 @@ public class TraceRecorderPropertiesTest {
 
     @ParameterizedTest
     @ValueSource(strings = "TraceRecorderPropertiesTest.properties")
+    @DisplayName("load ")
     public void loadPropertiesTest(String propertiesPath) throws IOException {
         URL resource = ClassLoader.getSystemClassLoader().getResource(propertiesPath);
         properties.load(resource);
@@ -61,12 +62,28 @@ public class TraceRecorderPropertiesTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "TraceRecorderPropertiesTest.properties")
+    @ValueSource(strings = { "TraceRecorderPropertiesTest.properties", "TraceRecorderPropertiesTest.xml" })
+    public void easyLoadTest(String propertiesPath) throws IOException {
+        URL resource = ClassLoader.getSystemClassLoader().getResource(propertiesPath);
+        assertNotNull(properties.easyLoad(resource));
+        assertNotNull(properties.config());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "TraceRecorderPropertiesTest.properties", "TraceRecorderPropertiesTest.xml" })
     public void useTest(String propertiesPath) throws IOException {
         URL resource = ClassLoader.getSystemClassLoader().getResource(propertiesPath);
-        properties.load(resource);
-        TraceRecorderConfig config = properties.config();
-        TraceRecorder recorder = new TraceRecorder(config);
+        TraceRecorder recorder = new TraceRecorder(properties.easyLoad(resource).config());
+        recorder.log("hello {}", "TraceRecorderProperties");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "TraceRecorderPropertiesTest.properties", "TraceRecorderPropertiesTest.xml" })
+    public void useTest1(String propertiesPath) throws IOException {
+        URL resource = ClassLoader.getSystemClassLoader().getResource(propertiesPath);
+        TraceRecorder recorder = new TraceRecorder(
+            properties.easyLoad(new FileInputStream(resource.getPath())).config()
+        );
         recorder.log("hello {}", "TraceRecorderProperties");
     }
 }
