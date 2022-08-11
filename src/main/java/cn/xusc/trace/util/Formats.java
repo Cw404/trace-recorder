@@ -16,32 +16,30 @@
 package cn.xusc.trace.util;
 
 import java.util.Objects;
+import lombok.experimental.UtilityClass;
 
 /**
  * 消息格式化工具类
  *
  * <p>
  * 尽可能格式化参数列表数据到表达式
+ * 通过lombok组件{@link UtilityClass}确保工具类的使用
  * </p>
  *
  * @author WangCai
  * @since 1.1
  */
-public final class Formats {
-
-    /**
-     * 禁止实例化
-     */
-    private Formats() {}
+@UtilityClass
+public class Formats {
 
     /**
      * 分割符
      */
-    private static final String SEPARATOR = "{}";
+    private final String SEPARATOR = "{}";
     /**
      * 转义符
      */
-    private static final char ESCAPE = '\\';
+    private final char ESCAPE = '\\';
 
     /**
      * 格式化消息
@@ -50,7 +48,7 @@ public final class Formats {
      * @param arg            参数
      * @return 格式化消息
      */
-    public static String format(String messagePattern, Object arg) {
+    public String format(String messagePattern, Object arg) {
         return format(messagePattern, new Object[] { arg });
     }
 
@@ -65,7 +63,7 @@ public final class Formats {
      * @param argArray       参数列表
      * @return 格式化消息
      */
-    public static String format(String messagePattern, Object... argArray) {
+    public String format(String messagePattern, Object... argArray) {
         Objects.requireNonNull(messagePattern);
         Objects.requireNonNull(argArray);
 

@@ -16,6 +16,7 @@
 package cn.xusc.trace.util;
 
 import java.util.Objects;
+import lombok.experimental.UtilityClass;
 
 /**
  * 符号工具类
@@ -23,26 +24,23 @@ import java.util.Objects;
  * <p>
  * 为避免没必要的字符串对常量池的负载，这里只提供常用的符号。
  * 可以通过{@link #generate(String, int)}进行指定数量的符号获取
+ * 通过lombok组件{@link UtilityClass}确保工具类的使用
  * </p>
  *
  * @author WangCai
  * @since 1.0
  */
-public final class Symbols {
-
-    /**
-     * 禁止实例化
-     */
-    private Symbols() {}
+@UtilityClass
+public class Symbols {
 
     /**
      * 空格符号
      */
-    private static final Symbol SPACE = new Symbol(" ", 1);
+    private final Symbol SPACE = new Symbol(" ", 1);
     /**
      * 制表符号
      */
-    private static final Symbol TAB = new Symbol(" ", 4);
+    private final Symbol TAB = new Symbol(" ", 4);
     /**
      * 换行符号
      *
@@ -50,18 +48,18 @@ public final class Symbols {
      * 平台相关
      * </p>
      */
-    private static final Symbol LINE_SEPARATOR = new Symbol(System.lineSeparator(), 1);
+    private final Symbol LINE_SEPARATOR = new Symbol(System.lineSeparator(), 1);
     /**
      * 连接符号
      */
-    private static final Symbol CONNECTIVE = new Symbol("-", 1);
+    private final Symbol CONNECTIVE = new Symbol("-", 1);
 
     /**
      * 获取空格符
      *
      * @return 空格符
      */
-    public static String space() {
+    public String space() {
         return SPACE.getSymbol();
     }
 
@@ -70,7 +68,7 @@ public final class Symbols {
      *
      * @return 制表符
      */
-    public static String tab() {
+    public String tab() {
         return TAB.getSymbol();
     }
 
@@ -79,7 +77,7 @@ public final class Symbols {
      *
      * @return 换行符
      */
-    public static String lineSeparator() {
+    public String lineSeparator() {
         return LINE_SEPARATOR.getSymbol();
     }
 
@@ -88,7 +86,7 @@ public final class Symbols {
      *
      * @return 连接符
      */
-    public static String connective() {
+    public String connective() {
         return CONNECTIVE.getSymbol();
     }
 
@@ -99,14 +97,14 @@ public final class Symbols {
      * @param size         数量
      * @return 自定义数量符号
      */
-    public static String generate(String originSymbol, int size) {
+    public String generate(String originSymbol, int size) {
         return new Symbol(originSymbol, size).getSymbol();
     }
 
     /**
      * 符号
      */
-    private static class Symbol {
+    private class Symbol {
 
         /**
          * 原始符号

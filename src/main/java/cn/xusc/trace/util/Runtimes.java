@@ -20,24 +20,25 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import lombok.experimental.UtilityClass;
 
 /**
  * 运行时工具类
  *
+ * <p>
+ * 通过lombok组件{@link UtilityClass}确保工具类的使用
+ * </p>
+ *
  * @author WangCai
  * @since 1.0
  */
-public final class Runtimes {
-
-    /**
-     * 禁止实例化
-     */
-    private Runtimes() {}
+@UtilityClass
+public class Runtimes {
 
     /**
      * 关闭处理队列
      */
-    private static final List<AutoCloseable> CLOSEABLES = new ArrayList<>();
+    private final List<AutoCloseable> CLOSEABLES = new ArrayList<>();
 
     static {
         Runtime.getRuntime().addShutdownHook(new ShowdownCleaner());
@@ -52,7 +53,7 @@ public final class Runtimes {
      *
      * @param closeable 关闭对象
      */
-    public static void addCleanTask(AutoCloseable closeable) {
+    public void addCleanTask(AutoCloseable closeable) {
         CLOSEABLES.add(closeable);
 
         /*
@@ -71,7 +72,7 @@ public final class Runtimes {
     /**
      * JVM关闭时的清理线程
      */
-    private static class ShowdownCleaner extends Thread {
+    private class ShowdownCleaner extends Thread {
 
         @Override
         public void run() {
