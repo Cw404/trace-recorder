@@ -4,7 +4,7 @@ ch:
 - modify:文件的变更
 - refactor:功能的重构
 - optimize:优化的内容
-- explain:新增说明文件
+- explain:新增说明文件或说明补充
 - upgrade:升级的依赖包
 - upgrade fix:升级依赖包的问题修复
 
@@ -16,6 +16,6 @@ en:
 - modify:Changes to files
 - refactor:Refactoring of functions
 - optimize:Optimized content
-- explain:New description file
+- explain:New description file or description supplements
 - upgrade:Upgraded dependency packages
 - upgrade fix:Upgrade dependency pack issue fixed
