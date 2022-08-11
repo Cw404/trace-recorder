@@ -15,6 +15,9 @@
  */
 package cn.xusc.trace.constant;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 协议族
  *
@@ -22,6 +25,11 @@ package cn.xusc.trace.constant;
  * @since 2.5
  */
 public interface ProtocolFamily {
+    /**
+     * 协议族列表
+     */
+    List<ProtocolFamily> PROTOCOL_FAMILIES = new ArrayList<>();
+
     /**
      * 协议名
      *
@@ -35,6 +43,13 @@ public interface ProtocolFamily {
      * @return 协议头
      */
     String head();
+
+    /**
+     * 注册到协议族列表
+     */
+    default void register() {
+        PROTOCOL_FAMILIES.add(this);
+    }
 
     /**
      * 网络协议
