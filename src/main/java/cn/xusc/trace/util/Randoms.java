@@ -16,26 +16,27 @@
 package cn.xusc.trace.util;
 
 import java.util.UUID;
+import lombok.experimental.UtilityClass;
 
 /**
  * 随机工具类
  *
+ * <p>
+ * 通过lombok组件{@link UtilityClass}确保工具类的使用
+ * </p>
+ *
  * @author WangCai
  * @since 2.2
  */
-public final class Randoms {
-
-    /**
-     * 禁止实例化
-     */
-    private Randoms() {}
+@UtilityClass
+public class Randoms {
 
     /**
      * 获取一个唯一标识符字符串
      *
      * @return 唯一标识符字符串
      */
-    public static String uuid() {
+    public String uuid() {
         return UUID.randomUUID().toString();
     }
 
@@ -45,7 +46,7 @@ public final class Randoms {
      * @param dashToNewStr 破折号转化的新字符串
      * @return 唯一标识符字符串
      */
-    public static String uuid(String dashToNewStr) {
+    public String uuid(String dashToNewStr) {
         return uuid().replace("-", dashToNewStr);
     }
 }

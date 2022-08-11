@@ -20,28 +20,29 @@ import java.io.StringReader;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import lombok.experimental.UtilityClass;
 
 /**
  * 字符串工具类
  *
+ * <p>
+ * 通过lombok组件{@link UtilityClass}确保工具类的使用
+ * </p>
+ *
  * @author WangCai
  * @since 2.0
  */
+@UtilityClass
 public class Strings {
 
-    private static final String EMPTY = "";
-
-    /**
-     * 禁止实例化
-     */
-    private Strings() {}
+    private final String EMPTY = "";
 
     /**
      * 空字符串
      *
      * @return 空字符串
      */
-    public static String empty() {
+    public String empty() {
         return EMPTY;
     }
 
@@ -51,7 +52,7 @@ public class Strings {
      * @param str 判断字符串
      * @return 是否为空结果
      */
-    public static boolean isEmpty(String str) {
+    public boolean isEmpty(String str) {
         return EMPTY.equals(str);
     }
 
@@ -63,7 +64,7 @@ public class Strings {
      * @return 字符串是否相等结果
      * @throws NullPointerException if {@code str} or {@code str1} is null
      */
-    public static boolean equals(String str, String str1) {
+    public boolean equals(String str, String str1) {
         Objects.requireNonNull(str);
         Objects.requireNonNull(str1);
 
@@ -79,7 +80,7 @@ public class Strings {
      * @throws NullPointerException if {@code originStr} is null.
      * @since 2.4
      */
-    public static List<String> split(String originStr, char separator) {
+    public List<String> split(String originStr, char separator) {
         Objects.requireNonNull(originStr);
 
         if (isEmpty(originStr)) {

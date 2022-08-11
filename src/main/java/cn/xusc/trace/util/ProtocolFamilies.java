@@ -17,24 +17,25 @@ package cn.xusc.trace.util;
 
 import cn.xusc.trace.constant.ProtocolFamily;
 import java.util.Objects;
+import lombok.experimental.UtilityClass;
 
 /**
  * 协议族工具类
  *
+ * <p>
+ * 通过lombok组件{@link UtilityClass}确保工具类的使用
+ * </p>
+ *
  * @author WangCai
  * @since 2.5
  */
-public final class ProtocolFamilies {
+@UtilityClass
+public class ProtocolFamilies {
 
     /**
      * 协议族注册初始化标识
      */
-    private static boolean protocolFamilyRegisterInit = false;
-
-    /**
-     * 禁止实例化
-     */
-    private ProtocolFamilies() {}
+    private boolean protocolFamilyRegisterInit = false;
 
     /**
      * 协议消除
@@ -42,7 +43,7 @@ public final class ProtocolFamilies {
      * @param protocolStr 协议字符串
      * @return 消除协议后的字符串
      */
-    public static String eliminate(String protocolStr) {
+    public String eliminate(String protocolStr) {
         Objects.requireNonNull(protocolStr);
 
         ensureProtocolFamilyRegisterInit();
@@ -61,7 +62,7 @@ public final class ProtocolFamilies {
     /**
      * 确保协议族注册初始化
      */
-    private static void ensureProtocolFamilyRegisterInit() {
+    private void ensureProtocolFamilyRegisterInit() {
         if (!protocolFamilyRegisterInit) {
             ProtocolFamily.Net.HTTP.HTTP.register();
             ProtocolFamily.Net.HTTP.HTTPS.register();

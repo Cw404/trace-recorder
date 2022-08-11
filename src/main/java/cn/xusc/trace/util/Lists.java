@@ -17,19 +17,20 @@ package cn.xusc.trace.util;
 
 import java.util.*;
 import java.util.function.Predicate;
+import lombok.experimental.UtilityClass;
 
 /**
  * 列表工具类
  *
+ * <p>
+ * 通过lombok组件{@link UtilityClass}确保工具类的使用
+ * </p>
+ *
  * @author WangCai
  * @since 2.0
  */
+@UtilityClass
 public class Lists {
-
-    /**
-     * 禁止实例化
-     */
-    private Lists() {}
 
     /**
      * 获取列表元素的类名
@@ -37,7 +38,7 @@ public class Lists {
      * @param list 列表
      * @return 元素类名字符串
      */
-    public static String classNames(List<?> list) {
+    public String classNames(List<?> list) {
         if (Objects.isNull(list)) {
             return Strings.empty();
         }
@@ -50,7 +51,7 @@ public class Lists {
      * @param iterator 迭代器
      * @return 元素类名字符串
      */
-    public static String classNames(Iterator<?> iterator) {
+    public String classNames(Iterator<?> iterator) {
         if (Objects.isNull(iterator)) {
             return Strings.empty();
         }
@@ -69,7 +70,7 @@ public class Lists {
      * @return 合并列表
      * @since 2.2
      */
-    public static List<?> merge(List<?>... lists) {
+    public List<?> merge(List<?>... lists) {
         if (lists.length == 0) {
             return Collections.emptyList();
         }
@@ -102,7 +103,7 @@ public class Lists {
      * @throws NullPointerException if {@code condition} is null.
      * @since 2.4
      */
-    public static <T> List<T> statistic(List<T> list, Predicate<T> condition) {
+    public <T> List<T> statistic(List<T> list, Predicate<T> condition) {
         Objects.requireNonNull(list);
         Objects.requireNonNull(condition);
 
