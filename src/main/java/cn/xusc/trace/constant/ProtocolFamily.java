@@ -59,7 +59,13 @@ public interface ProtocolFamily {
          * http协议
          */
         enum HTTP implements Net {
+            /**
+             * http协议
+             */
             HTTP("http://"),
+            /**
+             * https协议
+             */
             HTTPS("https://");
 
             private String head;
