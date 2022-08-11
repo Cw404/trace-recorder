@@ -25,7 +25,7 @@ plugins {
 }
 
 group 'cn.xusc'
-version = new Version(major: 2, minor: 4, revision: 0, snapshot: false)
+version = new Version(major: 2, minor: 5, revision: 0, snapshot: true)
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 
