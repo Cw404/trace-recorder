@@ -42,6 +42,7 @@ public class ProtocolFamilies {
      *
      * @param protocolStr 协议字符串
      * @return 消除协议后的字符串
+     * @throws NullPointerException if {@code protocolStr} is null.
      */
     public String eliminate(String protocolStr) {
         Objects.requireNonNull(protocolStr);
