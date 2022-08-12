@@ -72,6 +72,22 @@ public class Strings {
     }
 
     /**
+     * 字符串忽略大小写是否相等
+     *
+     * @param str  第一个字符串
+     * @param str1 第二个字符串
+     * @return 字符串是否相等结果
+     * @throws NullPointerException if {@code str} or {@code str1} is null
+     * @since 2.5
+     */
+    public boolean equalsIgnoreCase(String str, String str1) {
+        Objects.requireNonNull(str);
+        Objects.requireNonNull(str1);
+
+        return str.equalsIgnoreCase(str1);
+    }
+
+    /**
      * 根据指定分隔符分割字符串
      *
      * @param originStr 原字符串
