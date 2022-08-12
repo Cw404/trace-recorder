@@ -28,9 +28,7 @@ import cn.xusc.trace.handle.SyncTraceHandler;
 import cn.xusc.trace.handle.TraceHandler;
 import cn.xusc.trace.record.ConsoleInfoRecorder;
 import cn.xusc.trace.record.InfoRecorder;
-import cn.xusc.trace.util.FastList;
-import cn.xusc.trace.util.Lists;
-import cn.xusc.trace.util.Memo;
+import cn.xusc.trace.util.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -579,17 +577,29 @@ public class TraceRecorder {
     /**
      * 记录格式信息
      *
+     * <p>
+     * V2.5或者以后可通过参数列表末尾参数进行推断，来达到nolog记录。
+     * </p>
+     *
      * @param info     格式信息
      * @param argArray 参数列表
      * @since 1.1
      */
     public void log(String info, Object... argArray) {
         verifyClosed();
-        log(info, Objects.requireNonNullElse(label, RecordLabel.NOW), argArray);
+        if (Objects.equals(RecordLabel.HIDE, deduceRecordLabel(info, argArray))) {
+            nolog(info, argArray);
+            return;
+        }
+        log(info, Objects.requireNonNullElse(label, deduceRecordLabel(info, argArray)), argArray);
     }
 
     /**
      * 不记录信息
+     *
+     * <p>
+     * 推荐使用{@code #log(String, false)}，因为那样更方便
+     * </p>
      *
      * @param info 信息
      * @since 1.1
@@ -601,6 +611,10 @@ public class TraceRecorder {
 
     /**
      * 不记录格式信息
+     *
+     * <p>
+     * 推荐使用{@code #log(String, Object..., false)}，因为那样更方便
+     * </p>
      *
      * @param info     格式信息
      * @param argArray 参数列表
@@ -624,6 +638,29 @@ public class TraceRecorder {
      */
     private void log(String info, RecordLabel label, Object... argArray) {
         TRACE_HANDLER.handle(info, label, argArray);
+    }
+
+    /**
+     * 推断记录标签
+     *
+     * @param info 格式信息
+     * @param argArray 参数列表
+     * @return 记录标签
+     * @since 2.5
+     */
+    private RecordLabel deduceRecordLabel(String info, Object... argArray) {
+        if (Objects.isNull(argArray) || Objects.equals(0, argArray.length)) {
+            return RecordLabel.NOW;
+        }
+
+        if (Formats.isMoreArgs(info, argArray)) {
+            String maybeBoolArgStr = Objects.toString(argArray[argArray.length - 1]);
+            if (Strings.equalsIgnoreCase("false", maybeBoolArgStr)) {
+                return RecordLabel.HIDE;
+            }
+        }
+
+        return RecordLabel.NOW;
     }
 
     /**
