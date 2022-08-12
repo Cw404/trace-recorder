@@ -62,6 +62,8 @@ public class Formats {
      * @param messagePattern 格式消息
      * @param argArray       参数列表
      * @return 格式化消息
+     * @throws NullPointerException if {@code messagePattern} is null.
+     * @throws NullPointerException if {@code argArray} is null.
      */
     public String format(String messagePattern, Object... argArray) {
         Objects.requireNonNull(messagePattern);
@@ -79,7 +81,7 @@ public class Formats {
         int start = 0, end, index = 0;
         while ((end = messagePattern.indexOf(SEPARATOR, start)) > -1) {
             if (end > 0 && Objects.equals(messagePattern.charAt(end - 1), ESCAPE)) {
-                sb.append(messagePattern, start, start = end + 1);
+                sb.append(messagePattern, start, start = end + 2);
                 continue;
             }
 
@@ -95,5 +97,54 @@ public class Formats {
         }
 
         return start == 0 ? messagePattern : sb.append(messagePattern, start, mLength).toString();
+    }
+
+    /**
+     * 是否有更多格式参数
+     *
+     * @param messagePattern 格式消息
+     * @param argArray       参数列表
+     * @return 更多参数情况
+     * @throws NullPointerException if {@code messagePattern} is null.
+     * @throws NullPointerException if {@code argArray} is null.
+     * @since 2.5
+     */
+    public boolean isMoreArgs(String messagePattern, Object... argArray) {
+        Objects.requireNonNull(messagePattern);
+        Objects.requireNonNull(argArray);
+
+        int mLength = messagePattern.length();
+        if (mLength < SEPARATOR.length()) {
+            /*
+               小于分隔符长度的格式消息，存在两种情况
+                情况一：
+                    存在参数组
+                情况二:
+                    不存在参数组
+             */
+            if (argArray.length > 0) {
+                return true;
+            }
+            return false;
+        }
+
+        int start = 0, end, aryArrayCount = argArray.length;
+        while ((end = messagePattern.indexOf(SEPARATOR, start)) > -1) {
+            if (end > 0 && Objects.equals(messagePattern.charAt(end - 1), ESCAPE)) {
+                start = end + 2;
+                continue;
+            }
+
+            aryArrayCount--;
+            if (aryArrayCount < 0) {
+                /*
+                  还需填充占位，但参数列表已经填充完了
+                 */
+                return false;
+            }
+            start = end + 2;
+        }
+
+        return aryArrayCount == 0 ? false : true;
     }
 }
