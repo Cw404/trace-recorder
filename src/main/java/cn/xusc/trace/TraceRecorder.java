@@ -376,7 +376,7 @@ public class TraceRecorder {
      * 重置特殊的结构
      *
      * <p>
-     * 特殊的结构 -> {@link #memoryPoint()}记忆点数据
+     * 特殊的结构 - {@link #memoryPoint()}记忆点数据
      * </p>
      *
      * @return 重置后详情
