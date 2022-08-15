@@ -29,6 +29,8 @@ version = new Version(major: 2, minor: 5, revision: 0, snapshot: true)
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 
+compileJava.options.encoding = compileTestJava.options.encoding = "UTF-8"
+
 repositories {
 	// 优先本地仓库加载
 	mavenLocal()
