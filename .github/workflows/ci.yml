@@ -50,10 +50,9 @@ jobs:
 
       - name: Execute spotless check
         run: ./gradlew spotlessCheck
-      
-      - name: Build with Gradlew
-        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-        with:
-            arguments: build
+
+      - name: Build with Gradlew, discard the windows（encoding:windows-1252）
+        if: ${{ matrix.os != 'windows-latest'}}
+        run: ./gradlew build
 
       - uses: codecov/codecov-action@v3
