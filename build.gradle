@@ -68,6 +68,7 @@ java {
 javadoc {
 	title = 'Trace-Recorder'
 
+	options.encoding = "UTF-8"
 	options.author = true
 	options.bottom = "<i>Copyright &#169; 2022 - ${Year.now(ZoneId.of("Asia/Shanghai"))} WangCai. All Rights Reserved.</i>"
 	options.use = true
