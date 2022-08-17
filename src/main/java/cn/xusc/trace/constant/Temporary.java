@@ -52,9 +52,11 @@ public class Temporary {
     public static final String EXCEPTION = "exception";
 
     /**
-     * 忽略栈包名
+     * 忽略堆栈类名
      */
-    public static final String[] IGNORE_STACK_PACKAGE_NAME = new String[] {
+    public static final String[] IGNORE_STACK_CLASS_NAMES = new String[] {
+        "cn.xusc.trace.enhance.CommonStatisticsInfoEnhancer",
+        "cn.xusc.trace.enhance.AbstractStatisticsInfoEnhancer",
         "cn.xusc.trace.handle.BaseTraceHandler",
         "cn.xusc.trace.handle.SyncTraceHandler",
         "cn.xusc.trace.handle.AsyncTraceHandler",
