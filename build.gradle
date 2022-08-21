@@ -44,6 +44,8 @@ repositories {
 dependencies {
 	// 高性能的队列
 	implementation 'com.lmax:disruptor:3.4.4'
+	// Java最好的JSON解析器
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
 	// 简化java对象代码，增加可读性
 	compileOnly 'org.projectlombok:lombok:1.18.24'
 	annotationProcessor 'org.projectlombok:lombok:1.18.24'
