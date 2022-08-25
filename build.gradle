@@ -94,7 +94,8 @@ spotless {
 		// 确保不改变其它文件（apache）的内容
 		target project.fileTree(project.rootDir) {
 			include '**/*.java'
-			exclude '**/util/FastList.java'
+			exclude '**/util/FastList.java',
+					'**/util/AntPathMatcher.java'
 		}
 
 		// 导入排序
