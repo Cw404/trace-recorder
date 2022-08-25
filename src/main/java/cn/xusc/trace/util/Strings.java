@@ -17,9 +17,7 @@ package cn.xusc.trace.util;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -35,7 +33,17 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Strings {
 
+    /**
+     * 空字符串
+     */
     private final String EMPTY = "";
+
+    /**
+     * 空字符串数组
+     *
+     * @since 2.5
+     */
+    private final String[] EMPTY_ARRAY = {};
 
     /**
      * 空字符串
@@ -129,5 +137,52 @@ public class Strings {
         }
 
         return splits;
+    }
+
+    /**
+     * 字符串分词为字符串数组
+     *
+     * @param str 字符串
+     * @param delimiters 分隔符
+     * @param trimTokens 是否修剪令牌
+     * @param ignoreEmptyTokens 是否忽略空令牌
+     * @return 分词的字符串数组
+     * @since 2.5
+     */
+    public static String[] tokenizeToStringArray(
+        String str,
+        String delimiters,
+        boolean trimTokens,
+        boolean ignoreEmptyTokens
+    ) {
+        if (Objects.isNull(str)) {
+            return EMPTY_ARRAY;
+        }
+
+        StringTokenizer st = new StringTokenizer(str, delimiters);
+        List<String> tokens = new ArrayList<>();
+        while (st.hasMoreTokens()) {
+            String token = st.nextToken();
+            if (trimTokens) {
+                token = token.trim();
+            }
+            if (!ignoreEmptyTokens || token.length() > 0) {
+                tokens.add(token);
+            }
+        }
+        return toStringArray(tokens);
+    }
+
+    /**
+     * 集合转换成数组
+     *
+     * @param collection 集合
+     * @return 转换后的数组
+     * @since 2.5
+     */
+    public static String[] toStringArray(Collection<String> collection) {
+        return Boolean.logicalAnd(Objects.nonNull(collection), !collection.isEmpty())
+            ? collection.toArray(EMPTY_ARRAY)
+            : EMPTY_ARRAY;
     }
 }
