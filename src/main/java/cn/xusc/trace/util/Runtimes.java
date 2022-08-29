@@ -59,7 +59,7 @@ public class Runtimes {
         /*
           确保顺序准确；没有自定义顺序，默认排列最前
          */
-        if (CLOSEABLES.size() > 0) {
+        if (CLOSEABLES.size() > 1) {
             CLOSEABLES.sort(
                 Comparator.comparing(closeable1 -> {
                     CloseOrder closeOrder = closeable1.getClass().getAnnotation(CloseOrder.class);
