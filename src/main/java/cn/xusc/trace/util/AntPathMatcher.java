@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * <li>{@code {spring:[a-z]+}} matches the regexp {@code [a-z]+} as a path variable named "spring"</li>
  * </ul>
  *
- * <h3>Examples</h3>
+ * <p>Examples</p>
  * <ul>
  * <li>{@code com/t?st.jsp} &mdash; matches {@code com/test.jsp} but also
  * {@code com/tast.jsp} or {@code com/txst.jsp}</li>
@@ -56,6 +56,11 @@ import java.util.regex.Pattern;
  * both be relative in order for the two to match. Therefore, it is recommended
  * that users of this implementation to sanitize patterns in order to prefix
  * them with "/" as it makes sense in the context in which they're used.
+ *
+ * <p><strong>Note:</strong> To comply with the Javadoc specification, some processing has been done to the current class.
+ * If you want to get the full version, please go to see
+ *
+ * <p><strong>请注意:</strong> 为符合javadoc的规范，对当前类进行了一些处理。如果你想获取全的请到see进行查看
  *
  * @author Alef Arendsen
  * @author Juergen Hoeller
@@ -118,6 +123,8 @@ public class AntPathMatcher {
     /**
      * Set the path separator to use for pattern parsing.
      * <p>Default is "/", as in Ant.
+     *
+     * @param pathSeparator path separator
      */
     public void setPathSeparator(String pathSeparator) {
         this.pathSeparator = (pathSeparator != null ? pathSeparator : DEFAULT_PATH_SEPARATOR);
@@ -127,6 +134,7 @@ public class AntPathMatcher {
     /**
      * Specify whether to perform pattern matching in a case-sensitive fashion.
      * <p>Default is {@code true}. Switch this to {@code false} for case-insensitive matching.
+     * @param caseSensitive case sensitive
      * @since 4.2
      */
     public void setCaseSensitive(boolean caseSensitive) {
@@ -136,6 +144,7 @@ public class AntPathMatcher {
     /**
      * Specify whether to trim tokenized paths and patterns.
      * <p>Default is {@code false}.
+     * @param trimTokens trim tokens
      */
     public void setTrimTokens(boolean trimTokens) {
         this.trimTokens = trimTokens;
@@ -150,6 +159,7 @@ public class AntPathMatcher {
      * turn it off when encountering too many patterns to cache at runtime
      * (the threshold is 65536), assuming that arbitrary permutations of patterns
      * are coming in, with little chance for encountering a recurring pattern.
+     * @param cachePatterns cache patterns
      * @since 4.0.1
      * @see #getStringMatcher(String)
      */
@@ -163,6 +173,12 @@ public class AntPathMatcher {
         this.stringMatcherCache.clear();
     }
     
+    /**
+     * verify path is pattern?
+     *
+     * @param path path
+     * @return result
+     */
     public boolean isPattern(String path) {
         if (path == null) {
             return false;
@@ -184,10 +200,24 @@ public class AntPathMatcher {
         return false;
     }
     
+    /**
+     * verify path within pattern, full.
+     *
+     * @param pattern pattern path
+     * @param path need match path
+     * @return result
+     */
     public boolean match(String pattern, String path) {
         return doMatch(pattern, path, true, null);
     }
     
+    /**
+     * verify path within pattern, only start.
+     *
+     * @param pattern pattern path
+     * @param path need match path
+     * @return result
+     */
     public boolean matchStart(String pattern, String path) {
         return doMatch(pattern, path, false, null);
     }
@@ -477,6 +507,9 @@ public class AntPathMatcher {
      * <li>'{@code *}' and '{@code /docs/cvs/commit.html} &rarr; '{@code /docs/cvs/commit.html}'</li> </ul>
      * <p>Assumes that {@link #match} returns {@code true} for '{@code pattern}' and '{@code path}', but
      * does <strong>not</strong> enforce this.
+     * @param pattern pattern path
+     * @param path need match path
+     * @return pattern path
      */
     public String extractPathWithinPattern(String pattern, String path) {
         String[] patternParts = Strings.tokenizeToStringArray(pattern, this.pathSeparator, this.trimTokens, true);
@@ -500,6 +533,13 @@ public class AntPathMatcher {
         return builder.toString();
     }
     
+    /**
+     * extract uri template variables.
+     *
+     * @param pattern pattern path
+     * @param path need match path
+     * @return uri template variables
+     */
     public Map<String, String> extractUriTemplateVariables(String pattern, String path) {
         Map<String, String> variables = new LinkedHashMap<>();
         boolean result = doMatch(pattern, path, true, variables);
@@ -515,8 +555,9 @@ public class AntPathMatcher {
      * the first pattern contains a file extension match (e.g., {@code *.html}).
      * In that case, the second pattern will be merged into the first. Otherwise,
      * an {@code IllegalArgumentException} will be thrown.
-     * <h3>Examples</h3>
+     * <p>Examples</p>
      * <table border="1">
+     * <caption>Details</caption>
      * <tr><th>Pattern 1</th><th>Pattern 2</th><th>Result</th></tr>
      * <tr><td>{@code null}</td><td>{@code null}</td><td>&nbsp;</td></tr>
      * <tr><td>/hotels</td><td>{@code null}</td><td>/hotels</td></tr>
