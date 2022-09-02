@@ -15,7 +15,6 @@
  */
 package cn.xusc.trace.util;
 
-import cn.xusc.trace.constant.Temporary;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,9 +35,18 @@ import lombok.experimental.UtilityClass;
 public class Systems {
 
     /**
+     * 系统类型
+     */
+    private SystemType systemType;
+
+    /**
      * 属性分割符
      */
     private String splitSymbol = ":";
+
+    static {
+        systemType = SystemType.systemType(getProperties("os.name"));
+    }
 
     /**
      * 设置系统属性
@@ -76,7 +84,7 @@ public class Systems {
      * @return 类路径值
      */
     public String getClassPath() {
-        return getProperties(Temporary.CLASS_PATH_PROPERTY_NAME);
+        return getProperties("java.class.path");
     }
 
     /**
@@ -108,6 +116,15 @@ public class Systems {
     }
 
     /**
+     * 获取java家路径
+     *
+     * @return java家路径值
+     */
+    public String getJavaHome() {
+        return getProperties("java.home");
+    }
+
+    /**
      * 退出虚拟机
      */
     public void exit() {
@@ -121,5 +138,60 @@ public class Systems {
      */
     public void exit(int status) {
         System.exit(status);
+    }
+
+    /**
+     * 获取系统类型
+     *
+     * @return 系统类型
+     */
+    public SystemType systemType() {
+        return systemType;
+    }
+
+    /**
+     * 系统类型
+     *
+     * <p>
+     * 目前只支持Linux、Mac OS、Windows，OTHER为未匹配的其它操作系统类型
+     * </p>
+     */
+    public enum SystemType {
+        Linux("Linux"),
+        MacOS("Mac OS"),
+        WINDOWS("Windows"),
+        OTHER(Strings.empty());
+
+        /**
+         * 系统名
+         */
+        private final String osName;
+
+        /**
+         * 基础构造
+         *
+         * @param osName 系统名
+         */
+        SystemType(String osName) {
+            this.osName = osName;
+        }
+
+        /**
+         * 获取对应系统类型
+         *
+         * @param osName 系统名
+         * @return 系统类型
+         * @throws NullPointerException if {@code osName} is null.
+         */
+        public static SystemType systemType(String osName) {
+            Objects.requireNonNull(osName);
+
+            for (SystemType systemType : values()) {
+                if (osName.startsWith(systemType.osName)) {
+                    return systemType;
+                }
+            }
+            return OTHER;
+        }
     }
 }
