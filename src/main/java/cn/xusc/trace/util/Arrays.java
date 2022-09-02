@@ -54,18 +54,57 @@ public class Arrays {
      * @param from 起始索引
      * @param to 目标索引
      * @throws NullPointerException if {@code arrays} is null.
+     * @throws TraceException if {@code from} or {@code to} index out of bounds.
      */
-    public static void swap(Object[] arrays, int from, int to) {
+    public void swap(Object[] arrays, int from, int to) {
         Objects.requireNonNull(arrays);
 
         int length = arrays.length;
         int bound = length - 1;
         if (Boolean.logicalOr(Boolean.logicalOr(0 > from, from > bound), Boolean.logicalOr(0 > to, to > bound))) {
-            throw new TraceException(" index out of bounds");
+            throw new TraceException("index out of bounds");
         }
 
         Object t = arrays[from];
         arrays[from] = arrays[to];
         arrays[to] = t;
+    }
+
+    /**
+     * 合并原始元素和新元素
+     *
+     * @param original 原始数组
+     * @param ts 新元素
+     * @return 合并元素后的数组
+     * @param <T> 元素类型
+     * @throws NullPointerException if {@code original} is null.
+     * @throws NullPointerException if {@code ts} is null.
+     * @throws TraceException if {@code ts} contains non-component types.
+     */
+    public <T> T[] merge(T[] original, T... ts) {
+        Objects.requireNonNull(original);
+        Objects.requireNonNull(ts);
+
+        int tsLength, originalLength, newLength;
+        if ((tsLength = ts.length) == 0) {
+            return original;
+        }
+        T t;
+        Class<?> componentType = original.getClass().getComponentType();
+        T[] newArray = java.util.Arrays.copyOf(original, newLength = (originalLength = original.length) + tsLength);
+        for (int i = originalLength, y = 0; i < newLength; i++, y++) {
+            if (!componentType.isInstance(t = ts[y])) {
+                throw new TraceException(
+                    Formats.format(
+                        "ts contains [ {} ] non-component types [ {} ]",
+                        t.getClass().getName(),
+                        componentType.getName()
+                    )
+                );
+            }
+            newArray[i] = t;
+        }
+
+        return newArray;
     }
 }
