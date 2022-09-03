@@ -15,6 +15,7 @@
  */
 package cn.xusc.trace.util;
 
+import cn.xusc.trace.exception.TraceException;
 import java.util.Objects;
 import lombok.experimental.UtilityClass;
 
@@ -124,8 +125,12 @@ public class Symbols {
          *
          * @param originSymbol 原始符号
          * @param size         符号数量
+         * @throws TraceException if {@code taskHandlerSize} is less 1
          */
         public Symbol(String originSymbol, int size) {
+            if (size < 1) {
+                throw new TraceException("size must to greater 0");
+            }
             this.originSymbol = originSymbol;
             this.size = size;
         }
