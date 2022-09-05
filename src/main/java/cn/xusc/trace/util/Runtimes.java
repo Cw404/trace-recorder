@@ -74,6 +74,13 @@ public class Runtimes {
      */
     private class ShowdownCleaner extends Thread {
 
+        /**
+         * 基础构造
+         */
+        public ShowdownCleaner() {
+            super("ShowdownCleaner");
+        }
+
         @Override
         public void run() {
             FastList<Exception> exceptions = new FastList<>(Exception.class);
