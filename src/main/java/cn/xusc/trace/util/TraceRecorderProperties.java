@@ -25,7 +25,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -305,7 +304,10 @@ public final class TraceRecorderProperties extends Properties {
         Objects.requireNonNull(t, "t parameter is null");
         if (t instanceof URL) {
             URL url = (URL) t;
-            if (Objects.equals(Files.probeContentType(Paths.get(url.getPath())), "application/xml")) {
+            /*
+            fix: URL slashify question in windows
+             */
+            if (Objects.equals(Files.probeContentType(new File(url.getFile()).toPath()), "application/xml")) {
                 loadFromXML(url);
             } else {
                 load(url);

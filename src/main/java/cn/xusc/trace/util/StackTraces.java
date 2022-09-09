@@ -41,6 +41,7 @@ public class StackTraces {
      *
      * @param ignoreStackClassNames 忽略堆栈类名集
      * @return 当前忽略堆栈类名的可选堆栈元素
+     * @throws NullPointerException  if {@code ignoreStackClassNames} is null.
      */
     public Optional<StackTraceElement[]> currentStackTraceElement(String... ignoreStackClassNames) {
         Objects.requireNonNull(ignoreStackClassNames);
@@ -58,6 +59,7 @@ public class StackTraces {
      *
      * @param ignoreStackClassNames 忽略堆栈类名集
      * @return 当前忽略堆栈类名的第一个可选堆栈元素
+     * @throws NullPointerException  if {@code ignoreStackClassNames} is null.
      */
     public Optional<StackTraceElement> currentFirstStackTraceElement(String... ignoreStackClassNames) {
         Objects.requireNonNull(ignoreStackClassNames);
@@ -76,6 +78,8 @@ public class StackTraces {
      * @param exception 处理的异常
      * @param ignoreStackClassNames 忽略堆栈类名集
      * @return 当前忽略堆栈类名的可选堆栈元素
+     * @throws NullPointerException  if {@code exception} is null.
+     * @throws NullPointerException  if {@code ignoreStackClassNames} is null.
      */
     public Optional<StackTraceElement[]> currentStackTraceElement(
         Exception exception,
@@ -98,6 +102,8 @@ public class StackTraces {
      * @param exception 处理的异常
      * @param ignoreStackClassNames 忽略堆栈类名集
      * @return 当前忽略堆栈类名的第一个可选堆栈元素
+     * @throws NullPointerException  if {@code exception} is null.
+     * @throws NullPointerException  if {@code ignoreStackClassNames} is null.
      */
     public Optional<StackTraceElement> currentFirstStackTraceElement(
         Exception exception,

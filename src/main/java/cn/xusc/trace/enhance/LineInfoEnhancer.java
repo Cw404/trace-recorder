@@ -17,7 +17,6 @@ package cn.xusc.trace.enhance;
 
 import cn.xusc.trace.EnhanceInfo;
 import cn.xusc.trace.util.Symbols;
-import java.util.Objects;
 
 /**
  * 行信息增强器
@@ -39,12 +38,7 @@ public class LineInfoEnhancer implements InfoEnhancer {
 
     @Override
     public EnhanceInfo setWriteInfo(EnhanceInfo eInfo) {
-        if (Objects.nonNull(eInfo.getInfo())) {
-            /*
-              如果消息不为空，默认写出消息就为输入消息
-             */
-            eInfo.setWriteInfo(eInfo.getInfo() + Symbols.lineSeparator());
-        }
+        eInfo.setWriteInfo(eInfo.getInfo());
         return eInfo;
     }
 }

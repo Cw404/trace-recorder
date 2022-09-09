@@ -17,9 +17,8 @@ package cn.xusc.trace.enhance;
 
 import cn.xusc.trace.EnhanceInfo;
 import cn.xusc.trace.constant.Temporary;
-import cn.xusc.trace.exception.TraceException;
-import java.util.Arrays;
-import java.util.Objects;
+import cn.xusc.trace.util.StackTraces;
+import java.util.Optional;
 
 /**
  * 栈信息增强
@@ -28,18 +27,6 @@ import java.util.Objects;
  * @since 1.0
  */
 public class StackInfoEnhancer implements InfoEnhancer {
-
-    /**
-     * 忽略的栈包名
-     */
-    private static final String[] IGNORE_STACK_PACKAGE_NAME = Temporary.IGNORE_STACK_PACKAGE_NAME;
-
-    static {
-        /*
-          为二分查找前进行排序
-         */
-        Arrays.sort(IGNORE_STACK_PACKAGE_NAME);
-    }
 
     @Override
     public EnhanceInfo enhance(EnhanceInfo eInfo) {
@@ -50,17 +37,13 @@ public class StackInfoEnhancer implements InfoEnhancer {
             /*
               异常从临时值获取，容错异步处理的堆栈
              */
-            StackTraceElement[] stackTrace = ((Exception) eInfo.getTemporaryValue(Temporary.EXCEPTION)).getStackTrace();
-            StackTraceElement stackTraceElement = null;
-            for (StackTraceElement stackTraceElementF : stackTrace) {
-                if (Arrays.binarySearch(IGNORE_STACK_PACKAGE_NAME, stackTraceElementF.getClassName()) < 0) {
-                    stackTraceElement = stackTraceElementF;
-                    break;
-                }
-            }
-            if (Objects.isNull(stackTraceElement)) {
-                throw new TraceException("not found specify stack, stack info: " + Arrays.toString(stackTrace));
-            }
+            Exception exception = ((Exception) eInfo.getTemporaryValue(Temporary.EXCEPTION));
+            Optional<StackTraceElement> stackTraceElementOptional = StackTraces.currentFirstStackTraceElement(
+                exception,
+                Temporary.IGNORE_STACK_CLASS_NAMES
+            );
+
+            StackTraceElement stackTraceElement = stackTraceElementOptional.get();
             eInfo.setClassName(stackTraceElement.getClassName());
             eInfo.setMethodName(stackTraceElement.getMethodName());
             eInfo.setLineNumber(stackTraceElement.getLineNumber());
