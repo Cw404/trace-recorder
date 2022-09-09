@@ -178,7 +178,7 @@ public class Process {
                     infos.add(
                         Info
                             .builder()
-                            .UID(Integer.valueOf(uid))
+                            .UID(uid)
                             .PID(Integer.valueOf(pid))
                             .PPID(Integer.valueOf(ppid))
                             .C(Float.valueOf(c))
@@ -217,7 +217,7 @@ public class Process {
         /**
          * 用户id
          */
-        int UID;
+        String UID;
         /**
          * 进程id
          */
