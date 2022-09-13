@@ -29,7 +29,7 @@ import java.util.StringTokenizer;
  * </p>
  *
  * @author WangCai
- * @since 2.2
+ * @since 2.5
  */
 public final class Painter {
 
