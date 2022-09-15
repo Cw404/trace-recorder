@@ -29,6 +29,7 @@ public interface FieldReflect<T> {
      * 获取字段列表
      *
      * @return 字段列表
+     * @throws TraceException if the fields operation is not supported by this reflect.
      */
     default List<Field<java.lang.reflect.Field>> fields() {
         throw new TraceException("not support operation");
@@ -38,6 +39,7 @@ public interface FieldReflect<T> {
      * 获取字段值
      *
      * @return 字段值
+     * @throws TraceException if the value operation is not supported by this reflect.
      */
     default T value() {
         throw new TraceException("not support operation");

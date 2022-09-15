@@ -29,6 +29,7 @@ public interface MethodReflect<T> {
      * 获取方法列表
      *
      * @return 方法列表
+     * @throws TraceException if the methods operation is not supported by this reflect.
      */
     default List<Method<java.lang.reflect.Method>> methods() {
         throw new TraceException("not support operation");
@@ -38,6 +39,7 @@ public interface MethodReflect<T> {
      * 获取参数列表
      *
      * @return 参数列表
+     * @throws TraceException if the parameters operation is not supported by this reflect.
      */
     default List<Parameter<T>> parameters() {
         throw new TraceException("not support operation");
@@ -47,6 +49,7 @@ public interface MethodReflect<T> {
      * 获取返回类型
      *
      * @return 返回类型
+     * @throws TraceException if the return type operation is not supported by this reflect.
      */
     default String returnType() {
         throw new TraceException("not support operation");
@@ -57,6 +60,7 @@ public interface MethodReflect<T> {
      *
      * @param ts 参数
      * @return 调用结果
+     * @throws TraceException if the call operation is not supported by this reflect.
      */
     default T call(T... ts) {
         throw new TraceException("not support operation");
