@@ -24,7 +24,7 @@ import java.util.List;
  * @author WangCai
  * @since 2.5
  */
-public interface FieldReflect<T> {
+public interface FieldReflect<T> extends SpecificationReflect<T>, AnnotationReflect<T> {
     /**
      * 获取字段列表
      *

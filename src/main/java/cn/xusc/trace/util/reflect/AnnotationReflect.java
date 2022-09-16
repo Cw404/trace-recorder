@@ -23,7 +23,7 @@ import java.util.List;
  * @author WangCai
  * @since 2.5
  */
-public interface AnnotationReflect {
+public interface AnnotationReflect<T> extends SpecificationReflect<T> {
     /**
      * 获取注释列表
      *

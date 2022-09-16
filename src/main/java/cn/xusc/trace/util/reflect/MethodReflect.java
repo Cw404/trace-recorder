@@ -24,7 +24,7 @@ import java.util.List;
  * @author WangCai
  * @since 2.5
  */
-public interface MethodReflect<T> {
+public interface MethodReflect<T> extends SpecificationReflect<T>, AnnotationReflect<T> {
     /**
      * 获取方法列表
      *
