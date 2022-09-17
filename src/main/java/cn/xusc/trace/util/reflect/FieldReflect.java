@@ -24,7 +24,7 @@ import java.util.List;
  * @author WangCai
  * @since 2.5
  */
-public interface FieldReflect<T> extends SpecificationReflect<T>, AnnotationReflect<T> {
+public interface FieldReflect<T> extends SpecificationReflect<T>, ValueReflect<T>, AnnotationReflect<T> {
     /**
      * 获取字段列表
      *
@@ -32,16 +32,6 @@ public interface FieldReflect<T> extends SpecificationReflect<T>, AnnotationRefl
      * @throws TraceException if the fields operation is not supported by this reflect.
      */
     default List<Field<java.lang.reflect.Field>> fields() {
-        throw new TraceException("not support operation");
-    }
-
-    /**
-     * 获取字段值
-     *
-     * @return 字段值
-     * @throws TraceException if the value operation is not supported by this reflect.
-     */
-    default T value() {
         throw new TraceException("not support operation");
     }
 }
