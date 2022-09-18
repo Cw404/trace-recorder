@@ -15,6 +15,7 @@
  */
 package cn.xusc.trace.util.reflect;
 
+import cn.xusc.trace.exception.TraceException;
 import java.util.List;
 
 /**
@@ -28,6 +29,9 @@ public interface AnnotationReflect<T> extends SpecificationReflect<T>, ValueRefl
      * 获取注释列表
      *
      * @return 注释列表
+     * @throws TraceException if the fields operation is not supported by this reflect.
      */
-    List<Annotation<Class<? extends java.lang.annotation.Annotation>>> annotations();
+    default List<Annotation<Class<? extends java.lang.annotation.Annotation>>> annotations() {
+        throw new TraceException("not support operation");
+    }
 }
