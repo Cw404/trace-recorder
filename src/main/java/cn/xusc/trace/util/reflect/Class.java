@@ -27,7 +27,7 @@ import java.util.Objects;
  * @author WangCai
  * @since 2.5
  */
-public class Class<T> implements FieldReflect<T>, MethodReflect<T>, AnnotationReflect<T> {
+public class Class<T> implements ClassReflect<T> {
 
     /**
      * 源对象
@@ -65,7 +65,7 @@ public class Class<T> implements FieldReflect<T>, MethodReflect<T>, AnnotationRe
      *
      * @param clazz 源类
      * @param t 源对象
-     * @throws NullPointerException if {@code clazz} and {@code t} is null or class type not match.
+     * @throws TraceException if {@code clazz} and {@code t} is null or class type not match.
      */
     public Class(java.lang.Class<T> clazz, T t) {
         boolean clazzIsNull, tIsNull;
@@ -82,13 +82,65 @@ public class Class<T> implements FieldReflect<T>, MethodReflect<T>, AnnotationRe
             origin = t;
             return;
         }
-        if (!Objects.equals(t.getClass(), clazz)) {
+        originClazz = clazz;
+        if (!isInstance(t)) {
             throw new TraceException(
                 Formats.format("class type not match, clazz: {}, t class: {}", clazz, t.getClass())
             );
         }
-        originClazz = clazz;
         origin = t;
+    }
+
+    @Override
+    public boolean isInstance(T t) {
+        Objects.requireNonNull(t);
+
+        return originClazz.isInstance(t);
+    }
+
+    @Override
+    public boolean isEnum() {
+        return originClazz.isEnum();
+    }
+
+    @Override
+    public boolean isArray() {
+        return originClazz.isArray();
+    }
+
+    @Override
+    public boolean isInterface() {
+        return originClazz.isInterface();
+    }
+
+    @Override
+    public boolean isAnnotation() {
+        return originClazz.isAnnotation();
+    }
+
+    @Override
+    public boolean isPrimitive() {
+        return originClazz.isPrimitive();
+    }
+
+    @Override
+    public boolean isSynthetic() {
+        return originClazz.isSynthetic();
+    }
+
+    @Override
+    public boolean isLocalClass() {
+        return originClazz.isLocalClass();
+    }
+
+    @Override
+    public boolean isMemberClass() {
+        return originClazz.isMemberClass();
+    }
+
+    @Override
+    public boolean isAnonymousClass() {
+        return originClazz.isAnonymousClass();
     }
 
     @Override
@@ -104,6 +156,15 @@ public class Class<T> implements FieldReflect<T>, MethodReflect<T>, AnnotationRe
     @Override
     public java.lang.Class<T> componentType() {
         return (java.lang.Class<T>) originClazz.getComponentType();
+    }
+
+    @Override
+    public List<Constructor<java.lang.reflect.Constructor>> constructors() {
+        List<Constructor<java.lang.reflect.Constructor>> constructors = new ArrayList<>();
+        for (java.lang.reflect.Constructor constructor : originClazz.getDeclaredConstructors()) {
+            constructors.add(new Constructor(constructor));
+        }
+        return constructors;
     }
 
     @Override
