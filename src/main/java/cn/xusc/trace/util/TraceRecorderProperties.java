@@ -302,7 +302,14 @@ public final class TraceRecorderProperties extends Properties {
      */
     public synchronized <T> TraceRecorderProperties easyLoad(T t) throws IOException {
         Objects.requireNonNull(t, "t parameter is null");
-        if (t instanceof URL) {
+        if (t instanceof String) {
+            String s = (String) t;
+            String classPathPrefix = "classpath:";
+            if (s.startsWith(classPathPrefix)) {
+                return easyLoad(ClassLoader.getSystemResourceAsStream(s.substring(classPathPrefix.length())));
+            }
+            return easyLoad(new File(s).toURI().toURL());
+        } else if (t instanceof URL) {
             URL url = (URL) t;
             /*
             fix: URL slashify question in windows

@@ -86,4 +86,13 @@ public class TraceRecorderPropertiesTest {
         );
         recorder.log("hello {}", "TraceRecorderProperties");
     }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = { "classpath:TraceRecorderPropertiesTest.properties", "classpath:TraceRecorderPropertiesTest.xml" }
+    )
+    public void useTest2(String propertiesPath) throws IOException {
+        TraceRecorder recorder = new TraceRecorder(properties.easyLoad(propertiesPath).config());
+        recorder.log("hello {}", "TraceRecorderProperties");
+    }
 }
