@@ -82,12 +82,13 @@ public final class Reflector<T> {
     /**
      * 游走所有
      *
-     * @param classConsumer 类消费者
-     * @param fieldConsumer 字段消费者
-     * @param methodConsumer 方法消费者
+     * @param classConsumer      类消费者
+     * @param fieldConsumer      字段消费者
+     * @param methodConsumer     方法消费者
      * @param annotationConsumer 注释消费者
+     * @return 当前反射者
      */
-    public void walk(
+    public Reflector<T> walk(
         Consumer<Class<T>> classConsumer,
         Consumer<Constructor<java.lang.reflect.Constructor>> constructorConsumer,
         Consumer<Field<java.lang.reflect.Field>> fieldConsumer,
@@ -99,52 +100,63 @@ public final class Reflector<T> {
         walkFields(fieldConsumer);
         walkMethods(methodConsumer);
         walkAnnotations(annotationConsumer);
+        return this;
     }
 
     /**
      * 游走类
      *
      * @param classConsumer 类消费者
+     * @return 当前反射者
      */
-    public void walkClass(Consumer<Class<T>> classConsumer) {
+    public Reflector<T> walkClass(Consumer<Class<T>> classConsumer) {
         classConsumer.accept(clazz);
+        return this;
     }
 
     /**
      * 游走构造函数
      *
      * @param constructorConsumer 构造函数消费者
+     * @return 当前反射者
      */
-    public void walkConstructors(Consumer<Constructor<java.lang.reflect.Constructor>> constructorConsumer) {
+    public Reflector<T> walkConstructors(Consumer<Constructor<java.lang.reflect.Constructor>> constructorConsumer) {
         clazz.constructors().forEach(constructorConsumer::accept);
+        return this;
     }
 
     /**
      * 游走字段
      *
      * @param fieldConsumer 字段消费者
+     * @return 当前反射者
      */
-    public void walkFields(Consumer<Field<java.lang.reflect.Field>> fieldConsumer) {
+    public Reflector<T> walkFields(Consumer<Field<java.lang.reflect.Field>> fieldConsumer) {
         clazz.fields().forEach(fieldConsumer::accept);
+        return this;
     }
 
     /**
      * 游走方法
      *
      * @param methodConsumer 方法消费者
+     * @return 当前反射者
      */
-    public void walkMethods(Consumer<Method<java.lang.reflect.Method>> methodConsumer) {
+    public Reflector<T> walkMethods(Consumer<Method<java.lang.reflect.Method>> methodConsumer) {
         clazz.methods().forEach(methodConsumer::accept);
+        return this;
     }
 
     /**
      * 游走注释
      *
      * @param annotationConsumer 注释消费者
+     * @return 当前反射者
      */
-    public void walkAnnotations(
+    public Reflector<T> walkAnnotations(
         Consumer<Annotation<Class<? extends java.lang.annotation.Annotation>>> annotationConsumer
     ) {
         clazz.annotations().forEach(annotationConsumer::accept);
+        return this;
     }
 }
