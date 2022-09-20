@@ -89,11 +89,13 @@ public final class Reflector<T> {
      */
     public void walk(
         Consumer<Class<T>> classConsumer,
+        Consumer<Constructor<java.lang.reflect.Constructor>> constructorConsumer,
         Consumer<Field<java.lang.reflect.Field>> fieldConsumer,
         Consumer<Method<java.lang.reflect.Method>> methodConsumer,
         Consumer<Annotation<Class<? extends java.lang.annotation.Annotation>>> annotationConsumer
     ) {
         walkClass(classConsumer);
+        walkConstructors(constructorConsumer);
         walkFields(fieldConsumer);
         walkMethods(methodConsumer);
         walkAnnotations(annotationConsumer);
@@ -106,6 +108,15 @@ public final class Reflector<T> {
      */
     public void walkClass(Consumer<Class<T>> classConsumer) {
         classConsumer.accept(clazz);
+    }
+
+    /**
+     * 游走构造函数
+     *
+     * @param constructorConsumer 构造函数消费者
+     */
+    public void walkConstructors(Consumer<Constructor<java.lang.reflect.Constructor>> constructorConsumer) {
+        clazz.constructors().forEach(constructorConsumer::accept);
     }
 
     /**
