@@ -81,7 +81,7 @@ javadoc {
 // spotless配置
 spotless {
 	format 'misc', {
-		target '*.gradle', '*.md', '.gitignore'
+		target '*.gradle', '.gitignore'
 
 		// 修剪后面空格
 		trimTrailingWhitespace()
