@@ -139,6 +139,8 @@ subprojects {
 			importOrder()
 			// 移除未使用的导入
 			removeUnusedImports()
+			// 修复注释类型格式
+			formatAnnotations()
 
 			// 许可头文件
 			licenseHeaderFile rootDir.path +'/LICENSEHEADER'
