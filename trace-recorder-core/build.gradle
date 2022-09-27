@@ -1,0 +1,4 @@
+dependencies {
+	// 项目模块依赖
+	implementation project(":trace-recorder-common")
+}

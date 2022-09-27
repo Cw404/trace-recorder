@@ -1,6 +1,6 @@
-# ![logo](./logo.png "Trace-Recorder logo")
+# ![logo](./logo.png "trace-recorder logo")
 
-Simple, Scalable, High-Powered. Trace-Recorder is a trace recorder, mainly in order to better record the source code flow,
+Simple, Scalable, High-Powered. trace-recorder is a trace recorder, mainly in order to better record the source code flow,
 can better access to the source code implementation of the basic process and the full process;
 Records can be better managed with a scalable plug-in architecture.
 
