@@ -33,7 +33,7 @@ buildscript{
 	ext {
 		// - 插件
 		// https://plugins.gradle.org/plugin/com.diffplug.spotless
-		spotlessVersion = '6.9.0'
+		spotlessVersion = '6.11.0'
 		// - 项目
 		// https://mvnrepository.com/artifact/org.projectlombok/lombok
 		lombokVersion = '1.18.24'
