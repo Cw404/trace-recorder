@@ -20,6 +20,7 @@ import cn.xusc.trace.common.util.Lists;
 import cn.xusc.trace.core.enhance.InfoEnhancer;
 import cn.xusc.trace.core.filter.InfoFilter;
 import cn.xusc.trace.core.record.InfoRecorder;
+import cn.xusc.trace.core.util.TraceRecorderProperties;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -98,6 +99,13 @@ public class TraceRecorderConfig {
     private int taskHandlerSize;
 
     /**
+     * 附加属性
+     *
+     * @since 2.5
+     */
+    private TraceRecorderProperties additionProperties;
+
+    /**
      * 主构建器
      *
      * @param infoFilters          信息过滤器集
@@ -138,6 +146,48 @@ public class TraceRecorderConfig {
     }
 
     /**
+     * 带附加属性的构建器
+     *
+     * @param infoFilters          信息过滤器集
+     * @param infoEnhancers        信息增强器集
+     * @param infoRecorders        信息记录器集
+     * @param enableStack          启用堆栈信息标识
+     * @param enableShortClassName 启用短类名标识
+     * @param enableThreadName     启用线程名
+     * @param enableRecordAll      启用记录所有
+     * @param enableAsync          启用异步记录
+     * @param taskHandlerSize      任务处理器数量
+     * @param additionProperties   附加属性
+     * @throws TraceException if {@code taskHandlerSize} is less 1
+     * @since 2.5
+     */
+    public TraceRecorderConfig(
+        List<InfoFilter> infoFilters,
+        List<InfoEnhancer> infoEnhancers,
+        List<InfoRecorder> infoRecorders,
+        boolean enableStack,
+        boolean enableShortClassName,
+        boolean enableThreadName,
+        boolean enableRecordAll,
+        boolean enableAsync,
+        int taskHandlerSize,
+        TraceRecorderProperties additionProperties
+    ) {
+        this(
+            infoFilters,
+            infoEnhancers,
+            infoRecorders,
+            enableStack,
+            enableShortClassName,
+            enableThreadName,
+            enableRecordAll,
+            enableAsync,
+            taskHandlerSize
+        );
+        this.additionProperties = additionProperties;
+    }
+
+    /**
      * 跟踪记录仪配置详情
      *
      * @return 详情
@@ -164,6 +214,8 @@ public class TraceRecorderConfig {
             enableAsync +
             ", taskHandlerSize=" +
             taskHandlerSize +
+            ", additionProperties=" +
+            additionProperties +
             '}'
         );
     }

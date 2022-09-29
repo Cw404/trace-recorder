@@ -29,9 +29,13 @@ import cn.xusc.trace.core.handle.SyncTraceHandler;
 import cn.xusc.trace.core.handle.TraceHandler;
 import cn.xusc.trace.core.record.ConsoleInfoRecorder;
 import cn.xusc.trace.core.record.InfoRecorder;
+import cn.xusc.trace.core.util.TraceRecorderProperties;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * 跟踪记录仪
@@ -62,6 +66,13 @@ public class TraceRecorder {
      * 信息记录器链
      */
     private final List<InfoRecorder> INFO_RECORDERS = new FastList<>(InfoRecorder.class);
+
+    /**
+     * 跟踪记录仪环境
+     *
+     * @since 2.5
+     */
+    private TraceRecorderEnvironment environment;
 
     /**
      * 跟踪记录仪备忘录
@@ -133,6 +144,7 @@ public class TraceRecorder {
 
         enableStack = true;
         enableThreadName = true;
+        environment = new TraceRecorderEnvironment();
     }
 
     /**
@@ -142,6 +154,19 @@ public class TraceRecorder {
      */
     public TraceRecorder() {
         TRACE_HANDLER = new SyncTraceHandler(this);
+        initBaseEnvironment();
+    }
+
+    /**
+     * 带附加属性的基础构造
+     *
+     * @param additionProperties 附加属性
+     * @throws NullPointerException if {@code additionProperties} is null.
+     * @since 2.5
+     */
+    public TraceRecorder(TraceRecorderProperties additionProperties) {
+        this();
+        initAdditionPropertiesEnvironment(Optional.of(additionProperties));
     }
 
     /**
@@ -152,6 +177,20 @@ public class TraceRecorder {
      */
     public TraceRecorder(boolean enableAsync) {
         TRACE_HANDLER = enableAsync ? new AsyncTraceHandler(this) : new SyncTraceHandler(this);
+        initBaseEnvironment();
+    }
+
+    /**
+     * 带附加属性的异步标识构造
+     *
+     * @param enableAsync 异步标识
+     * @param additionProperties 附加属性
+     * @throws NullPointerException if {@code additionProperties} is null.
+     * @since 2.5
+     */
+    public TraceRecorder(boolean enableAsync, TraceRecorderProperties additionProperties) {
+        this(enableAsync);
+        initAdditionPropertiesEnvironment(Optional.of(additionProperties));
     }
 
     /**
@@ -166,6 +205,21 @@ public class TraceRecorder {
             throw new TraceException("taskHandlerSize < 1");
         }
         TRACE_HANDLER = new AsyncTraceHandler(this, taskHandlerSize);
+        initBaseEnvironment();
+    }
+
+    /**
+     * 带附加属性的异步处理器的跟踪记录仪构造
+     *
+     * @param taskHandlerSize 任务处理器数量
+     * @param additionProperties 附加属性
+     * @throws TraceException if {@code taskHandlerSize} is less 1
+     * @throws NullPointerException if {@code additionProperties} is null.
+     * @since 2.5
+     */
+    public TraceRecorder(int taskHandlerSize, TraceRecorderProperties additionProperties) {
+        this(taskHandlerSize);
+        initAdditionPropertiesEnvironment(Optional.of(additionProperties));
     }
 
     /**
@@ -213,9 +267,70 @@ public class TraceRecorder {
          */
         if (config.isEnableAsync()) {
             TRACE_HANDLER = new AsyncTraceHandler(this, config.getTaskHandlerSize());
+            initBaseEnvironment();
+            initAdditionPropertiesEnvironment(Optional.ofNullable(config.getAdditionProperties()));
             return;
         }
         TRACE_HANDLER = new SyncTraceHandler(this);
+        initBaseEnvironment();
+        initAdditionPropertiesEnvironment(Optional.ofNullable(config.getAdditionProperties()));
+    }
+
+    /**
+     * 初始化基础环境
+     *
+     * @since 2.5
+     */
+    private void initBaseEnvironment() {
+        Map<String, Supplier<Object>> environmentCollectMaps = Map.of(
+            "version",
+            () -> {
+                verifyClosed();
+                return TraceRecorderVersion.INSTANCE;
+            },
+            "enableStack",
+            () -> isEnableStackInfo(),
+            "enableShortClassName",
+            () -> isEnableShortClassName(),
+            "enableThreadName",
+            () -> isEnableThreadName(),
+            "enableRecordAll",
+            () -> recordAll(),
+            "enableAsync",
+            () -> {
+                verifyClosed();
+                return TRACE_HANDLER instanceof AsyncTraceHandler;
+            },
+            "infoFilters",
+            () -> Lists.classNames(getInfoFilters()),
+            "infoEnhancers",
+            () -> Lists.classNames(getInfoEnhancers()),
+            "infoRecorders",
+            () -> Lists.classNames(getInfoRecorders())
+        );
+        environment.put(environmentCollectMaps);
+    }
+
+    /**
+     * 初始化带可选附加属性的环境
+     *
+     * @param additionPropertiesOptional 可选附加属性
+     * @since 2.5
+     */
+    private void initAdditionPropertiesEnvironment(Optional<TraceRecorderProperties> additionPropertiesOptional) {
+        if (additionPropertiesOptional.isPresent()) {
+            additionPropertiesOptional
+                .get()
+                .forEach((key, value) -> {
+                    environment.put(
+                        String.valueOf(key),
+                        () -> {
+                            verifyClosed();
+                            return value;
+                        }
+                    );
+                });
+        }
     }
 
     /**
@@ -562,6 +677,17 @@ public class TraceRecorder {
     public boolean isEnableStackInfo() {
         verifyClosed();
         return enableStack;
+    }
+
+    /**
+     * 获取跟踪记录仪环境
+     *
+     * @return 跟踪记录仪环境
+     * @since 2.5
+     */
+    public TraceRecorderEnvironment environment() {
+        verifyClosed();
+        return environment;
     }
 
     /**

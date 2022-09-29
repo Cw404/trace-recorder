@@ -98,6 +98,7 @@ public final class TraceRecorderProperties extends Properties {
                 .enableRecordAll(innerEnableRecordAll())
                 .enableAsync(innerEnableAsync())
                 .taskHandlerSize(innerTaskHandlerSize())
+                .additionProperties(this)
                 .build();
         }
         throw new TraceException("not load TraceRecorder properties");
