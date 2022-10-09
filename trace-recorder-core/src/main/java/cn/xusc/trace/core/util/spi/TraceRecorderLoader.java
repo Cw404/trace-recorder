@@ -353,7 +353,7 @@ public class TraceRecorderLoader<T> {
                 if (pair.length > 2) {
                     throw new TraceException(Formats.format("[ {} ] is invalid data format, exist more = split", line));
                 }
-                return new ResourcePair(pair[0], pair[1]);
+                return new ResourcePair(pair[0].trim(), pair[1].trim());
             }
             return null;
         }
