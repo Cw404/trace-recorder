@@ -18,15 +18,13 @@ package cn.xusc.trace.core.util.spi;
 import cn.xusc.trace.common.exception.TraceException;
 import cn.xusc.trace.common.util.Formats;
 import cn.xusc.trace.common.util.Lists;
-import cn.xusc.trace.core.util.TraceRecorderProperties;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
 
 /**
  * 跟踪记录仪加载器
@@ -45,6 +43,11 @@ public class TraceRecorderLoader<T> {
      * 类对象池
      */
     private static final Map<Class<?>, List<Holder<Object>>> CLASS_OBJECT_POOL = new HashMap<>();
+
+    /**
+     * 类名称池
+     */
+    private static final Map<Class<?>, List<String>> CLASS_NAME_POOL = new HashMap<>();
 
     /**
      * 加载类
@@ -187,11 +190,15 @@ public class TraceRecorderLoader<T> {
      */
     private List<Holder<Object>> loadResource(ClassLoader classLoader, URL resource) throws IOException {
         List<Holder<Object>> holders = new ArrayList<>();
-        TraceRecorderProperties properties = new TraceRecorderProperties();
-        properties.easyLoad(resource);
-        properties.forEach((k, v) -> {
-            String name = (String) k;
-            String classPath = (String) v;
+        ResourceReader resourceReader = new ResourceReader(resource.openStream());
+        List<String> names = CLASS_NAME_POOL.computeIfAbsent(CLAZZ, k -> new ArrayList<>());
+        while (resourceReader.ready()) {
+            ResourcePair resourcePair = resourceReader.readResourcePair();
+            String name = (String) resourcePair.getName();
+            String classPath = (String) resourcePair.getClassPath();
+            if (names.contains(name)) {
+                throw new TraceException(Formats.format("name [ {} ] already exist", name));
+            }
             if (Boolean.logicalOr(name.isBlank(), classPath.isBlank())) {
                 throw new TraceException("not support load, name or classpath must to not blank");
             }
@@ -207,11 +214,12 @@ public class TraceRecorderLoader<T> {
                     .name(name)
                     .lazyValueSupplier(() -> getConstructor(loadClass).call())
                     .build();
+                names.add(name);
                 holders.add(holder);
             } catch (ClassNotFoundException e) {
                 throw new TraceException(e);
             }
-        });
+        }
         return holders;
     }
 
@@ -282,6 +290,87 @@ public class TraceRecorderLoader<T> {
          */
         public T getValue() {
             return Optional.ofNullable(value).orElseGet(() -> value = lazyValueSupplier.get());
+        }
+    }
+
+    /**
+     * 资源对
+     *
+     * @param <N> 资源名类型
+     * @param <P> 类路径类型
+     */
+    @Setter
+    @Getter
+    @AllArgsConstructor
+    private class ResourcePair<N, P> {
+
+        /**
+         * 资源名称
+         */
+        N name;
+
+        /**
+         * 类路径
+         */
+        P classPath;
+    }
+
+    /**
+     * 资源读取器
+     */
+    private class ResourceReader extends Reader {
+
+        /**
+         * 缓冲的资源读取器
+         */
+        private final BufferedReader READER;
+
+        /**
+         * 基础构造
+         *
+         * @param inputStream 资源输入流
+         */
+        public ResourceReader(InputStream inputStream) {
+            READER = new BufferedReader(new InputStreamReader(inputStream));
+        }
+
+        /**
+         * 读取资源对
+         *
+         * @return 资源对
+         * @throws IOException If an I/O error occurs.
+         */
+        public ResourcePair readResourcePair() throws IOException {
+            while (ready()) {
+                String line = READER.readLine();
+                if (line.startsWith("#") || line.isBlank()) {
+                    continue;
+                }
+                if (line.indexOf("=") == -1) {
+                    throw new TraceException(Formats.format("[ {} ] is invalid data format, need = split", line));
+                }
+                String[] pair = line.split("=");
+                if (pair.length > 2) {
+                    throw new TraceException(Formats.format("[ {} ] is invalid data format, exist more = split", line));
+                }
+                return new ResourcePair(pair[0], pair[1]);
+            }
+            return null;
+        }
+
+        @Override
+        public int read(char[] cbuf, int off, int len) {
+            throw new TraceException("not support operation");
+        }
+
+        @Override
+        public boolean ready() throws IOException {
+            return READER.ready();
+        }
+
+        @Override
+        public void close() throws IOException {
+            READER.close();
         }
     }
 }
