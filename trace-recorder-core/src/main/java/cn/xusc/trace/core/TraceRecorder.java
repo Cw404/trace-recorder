@@ -21,15 +21,15 @@ import cn.xusc.trace.common.exception.TraceTimeoutException;
 import cn.xusc.trace.common.util.*;
 import cn.xusc.trace.core.config.TraceRecorderConfig;
 import cn.xusc.trace.core.constant.RecordLabel;
+import cn.xusc.trace.core.constant.Temporary;
 import cn.xusc.trace.core.enhance.*;
 import cn.xusc.trace.core.filter.InfoFilter;
-import cn.xusc.trace.core.filter.RecordLabelInfoFilter;
 import cn.xusc.trace.core.handle.AsyncTraceHandler;
 import cn.xusc.trace.core.handle.SyncTraceHandler;
 import cn.xusc.trace.core.handle.TraceHandler;
-import cn.xusc.trace.core.record.ConsoleInfoRecorder;
 import cn.xusc.trace.core.record.InfoRecorder;
 import cn.xusc.trace.core.util.TraceRecorderProperties;
+import cn.xusc.trace.core.util.spi.TraceRecorderLoader;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -48,6 +48,7 @@ import java.util.function.Supplier;
  *     recorder.log("msg");
  *     recorder.nolog("msg");
  * </pre>
+ * <notice>组件优先级别：内设组件 -> 外部spi组件 -> 外部属性配置组件</notice>
  *
  * @author WangCai
  * @since 1.0
@@ -135,12 +136,7 @@ public class TraceRecorder {
         /*
           初始化基础跟踪记录仪
          */
-        INFO_FILTERS.add(new RecordLabelInfoFilter());
-        INFO_ENHANCERS.add(new LineInfoEnhancer());
-        INFO_ENHANCERS.add(new StackInfoEnhancer());
-        INFO_ENHANCERS.add(new ShortClassNameInfoEnhancer());
-        INFO_ENHANCERS.add(new ThreadInfoEnhancer());
-        INFO_RECORDERS.add(new ConsoleInfoRecorder());
+        quickSpiComponentsRegister();
 
         enableStack = true;
         enableThreadName = true;
@@ -274,6 +270,49 @@ public class TraceRecorder {
         TRACE_HANDLER = new SyncTraceHandler(this);
         initBaseEnvironment();
         initAdditionPropertiesEnvironment(Optional.ofNullable(config.getAdditionProperties()));
+    }
+
+    /**
+     * 快速的SPI组件注册
+     *
+     * @since 2.5
+     */
+    private void quickSpiComponentsRegister() {
+        TraceRecorderLoader<InfoFilter> infoFilterLoader = TraceRecorderLoader.getTraceRecorderLoader(InfoFilter.class);
+        TraceRecorderLoader<InfoEnhancer> infoEnhancerLoader = TraceRecorderLoader.getTraceRecorderLoader(
+            InfoEnhancer.class
+        );
+        TraceRecorderLoader<InfoRecorder> infoRecorderLoader = TraceRecorderLoader.getTraceRecorderLoader(
+            InfoRecorder.class
+        );
+
+        /* inner(内部) */
+        INFO_FILTERS.add(infoFilterLoader.find(Temporary.SPI_COMPONENT_PREFIX.concat("recordLabelInfoFilter")).get());
+        INFO_ENHANCERS.add(infoEnhancerLoader.find(Temporary.SPI_COMPONENT_PREFIX.concat("lineInfoEnhancer")).get());
+        INFO_ENHANCERS.add(infoEnhancerLoader.find(Temporary.SPI_COMPONENT_PREFIX.concat("stackInfoEnhancer")).get());
+        INFO_ENHANCERS.add(
+            infoEnhancerLoader.find(Temporary.SPI_COMPONENT_PREFIX.concat("shortClassNameInfoEnhancer")).get()
+        );
+        INFO_ENHANCERS.add(infoEnhancerLoader.find(Temporary.SPI_COMPONENT_PREFIX.concat("threadInfoEnhancer")).get());
+        INFO_RECORDERS.add(infoRecorderLoader.find(Temporary.SPI_COMPONENT_PREFIX.concat("consoleInfoRecorder")).get());
+        List<?> innerComponents = Lists.merge(INFO_FILTERS, INFO_ENHANCERS, INFO_RECORDERS);
+
+        /* external(外部) */
+        for (InfoFilter infoFilter : infoFilterLoader.findAll().get()) {
+            if (!innerComponents.contains(infoFilter)) {
+                addInfoFilter(infoFilter);
+            }
+        }
+        for (InfoEnhancer infoEnhancer : infoEnhancerLoader.findAll().get()) {
+            if (!innerComponents.contains(infoEnhancer)) {
+                addInfoEnhancer(infoEnhancer);
+            }
+        }
+        for (InfoRecorder infoRecorder : infoRecorderLoader.findAll().get()) {
+            if (!innerComponents.contains(infoRecorder)) {
+                addInfoRecorder(infoRecorder);
+            }
+        }
     }
 
     /**

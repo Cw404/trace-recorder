@@ -52,6 +52,13 @@ public class Temporary {
     public static final String EXCEPTION = "exception";
 
     /**
+     * SPI组件前缀
+     *
+     * @since 2.5
+     */
+    public static final String SPI_COMPONENT_PREFIX = "inner_xusc_";
+
+    /**
      * 忽略堆栈类名
      */
     public static final String[] IGNORE_STACK_CLASS_NAMES = new String[] {
