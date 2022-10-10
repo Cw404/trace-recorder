@@ -194,6 +194,9 @@ public class TraceRecorderLoader<T> {
         List<String> names = CLASS_NAME_POOL.computeIfAbsent(CLAZZ, k -> new ArrayList<>());
         while (resourceReader.ready()) {
             ResourcePair resourcePair = resourceReader.readResourcePair();
+            if (Objects.isNull(resourcePair)) {
+                return holders;
+            }
             String name = (String) resourcePair.getName();
             String classPath = (String) resourcePair.getClassPath();
             if (names.contains(name)) {
