@@ -29,6 +29,7 @@ import cn.xusc.trace.core.handle.SyncTraceHandler;
 import cn.xusc.trace.core.handle.TraceHandler;
 import cn.xusc.trace.core.record.InfoRecorder;
 import cn.xusc.trace.core.util.TraceRecorderProperties;
+import cn.xusc.trace.core.util.TraceRecorders;
 import cn.xusc.trace.core.util.spi.TraceRecorderLoader;
 import java.util.List;
 import java.util.Map;
@@ -136,6 +137,7 @@ public class TraceRecorder {
         /*
           初始化基础跟踪记录仪
          */
+        localThreadShareTraceRecorder();
         quickSpiComponentsRegister();
 
         enableStack = true;
@@ -270,6 +272,15 @@ public class TraceRecorder {
         TRACE_HANDLER = new SyncTraceHandler(this);
         initBaseEnvironment();
         initAdditionPropertiesEnvironment(Optional.ofNullable(config.getAdditionProperties()));
+    }
+
+    /**
+     * 本地线程共享跟踪记录仪
+     *
+     * @since 2.5
+     */
+    private void localThreadShareTraceRecorder() {
+        TraceRecorders.register(this);
     }
 
     /**
