@@ -49,7 +49,7 @@ import java.util.function.Supplier;
  *     recorder.log("msg");
  *     recorder.nolog("msg");
  * </pre>
- * <notice>组件优先级别：内设组件 -> 外部spi组件 -> 外部属性配置组件</notice>
+ * <strong>组件优先级别: 内设组件 - 外部spi组件 - 外部属性配置组件</strong>
  *
  * @author WangCai
  * @since 1.0
