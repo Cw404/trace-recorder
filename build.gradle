@@ -17,105 +17,178 @@
 import java.time.Year
 import java.time.ZoneId
 
+// 构建脚本
+buildscript{
+	repositories {
+		// 优先本地仓库加载
+		mavenLocal()
+		// 阿里云中央仓库加载
+		maven { url 'https://maven.aliyun.com/repository/public/' }
+		maven { url 'https://maven.aliyun.com/repository/spring/' }
+		// 默认的中央仓库加载
+		mavenCentral()
+	}
+
+	// 版本定义
+	ext {
+		// - 插件
+		// https://plugins.gradle.org/plugin/com.diffplug.spotless
+		spotlessVersion = '6.11.0'
+		// - 项目
+		// https://mvnrepository.com/artifact/org.projectlombok/lombok
+		lombokVersion = '1.18.24'
+		// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+		jacksonVersion = '2.13.3'
+		// https://mvnrepository.com/artifact/com.lmax/disruptor
+		disruptorVersion = '3.4.4'
+		// https://mvnrepository.com/artifact/org.mockito/mockito-core
+		mockitoVersion = '4.7.0'
+		// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+		jupiterVersion = '5.9.0'
+	}
+}
+
+// 插件
 plugins {
 	id 'java'
 	id 'maven-publish'
-	// https://plugins.gradle.org/plugin/com.diffplug.spotless
-	id "com.diffplug.spotless" version "6.9.0"
+	id "com.diffplug.spotless" version "${spotlessVersion}"
 }
 
-group 'cn.xusc'
-version = new Version(major: 2, minor: 5, revision: 0, snapshot: true)
-
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
-
-compileJava.options.encoding = compileTestJava.options.encoding = "UTF-8"
-
-repositories {
-	// 优先本地仓库加载
-	mavenLocal()
-	// 阿里云中央仓库加载
-	maven { url 'https://maven.aliyun.com/repository/public/' }
-	maven { url 'https://maven.aliyun.com/repository/spring/' }
-	// 默认的中央仓库加载
-	mavenCentral()
-}
-
-dependencies {
-	// 高性能的队列
-	implementation 'com.lmax:disruptor:3.4.4'
-	// Java最好的JSON解析器
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
-	// 简化java对象代码，增加可读性
-	compileOnly 'org.projectlombok:lombok:1.18.24'
-	annotationProcessor 'org.projectlombok:lombok:1.18.24'
-
-	testImplementation 'org.mockito:mockito-core:4.7.0'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
-	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.0'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
-}
-
-test {
-	useJUnitPlatform()
-}
-
-// 增加javadoc和源代码jar的生成
-java {
-	withJavadocJar()
-	withSourcesJar()
-}
-
-// javadoc配置
-javadoc {
-	title = 'Trace-Recorder'
-
-	options.encoding = "UTF-8"
-	options.author = true
-	options.bottom = "<i>Copyright &#169; 2022 - ${Year.now(ZoneId.of("Asia/Shanghai"))} WangCai. All Rights Reserved.</i>"
-	options.use = true
-	options.version = true
-	options.showFromPublic()
-}
-
-// spotless配置
-spotless {
-	format 'misc', {
-		target '*.gradle', '*.md', '.gitignore'
-
-		// 修剪后面空格
-		trimTrailingWhitespace()
-		// 使用tab制表符进行缩进
-		indentWithTabs()
-		// 末尾使用新行结束
-		endWithNewline()
+// 所有项目配置
+allprojects {
+	repositories {
+		// 优先本地仓库加载
+		mavenLocal()
+		// 阿里云中央仓库加载
+		maven { url 'https://maven.aliyun.com/repository/public/' }
+		maven { url 'https://maven.aliyun.com/repository/spring/' }
+		// 默认的中央仓库加载
+		mavenCentral()
 	}
-	java {
-		// 确保不改变其它文件（apache）的内容
-		target project.fileTree(project.rootDir) {
-			include '**/*.java'
-			exclude '**/util/FastList.java',
-					'**/util/AntPathMatcher.java'
+
+	// 配置源码和目标编译的jdk版本
+	sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
+}
+
+// 子项目配置
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'maven-publish'
+	apply plugin: "com.diffplug.spotless"
+
+	group 'cn.xusc'
+	version = new Version(major: 2, minor: 5, revision: 0, snapshot: true)
+
+	// 配置lombok编译时期的注释解析
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
 		}
-
-		// 导入排序
-		importOrder()
-		// 移除未使用的导入
-		removeUnusedImports()
-
-		// 许可头文件
-		licenseHeaderFile './LICENSEHEADER'
-		// https://www.npmjs.com/package/prettier
-		// https://www.npmjs.com/package/prettier-plugin-java
-		prettier(['prettier': '2.7.1', 'prettier-plugin-java': '1.6.2']).config([
-				'parser'    : 'java',
-				'tabWidth'  : 4,
-				'printWidth': 120,
-				'endOfLine' : 'lf'
-		])
 	}
-	// spotlessJava -> spotlessMisc
-	spotlessMisc.dependsOn(spotlessJava)
+
+	dependencies {
+		// Java最好的JSON解析器
+		implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+		// 简化java对象代码，增加可读性
+		compileOnly "org.projectlombok:lombok:${lombokVersion}"
+		annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+		// disruptor通用依赖
+		project.name.eachMatch("common|trace-recorder-core",{
+			// 高性能的队列
+			implementation "com.lmax:disruptor:${disruptorVersion}"
+		})
+
+		// 示例项目特殊通用依赖
+		project.name.eachMatch("example",{
+			implementation "org.mockito:mockito-core:${mockitoVersion}"
+			implementation "org.junit.jupiter:junit-jupiter-api:${jupiterVersion}"
+			implementation "org.junit.jupiter:junit-jupiter-params:${jupiterVersion}"
+			runtimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}"
+		})
+	}
+
+	// 配置java类编译、java测试类编译、javadoc的编码格式
+	[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+	// spotless配置
+	spotless {
+		format 'misc', {
+			target '*.gradle', '.gitignore'
+
+			// 修剪后面空格
+			trimTrailingWhitespace()
+			// 使用tab制表符进行缩进
+			indentWithTabs()
+			// 末尾使用新行结束
+			endWithNewline()
+		}
+		java {
+			// 确保不改变其它文件（apache）的内容
+			target project.fileTree(project.projectDir) {
+				include '**/*.java'
+				exclude '**/util/FastList.java',
+						'**/util/AntPathMatcher.java'
+			}
+
+			// 排除不必整理的项目模块
+			targetExclude 'trace-recorder-example'
+
+			// 导入排序
+			importOrder()
+			// 移除未使用的导入
+			removeUnusedImports()
+			// 修复注释类型格式
+			formatAnnotations()
+
+			// 许可头文件
+			licenseHeaderFile rootDir.path +'/LICENSEHEADER'
+			// https://www.npmjs.com/package/prettier
+			// https://www.npmjs.com/package/prettier-plugin-java
+			prettier(['prettier': '2.7.1', 'prettier-plugin-java': '1.6.2']).config([
+					'parser'    : 'java',
+					'tabWidth'  : 4,
+					'printWidth': 120,
+					'endOfLine' : 'lf'
+			])
+		}
+		// spotlessJava -> spotlessMisc
+		spotlessMisc.dependsOn(spotlessJava)
+	}
+
+	// 增加javadoc和源代码jar的生成
+	java {
+		withJavadocJar()
+		withSourcesJar()
+	}
+
+	// javadoc配置
+	javadoc {
+		title = 'trace-recorder'
+
+		options.author = true
+		options.bottom = "<i>Copyright &#169; 2022 - ${Year.now(ZoneId.of("Asia/Shanghai"))} WangCai. All Rights Reserved.</i>"
+		options.use = true
+		options.version = true
+		options.showFromPublic()
+	}
+
+	// 发行非示例项目模块
+	project.name.eachMatch("trace-recorder-(?!example)", {
+		// 发行
+		publishing {
+			publications {
+				maven(MavenPublication) {
+					groupId = "${group}"
+					artifactId = "${project.name}"
+					version = "${version}"
+
+					from components.java
+				}
+			}
+		}
+	})
 }
 
 // git 提交前钩子任务
@@ -137,19 +210,6 @@ task preCommit() {
 // git 钩子任务组
 task hooks() {
 	preCommit
-}
-
-// 发行
-publishing {
-	publications {
-		maven(MavenPublication) {
-			groupId = "${group}"
-			artifactId = 'trace-recorder'
-			version = "${version}"
-
-			from components.java
-		}
-	}
 }
 
 // 版本

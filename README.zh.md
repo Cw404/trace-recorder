@@ -1,6 +1,6 @@
-# Trace-Recorder<sup><sup>&nbsp;它是可伸缩的。</sup></sup>
+# ![logo](./logo_zh.png "trace-recorder logo")
 
-简单的， 可伸缩的， 高性能的。 Trace-Recorder 是一个跟踪记录仪，主要是为了更好的去进行源码流程的记录，
+简单的， 可伸缩的， 高性能的。 trace-recorder 是一个跟踪记录仪，主要是为了更好的去进行源码流程的记录，
 可以更好的获取源码执行的基础流程和全流程；通过可伸缩的插件体系可以更好的去管理记录。
 
 ### 使用
@@ -14,9 +14,9 @@ implementation 'cn.xusc:trace-recorder:2.4'
 maven
 ```maven
 <dependency>
-	<groupId>cn.xusc</groupId>
-	<artifactId>trace-recorder</artifactId>
-	<version>2.4</version>
+   <groupId>cn.xusc</groupId>
+   <artifactId>trace-recorder</artifactId>
+   <version>2.4</version>
 </dependency>
 ```
 
