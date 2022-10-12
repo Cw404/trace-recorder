@@ -138,7 +138,6 @@ public class TraceRecorder {
           初始化基础跟踪记录仪
          */
         localThreadShareTraceRecorder();
-        quickSpiComponentsRegister();
 
         enableStack = true;
         enableThreadName = true;
@@ -153,6 +152,7 @@ public class TraceRecorder {
     public TraceRecorder() {
         TRACE_HANDLER = new SyncTraceHandler(this);
         initBaseEnvironment();
+        quickSpiComponentsRegister();
     }
 
     /**
@@ -163,8 +163,10 @@ public class TraceRecorder {
      * @since 2.5
      */
     public TraceRecorder(TraceRecorderProperties additionProperties) {
-        this();
+        TRACE_HANDLER = new SyncTraceHandler(this);
+        initBaseEnvironment();
         initAdditionPropertiesEnvironment(Optional.of(additionProperties));
+        quickSpiComponentsRegister();
     }
 
     /**
@@ -176,6 +178,7 @@ public class TraceRecorder {
     public TraceRecorder(boolean enableAsync) {
         TRACE_HANDLER = enableAsync ? new AsyncTraceHandler(this) : new SyncTraceHandler(this);
         initBaseEnvironment();
+        quickSpiComponentsRegister();
     }
 
     /**
@@ -187,8 +190,10 @@ public class TraceRecorder {
      * @since 2.5
      */
     public TraceRecorder(boolean enableAsync, TraceRecorderProperties additionProperties) {
-        this(enableAsync);
+        TRACE_HANDLER = enableAsync ? new AsyncTraceHandler(this) : new SyncTraceHandler(this);
+        initBaseEnvironment();
         initAdditionPropertiesEnvironment(Optional.of(additionProperties));
+        quickSpiComponentsRegister();
     }
 
     /**
@@ -204,6 +209,7 @@ public class TraceRecorder {
         }
         TRACE_HANDLER = new AsyncTraceHandler(this, taskHandlerSize);
         initBaseEnvironment();
+        quickSpiComponentsRegister();
     }
 
     /**
@@ -216,8 +222,13 @@ public class TraceRecorder {
      * @since 2.5
      */
     public TraceRecorder(int taskHandlerSize, TraceRecorderProperties additionProperties) {
-        this(taskHandlerSize);
+        if (taskHandlerSize < 1) {
+            throw new TraceException("taskHandlerSize < 1");
+        }
+        TRACE_HANDLER = new AsyncTraceHandler(this, taskHandlerSize);
+        initBaseEnvironment();
         initAdditionPropertiesEnvironment(Optional.of(additionProperties));
+        quickSpiComponentsRegister();
     }
 
     /**
@@ -267,11 +278,13 @@ public class TraceRecorder {
             TRACE_HANDLER = new AsyncTraceHandler(this, config.getTaskHandlerSize());
             initBaseEnvironment();
             initAdditionPropertiesEnvironment(Optional.ofNullable(config.getAdditionProperties()));
+            quickSpiComponentsRegister();
             return;
         }
         TRACE_HANDLER = new SyncTraceHandler(this);
         initBaseEnvironment();
         initAdditionPropertiesEnvironment(Optional.ofNullable(config.getAdditionProperties()));
+        quickSpiComponentsRegister();
     }
 
     /**
