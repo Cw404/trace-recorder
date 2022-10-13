@@ -92,10 +92,10 @@ public class Class<T> implements ClassReflect<T> {
     }
 
     @Override
-    public boolean isInstance(T t) {
-        Objects.requireNonNull(t);
+    public boolean isInstance(Object obj) {
+        Objects.requireNonNull(obj);
 
-        return originClazz.isInstance(t);
+        return originClazz.isInstance(obj);
     }
 
     @Override
