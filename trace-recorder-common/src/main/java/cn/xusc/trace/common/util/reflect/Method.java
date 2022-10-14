@@ -77,13 +77,13 @@ public class Method<T> implements MethodReflect<T> {
     }
 
     @Override
-    public T call(T... ts) {
+    public Object call(Object... objs) {
         if (disableOriginFunction) {
             return MethodReflect.super.call();
         }
 
         try {
-            return (T) method.invoke(origin, ts);
+            return method.invoke(origin, objs);
         } catch (Exception e) {
             throw new TraceException(e);
         }

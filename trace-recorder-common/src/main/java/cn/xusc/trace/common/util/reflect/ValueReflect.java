@@ -34,7 +34,7 @@ public interface ValueReflect<T> {
      * @return 值
      * @throws TraceException if the value operation is not supported by this reflect.
      */
-    default T value() {
+    default Object value() {
         throw new TraceException("not support operation");
     }
 }

@@ -58,11 +58,11 @@ public interface MethodReflect<T> extends SpecificationReflect<T>, AnnotationRef
     /**
      * 方法调用
      *
-     * @param ts 参数
+     * @param objs 参数
      * @return 调用结果
      * @throws TraceException if the call operation is not supported by this reflect.
      */
-    default T call(T... ts) {
+    default Object call(Object... objs) {
         throw new TraceException("not support operation");
     }
 }

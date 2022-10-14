@@ -82,7 +82,7 @@ public class Annotation<T> implements MethodReflect<T> {
     }
 
     @Override
-    public T value() {
+    public Object value() {
         if (disableOriginFunction) {
             return MethodReflect.super.call();
         }
@@ -95,7 +95,7 @@ public class Annotation<T> implements MethodReflect<T> {
             return null;
         }
 
-        return (T) valueMethod.get().call();
+        return valueMethod.get().call();
     }
 
     @Override

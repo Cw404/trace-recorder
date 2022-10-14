@@ -27,10 +27,10 @@ public interface ClassReflect<T> extends FieldReflect<T>, MethodReflect<T>, Anno
     /**
      * 对象是否为类实例
      *
-     * @param t 对象
+     * @param obj 对象
      * @return 详情
      */
-    boolean isInstance(T t);
+    boolean isInstance(Object obj);
 
     /**
      * 是否为枚举类
