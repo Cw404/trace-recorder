@@ -57,9 +57,9 @@ public class Constructor<T> implements MethodReflect<T>, AnnotationReflect<T> {
     }
 
     @Override
-    public T call(T... ts) {
+    public Object call(Object... objs) {
         try {
-            return (T) constructor.newInstance(ts);
+            return constructor.newInstance(objs);
         } catch (Exception e) {
             throw new TraceException(e);
         }
