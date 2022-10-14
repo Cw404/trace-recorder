@@ -144,6 +144,11 @@ public class Class<T> implements ClassReflect<T> {
     }
 
     @Override
+    public Class<java.lang.Class<? super T>> superClass() {
+        return new Class<>((java.lang.Class) originClazz.getSuperclass());
+    }
+
+    @Override
     public String name() {
         return originClazz.getName();
     }

@@ -108,6 +108,13 @@ public interface ClassReflect<T> extends FieldReflect<T>, MethodReflect<T>, Anno
     boolean isAnonymousClass();
 
     /**
+     * 获取父类
+     *
+     * @return 父类
+     */
+    Class<java.lang.Class<? super T>> superClass();
+
+    /**
      * 获取构造函数列表
      *
      * @return 构造函数列表
