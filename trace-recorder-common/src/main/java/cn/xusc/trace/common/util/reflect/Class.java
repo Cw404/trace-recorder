@@ -20,6 +20,9 @@ import cn.xusc.trace.common.util.Formats;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * 类
@@ -197,5 +200,62 @@ public class Class<T> implements ClassReflect<T> {
             annotations.add(new Annotation(annotation, annotation.annotationType()));
         }
         return annotations;
+    }
+
+    @Override
+    public Optional<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>> findAnnotation(
+        java.lang.Class<?> targetAnnotationClass
+    ) {
+        return innerFindAnnotation(
+            () -> ClassReflect.super.findAnnotation(targetAnnotationClass),
+            superClass -> superClass.findAnnotation(targetAnnotationClass)
+        );
+    }
+
+    @Override
+    public Optional<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>> findAvailableAnnotation(
+        java.lang.Class<?> targetAnnotationClass
+    ) {
+        return innerFindAnnotation(
+            () -> ClassReflect.super.findSelfAnnotation(targetAnnotationClass),
+            superClass -> superClass.findAvailableAnnotation(targetAnnotationClass)
+        );
+    }
+
+    /**
+     * 内部查找注释
+     *
+     * <p>
+     * 查找规则: 自身类查找至父类查找，直到顶级超类Object类
+     * <p>
+     * 兼容{@link #findAnnotation(java.lang.Class)}和{@link #findAvailableAnnotation(java.lang.Class)}方法
+     *
+     * @param selfAnnotationSupplier 自身注释提供者
+     * @param superClassAnnotationFunction 父类注释函数
+     * @return 可选注释
+     */
+    private Optional<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>> innerFindAnnotation(
+        Supplier<Optional<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>>> selfAnnotationSupplier,
+        Function<Class<java.lang.Class<? super T>>, Optional<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>>> superClassAnnotationFunction
+    ) {
+        Optional<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>> annotationOptional = selfAnnotationSupplier.get();
+        if (annotationOptional.isPresent()) {
+            return annotationOptional;
+        }
+
+        Class<java.lang.Class<? super T>> superClass = superClass();
+        if (Objects.equals(superClass.type(), Object.class)) {
+            /*
+            Object类为所有类的超类，不参与查找
+             */
+            return Optional.empty();
+        }
+        Optional<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>> superClassAnnotationOptional = superClassAnnotationFunction.apply(
+            superClass
+        );
+        if (isInherited(superClassAnnotationOptional)) {
+            return superClassAnnotationOptional;
+        }
+        return Optional.empty();
     }
 }
