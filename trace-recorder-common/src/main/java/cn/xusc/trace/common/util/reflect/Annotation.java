@@ -110,4 +110,9 @@ public class Annotation<T> implements MethodReflect<T> {
         }
         return annotations;
     }
+
+    @Override
+    public Optional<Method<java.lang.reflect.Method>> findMethod(String methodName) {
+        return methods().stream().filter(method -> Objects.equals(methodName, method.name())).findFirst();
+    }
 }
