@@ -19,6 +19,7 @@ import cn.xusc.trace.common.exception.TraceException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 方法
@@ -63,8 +64,8 @@ public class Method<T> implements MethodReflect<T> {
     }
 
     @Override
-    public List<Parameter<T>> parameters() {
-        List<Parameter<T>> parameters = new ArrayList<>();
+    public List<Parameter<java.lang.reflect.Parameter>> parameters() {
+        List<Parameter<java.lang.reflect.Parameter>> parameters = new ArrayList<>();
         for (java.lang.reflect.Parameter parameter : method.getParameters()) {
             parameters.add(new Parameter<>(parameter));
         }
@@ -96,5 +97,10 @@ public class Method<T> implements MethodReflect<T> {
             annotations.add(new Annotation(annotation, annotation.annotationType()));
         }
         return annotations;
+    }
+
+    @Override
+    public Optional<Parameter<java.lang.reflect.Parameter>> findParameter(String parameterName) {
+        return parameters().stream().filter(parameter -> Objects.equals(parameterName, parameter.name())).findFirst();
     }
 }

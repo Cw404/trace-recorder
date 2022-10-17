@@ -24,7 +24,7 @@ import java.util.List;
  * @author WangCai
  * @since 2.5
  */
-public class Parameter<T> implements AnnotationReflect<T> {
+public class Parameter<T> implements ParameterReflect<T> {
 
     /**
      * 源参数

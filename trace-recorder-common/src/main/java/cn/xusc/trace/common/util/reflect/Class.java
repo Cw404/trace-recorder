@@ -258,4 +258,14 @@ public class Class<T> implements ClassReflect<T> {
         }
         return Optional.empty();
     }
+
+    @Override
+    public Optional<Field<java.lang.reflect.Field>> findField(String fieldName) {
+        return fields().stream().filter(field -> Objects.equals(fieldName, field.name())).findFirst();
+    }
+
+    @Override
+    public Optional<Method<java.lang.reflect.Method>> findMethod(String methodName) {
+        return methods().stream().filter(method -> Objects.equals(methodName, method.name())).findFirst();
+    }
 }

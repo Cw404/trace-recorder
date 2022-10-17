@@ -16,34 +16,23 @@
 package cn.xusc.trace.common.util.reflect;
 
 import cn.xusc.trace.common.exception.TraceException;
-import java.util.List;
 import java.util.Optional;
 
 /**
- * 字段反射接口
+ * 参数反射接口
  *
  * @author WangCai
  * @since 2.5
  */
-public interface FieldReflect<T> extends SpecificationReflect<T>, ValueReflect<T>, AnnotationReflect<T> {
+public interface ParameterReflect<T> extends SpecificationReflect<T>, AnnotationReflect<T> {
     /**
-     * 获取字段列表
+     * 查找可选的参数
      *
-     * @return 字段列表
-     * @throws TraceException if the fields operation is not supported by this reflect.
+     * @param parameterName 参数名
+     * @return 可选参数
+     * @throws TraceException if the find parameter operation is not supported by this reflect.
      */
-    default List<Field<java.lang.reflect.Field>> fields() {
-        throw new TraceException("not support operation");
-    }
-
-    /**
-     * 查找可选的字段
-     *
-     * @param fieldName 字段名
-     * @return 可选字段
-     * @throws TraceException if the find field operation is not supported by this reflect.
-     */
-    default Optional<Field<java.lang.reflect.Field>> findField(String fieldName) {
+    default Optional<Parameter<java.lang.reflect.Parameter>> findParameter(String parameterName) {
         throw new TraceException("not support operation");
     }
 }
