@@ -25,7 +25,7 @@ import java.util.function.Consumer;
  * 渲染引擎
  *
  * <p>
- * 通过EL表达式进行内容渲染
+ * 通过EL表达式风格进行内容渲染
  * </p>
  *
  * @author WangCai
