@@ -69,6 +69,11 @@ public class Annotation<T> implements MethodReflect<T> {
     }
 
     @Override
+    public Object self() {
+        return origin;
+    }
+
+    @Override
     public List<Method<java.lang.reflect.Method>> methods() {
         if (disableOriginFunction) {
             return MethodReflect.super.methods();

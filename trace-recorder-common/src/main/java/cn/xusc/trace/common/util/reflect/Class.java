@@ -167,6 +167,11 @@ public class Class<T> implements ClassReflect<T> {
     }
 
     @Override
+    public Object self() {
+        return originClazz;
+    }
+
+    @Override
     public List<Constructor<java.lang.reflect.Constructor>> constructors() {
         List<Constructor<java.lang.reflect.Constructor>> constructors = new ArrayList<>();
         for (java.lang.reflect.Constructor constructor : originClazz.getDeclaredConstructors()) {

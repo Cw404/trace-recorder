@@ -64,6 +64,11 @@ public class Method<T> implements MethodReflect<T> {
     }
 
     @Override
+    public Object self() {
+        return method;
+    }
+
+    @Override
     public List<Parameter<java.lang.reflect.Parameter>> parameters() {
         List<Parameter<java.lang.reflect.Parameter>> parameters = new ArrayList<>();
         for (java.lang.reflect.Parameter parameter : method.getParameters()) {

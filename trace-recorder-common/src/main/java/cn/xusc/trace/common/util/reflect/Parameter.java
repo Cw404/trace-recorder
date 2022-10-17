@@ -51,6 +51,11 @@ public class Parameter<T> implements ParameterReflect<T> {
     }
 
     @Override
+    public Object self() {
+        return parameter;
+    }
+
+    @Override
     public List<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>> annotations() {
         List<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>> annotations = new ArrayList<>();
         for (java.lang.annotation.Annotation annotation : parameter.getDeclaredAnnotations()) {

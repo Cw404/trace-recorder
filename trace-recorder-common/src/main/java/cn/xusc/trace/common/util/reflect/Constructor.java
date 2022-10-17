@@ -50,6 +50,11 @@ public class Constructor<T> implements MethodReflect<T>, AnnotationReflect<T> {
     }
 
     @Override
+    public Object self() {
+        return constructor;
+    }
+
+    @Override
     public List<Parameter<java.lang.reflect.Parameter>> parameters() {
         List<Parameter<java.lang.reflect.Parameter>> parameters = new ArrayList<>();
         for (java.lang.reflect.Parameter parameter : constructor.getParameters()) {
