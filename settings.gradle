@@ -1,6 +1,7 @@
 rootProject.name = 'trace-recorder'
 include 'trace-recorder-core'
 include 'trace-recorder-common'
+include 'trace-recorder-chart'
 include 'trace-recorder-example'
 include 'trace-recorder-example:trace-recorder-example-common'
 include 'trace-recorder-example:trace-recorder-example-core'
