@@ -157,33 +157,11 @@ public abstract class AbstractServer implements Server {
                                 .value();
 
                             /*
-                            源注释获取(RenderServerResources、RenderServerResource)
+                            探测源注释
                              */
-                            List<Annotation<java.lang.annotation.Annotation>> metaAnnotations = new ArrayList<>();
-                            Optional<Annotation<Class<? extends java.lang.annotation.Annotation>>> renderServerResourcesAnnotationOptional = method.findAvailableAnnotation(
-                                RenderServerResources.class
+                            List<Annotation<java.lang.annotation.Annotation>> metaAnnotations = detectionMetaAnnotations(
+                                method
                             );
-                            if (renderServerResourcesAnnotationOptional.isPresent()) {
-                                for (RenderServerResource renderServerResource : (
-                                    (RenderServerResource[]) renderServerResourcesAnnotationOptional.get().value()
-                                )) {
-                                    metaAnnotations.add(
-                                        new Annotation<>(renderServerResource, renderServerResource.annotationType())
-                                    );
-                                }
-                            } else {
-                                Optional<Annotation<Class<? extends java.lang.annotation.Annotation>>> renderServerResourceAnnotationOptional = method.findAvailableAnnotation(
-                                    RenderServerResource.class
-                                );
-                                if (renderServerResourceAnnotationOptional.isPresent()) {
-                                    java.lang.annotation.Annotation renderServerResource = (java.lang.annotation.Annotation) renderServerResourceAnnotationOptional
-                                        .get()
-                                        .self();
-                                    metaAnnotations.add(
-                                        new Annotation<>(renderServerResource, renderServerResource.annotationType())
-                                    );
-                                }
-                            }
 
                             /*
                             服务资源正式注册
@@ -198,13 +176,63 @@ public abstract class AbstractServer implements Server {
                                     resources.remove(path);
                                 }
                                 registerServerResource(
-                                    new SimpleServerResource(path, data, metaAnnotations),
+                                    (boolean) method
+                                            .findAvailableAnnotation(
+                                                cn.xusc.trace.server.annotation.TransientServerResource.class
+                                            )
+                                            .orElse(defaultNoValueAnnotation)
+                                            .value()
+                                        ? new TransientServerResource(
+                                            path,
+                                            data,
+                                            metaAnnotations,
+                                            () -> ServerResource.parseSpecificData(method.call())
+                                        )
+                                        : new SimpleServerResource(path, data, metaAnnotations),
                                     isCloseServerResource
                                 );
                             }
                         });
                 }
             });
+    }
+
+    /**
+     * 探测源注释
+     *
+     * @param method 探测方法
+     * @return 源注释列表
+     */
+    private List<Annotation<java.lang.annotation.Annotation>> detectionMetaAnnotations(
+        Method<java.lang.reflect.Method> method
+    ) {
+        List<Annotation<java.lang.annotation.Annotation>> metaAnnotations = new ArrayList<>();
+
+        /*
+        源注释获取(RenderServerResources、RenderServerResource)
+         */
+        Optional<Annotation<Class<? extends java.lang.annotation.Annotation>>> renderServerResourcesAnnotationOptional = method.findAvailableAnnotation(
+            RenderServerResources.class
+        );
+        if (renderServerResourcesAnnotationOptional.isPresent()) {
+            for (RenderServerResource renderServerResource : (
+                (RenderServerResource[]) renderServerResourcesAnnotationOptional.get().value()
+            )) {
+                metaAnnotations.add(new Annotation<>(renderServerResource, renderServerResource.annotationType()));
+            }
+        } else {
+            Optional<Annotation<Class<? extends java.lang.annotation.Annotation>>> renderServerResourceAnnotationOptional = method.findAvailableAnnotation(
+                RenderServerResource.class
+            );
+            if (renderServerResourceAnnotationOptional.isPresent()) {
+                java.lang.annotation.Annotation renderServerResource = (java.lang.annotation.Annotation) renderServerResourceAnnotationOptional
+                    .get()
+                    .self();
+                metaAnnotations.add(new Annotation<>(renderServerResource, renderServerResource.annotationType()));
+            }
+        }
+
+        return metaAnnotations;
     }
 
     /**

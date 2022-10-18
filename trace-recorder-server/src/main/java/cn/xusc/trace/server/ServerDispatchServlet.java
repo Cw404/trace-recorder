@@ -143,11 +143,19 @@ public class ServerDispatchServlet extends HttpServlet {
      * @return 解析的数据
      */
     private String parseWriteData(HttpServletRequest req, ServerResource serverResource) {
+        byte[] data = serverResource.data();
+        /*
+        短暂服务资源获取
+         */
+        if (serverResource instanceof TransientServerResource) {
+            data = ((TransientServerResource) serverResource).getDataSupplier().get();
+        }
+
         if (serverResource.metaAnnotations().isEmpty()) {
-            return new String(serverResource.data(), StandardCharsets.UTF_8);
+            return new String(data, StandardCharsets.UTF_8);
         }
         String key, value;
-        RenderEngine renderEngine = new RenderEngine(new String(serverResource.data(), StandardCharsets.UTF_8));
+        RenderEngine renderEngine = new RenderEngine(new String(data, StandardCharsets.UTF_8));
         for (Annotation<java.lang.annotation.Annotation> metaAnnotation : serverResource.metaAnnotations()) {
             /*
             当前为RenderServerResource注释
