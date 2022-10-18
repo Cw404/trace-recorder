@@ -54,13 +54,11 @@ public enum ServerClosedWaiter {
     /**
      * 根据可等标识进行等待
      *
-     * <p>
-     * 等待规则:
+     * <p>等待规则:</p>
      * <ul>
      *     <li>不可等休眠指定秒数时间，直至可等</li>
      *     <li>可等并未唤醒，则持续等待，直至唤醒</li>
      * </ul>
-     * </p>
      *
      * @param timeout 睡眠时间
      * @throws InterruptedException if interrupted while sleeping.
