@@ -16,7 +16,7 @@
 
 dependencies {
 	// 项目模块依赖
-	implementation project(":trace-recorder-common")
+	compileOnly project(":trace-recorder-common")
 	implementation project(":trace-recorder-server")
 
 	// tom猫

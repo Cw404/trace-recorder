@@ -16,7 +16,7 @@
 
 dependencies {
 	// 项目模块依赖
-	implementation project(":trace-recorder-common")
+	compileOnly project(":trace-recorder-common")
 
 	// https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
 	compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
