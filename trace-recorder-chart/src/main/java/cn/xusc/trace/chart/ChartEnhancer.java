@@ -19,6 +19,7 @@ import cn.xusc.trace.chart.constant.ChartRefreshStrategy;
 import cn.xusc.trace.chart.constant.Temporary;
 import cn.xusc.trace.chart.standard.StandardChartData;
 import cn.xusc.trace.common.annotation.CloseOrder;
+import cn.xusc.trace.common.annotation.TraceOrder;
 import cn.xusc.trace.common.exception.TraceException;
 import cn.xusc.trace.common.util.Formats;
 import cn.xusc.trace.common.util.Lists;
@@ -42,6 +43,7 @@ import java.util.Optional;
  * @author WangCai
  * @since 2.5
  */
+@TraceOrder(Integer.MIN_VALUE + 100_0000)
 @CloseOrder(1)
 public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
 
