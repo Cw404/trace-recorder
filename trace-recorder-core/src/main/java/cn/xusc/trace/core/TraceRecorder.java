@@ -15,10 +15,13 @@
  */
 package cn.xusc.trace.core;
 
+import cn.xusc.trace.common.annotation.TraceOrder;
 import cn.xusc.trace.common.exception.TraceClosedException;
 import cn.xusc.trace.common.exception.TraceException;
 import cn.xusc.trace.common.exception.TraceTimeoutException;
 import cn.xusc.trace.common.util.*;
+import cn.xusc.trace.common.util.reflect.Annotation;
+import cn.xusc.trace.common.util.reflect.Class;
 import cn.xusc.trace.core.config.TraceRecorderConfig;
 import cn.xusc.trace.core.constant.RecordLabel;
 import cn.xusc.trace.core.constant.Temporary;
@@ -31,10 +34,7 @@ import cn.xusc.trace.core.record.InfoRecorder;
 import cn.xusc.trace.core.util.TraceRecorderProperties;
 import cn.xusc.trace.core.util.TraceRecorders;
 import cn.xusc.trace.core.util.spi.TraceRecorderLoader;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -512,6 +512,39 @@ public class TraceRecorder {
     public List<InfoEnhancer> getInfoEnhancers() {
         verifyClosed();
         if (dirtyInfoEnhancers) {
+            if (INFO_ENHANCERS.size() > 1) {
+                /*
+                  脏序排列
+                */
+                Map<Integer, List<InfoEnhancer>> needOrderInfoEnhancers = new TreeMap();
+                List<InfoEnhancer> noOrderInfoEnhancers = new ArrayList<>();
+                Optional<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>> traceOrderAnnotationOptional;
+                for (InfoEnhancer infoEnhancer : INFO_ENHANCERS) {
+                    if (
+                        (
+                            traceOrderAnnotationOptional =
+                                new Class<>(infoEnhancer).findAvailableAnnotation(TraceOrder.class)
+                        ).isEmpty()
+                    ) {
+                        noOrderInfoEnhancers.add(infoEnhancer);
+                        continue;
+                    }
+                    int value = (int) traceOrderAnnotationOptional.get().value();
+                    needOrderInfoEnhancers.compute(
+                        value,
+                        (key, oldValue) -> {
+                            if (Objects.isNull(oldValue)) {
+                                return new ArrayList<>(List.of(infoEnhancer));
+                            }
+                            return (List<InfoEnhancer>) Lists.merge(oldValue, List.of(infoEnhancer));
+                        }
+                    );
+                }
+                INFO_ENHANCERS.clear();
+                needOrderInfoEnhancers.values().forEach(infoEnhancers -> infoEnhancers.forEach(INFO_ENHANCERS::add));
+                noOrderInfoEnhancers.forEach(INFO_ENHANCERS::add);
+            }
+
             /*
               脏恢复
              */
