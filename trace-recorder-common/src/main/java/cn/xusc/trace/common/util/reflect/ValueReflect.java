@@ -28,7 +28,7 @@ public interface ValueReflect<T> {
      * 获取值
      *
      * <p>
-     * 字段返回字段值，注解返回value方法值
+     * 字段返回字段值，注释返回value方法值
      * </p>
      *
      * @return 值
