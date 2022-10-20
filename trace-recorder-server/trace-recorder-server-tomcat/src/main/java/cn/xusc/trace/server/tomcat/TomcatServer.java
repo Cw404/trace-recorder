@@ -28,8 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.logging.LogManager;
-import org.apache.catalina.Context;
-import org.apache.catalina.LifecycleException;
+import org.apache.catalina.*;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 
@@ -126,6 +125,7 @@ public class TomcatServer extends AbstractServer {
         ServerDispatchServlet dispatchServlet = new ServerDispatchServlet(resources);
         dispatchServlet.registerCloseServer(() -> {
             shutdown();
+            destroy();
         });
         Tomcat.addServlet(context, "dispatch", dispatchServlet);
         /*
