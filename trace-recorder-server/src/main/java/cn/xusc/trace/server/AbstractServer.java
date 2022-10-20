@@ -232,6 +232,21 @@ public abstract class AbstractServer implements Server {
             }
         }
 
+        /*
+        源注释获取(OutputStreamServerResource)
+         */
+        Optional<Annotation<Class<? extends java.lang.annotation.Annotation>>> outputStreamServerResourceAnnotationOptional = method.findAvailableAnnotation(
+            OutputStreamServerResource.class
+        );
+        if ((boolean) outputStreamServerResourceAnnotationOptional.orElse(defaultNoValueAnnotation).value()) {
+            java.lang.annotation.Annotation outputStreamServerResource = (java.lang.annotation.Annotation) outputStreamServerResourceAnnotationOptional
+                .get()
+                .self();
+            metaAnnotations.add(
+                new Annotation<>(outputStreamServerResource, outputStreamServerResource.annotationType())
+            );
+        }
+
         return metaAnnotations;
     }
 
