@@ -24,7 +24,7 @@ import java.util.List;
  * @author WangCai
  * @since 2.5
  */
-public class Parameter<T> implements AnnotationReflect<T> {
+public class Parameter<T> implements ParameterReflect<T> {
 
     /**
      * 源参数
@@ -48,6 +48,11 @@ public class Parameter<T> implements AnnotationReflect<T> {
     @Override
     public java.lang.Class<T> type() {
         return (java.lang.Class<T>) parameter.getType();
+    }
+
+    @Override
+    public Object self() {
+        return parameter;
     }
 
     @Override

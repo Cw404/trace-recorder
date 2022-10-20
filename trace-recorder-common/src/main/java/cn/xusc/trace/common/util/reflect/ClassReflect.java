@@ -27,10 +27,10 @@ public interface ClassReflect<T> extends FieldReflect<T>, MethodReflect<T>, Anno
     /**
      * 对象是否为类实例
      *
-     * @param t 对象
+     * @param obj 对象
      * @return 详情
      */
-    boolean isInstance(T t);
+    boolean isInstance(Object obj);
 
     /**
      * 是否为枚举类
@@ -106,6 +106,13 @@ public interface ClassReflect<T> extends FieldReflect<T>, MethodReflect<T>, Anno
      * @return 详情
      */
     boolean isAnonymousClass();
+
+    /**
+     * 获取父类
+     *
+     * @return 父类
+     */
+    Class<java.lang.Class<? super T>> superClass();
 
     /**
      * 获取构造函数列表

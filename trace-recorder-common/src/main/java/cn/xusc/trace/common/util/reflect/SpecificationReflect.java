@@ -46,4 +46,11 @@ public interface SpecificationReflect<T> {
     default java.lang.Class<T> componentType() {
         return null;
     }
+
+    /**
+     * 获取源自身
+     *
+     * @return 源自身
+     */
+    Object self();
 }

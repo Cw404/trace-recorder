@@ -17,6 +17,7 @@ package cn.xusc.trace.common.util.reflect;
 
 import cn.xusc.trace.common.exception.TraceException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 方法反射接口
@@ -24,7 +25,7 @@ import java.util.List;
  * @author WangCai
  * @since 2.5
  */
-public interface MethodReflect<T> extends SpecificationReflect<T>, AnnotationReflect<T> {
+public interface MethodReflect<T> extends SpecificationReflect<T>, AnnotationReflect<T>, ParameterReflect<T> {
     /**
      * 获取方法列表
      *
@@ -41,7 +42,7 @@ public interface MethodReflect<T> extends SpecificationReflect<T>, AnnotationRef
      * @return 参数列表
      * @throws TraceException if the parameters operation is not supported by this reflect.
      */
-    default List<Parameter<T>> parameters() {
+    default List<Parameter<java.lang.reflect.Parameter>> parameters() {
         throw new TraceException("not support operation");
     }
 
@@ -58,11 +59,22 @@ public interface MethodReflect<T> extends SpecificationReflect<T>, AnnotationRef
     /**
      * 方法调用
      *
-     * @param ts 参数
+     * @param objs 参数
      * @return 调用结果
      * @throws TraceException if the call operation is not supported by this reflect.
      */
-    default T call(T... ts) {
+    default Object call(Object... objs) {
+        throw new TraceException("not support operation");
+    }
+
+    /**
+     * 查找可选的方法
+     *
+     * @param methodName 方法名
+     * @return 可选方法
+     * @throws TraceException if the find method operation is not supported by this reflect.
+     */
+    default Optional<Method<java.lang.reflect.Method>> findMethod(String methodName) {
         throw new TraceException("not support operation");
     }
 }

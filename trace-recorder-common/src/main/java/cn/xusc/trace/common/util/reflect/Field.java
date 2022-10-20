@@ -68,13 +68,18 @@ public class Field<T> implements FieldReflect<T> {
     }
 
     @Override
-    public T value() {
+    public Object self() {
+        return field;
+    }
+
+    @Override
+    public Object value() {
         if (disableOriginFunction) {
             return FieldReflect.super.value();
         }
 
         try {
-            return (T) field.get(origin);
+            return field.get(origin);
         } catch (Exception e) {
             throw new TraceException(e);
         }

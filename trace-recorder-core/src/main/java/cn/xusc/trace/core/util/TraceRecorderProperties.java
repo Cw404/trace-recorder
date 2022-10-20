@@ -309,7 +309,13 @@ public final class TraceRecorderProperties extends Properties {
             String s = (String) t;
             String classPathPrefix = "classpath:";
             if (s.startsWith(classPathPrefix)) {
-                return easyLoad(ClassLoader.getSystemResourceAsStream(s.substring(classPathPrefix.length())));
+                try (
+                    InputStream inputStream = ClassLoader.getSystemResourceAsStream(
+                        s.substring(classPathPrefix.length())
+                    )
+                ) {
+                    return easyLoad(inputStream);
+                }
             }
             return easyLoad(new File(s).toURI().toURL());
         } else if (t instanceof URL) {

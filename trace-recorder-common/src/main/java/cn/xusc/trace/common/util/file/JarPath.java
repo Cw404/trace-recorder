@@ -70,7 +70,7 @@ public class JarPath implements Path {
 
     @Override
     public Path getFileName() {
-        throw new TraceUnsupportedOperationException();
+        return Path.of(entry.getName());
     }
 
     @Override

@@ -18,7 +18,7 @@ package cn.xusc.trace.common.annotation;
 import java.lang.annotation.*;
 
 /**
- * 资源关闭顺序注解
+ * 资源关闭顺序注释
  *
  * @author WangCai
  * @since 1.0

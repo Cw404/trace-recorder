@@ -15,5 +15,6 @@
  */
 
 dependencies {
-	// nop
+	// https://mvnrepository.com/artifact/ognl/ognl
+	implementation 'ognl:ognl:3.3.4'
 }

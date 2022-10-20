@@ -69,6 +69,11 @@ public class Annotation<T> implements MethodReflect<T> {
     }
 
     @Override
+    public Object self() {
+        return origin;
+    }
+
+    @Override
     public List<Method<java.lang.reflect.Method>> methods() {
         if (disableOriginFunction) {
             return MethodReflect.super.methods();
@@ -82,7 +87,7 @@ public class Annotation<T> implements MethodReflect<T> {
     }
 
     @Override
-    public T value() {
+    public Object value() {
         if (disableOriginFunction) {
             return MethodReflect.super.call();
         }
@@ -95,7 +100,7 @@ public class Annotation<T> implements MethodReflect<T> {
             return null;
         }
 
-        return (T) valueMethod.get().call();
+        return valueMethod.get().call();
     }
 
     @Override
@@ -109,5 +114,10 @@ public class Annotation<T> implements MethodReflect<T> {
             annotations.add(new Annotation(annotation, annotation.annotationType()));
         }
         return annotations;
+    }
+
+    @Override
+    public Optional<Method<java.lang.reflect.Method>> findMethod(String methodName) {
+        return methods().stream().filter(method -> Objects.equals(methodName, method.name())).findFirst();
     }
 }
