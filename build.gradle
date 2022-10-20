@@ -45,6 +45,8 @@ buildscript{
 		mockitoVersion = '4.7.0'
 		// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
 		jupiterVersion = '5.9.0'
+		// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+		slf4jVersion = '2.0.3'
 	}
 }
 
@@ -98,6 +100,11 @@ subprojects {
 		project.name.eachMatch("common|trace-recorder-core",{
 			// 高性能的队列
 			implementation "com.lmax:disruptor:${disruptorVersion}"
+		})
+
+		// 日志通用依赖(排除示例)
+		project.name.eachMatch("trace-recorder-(?!example)", {
+			implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 		})
 
 		// 示例项目特殊通用依赖

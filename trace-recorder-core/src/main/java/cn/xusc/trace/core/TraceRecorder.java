@@ -34,9 +34,12 @@ import cn.xusc.trace.core.record.InfoRecorder;
 import cn.xusc.trace.core.util.TraceRecorderProperties;
 import cn.xusc.trace.core.util.TraceRecorders;
 import cn.xusc.trace.core.util.spi.TraceRecorderLoader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 跟踪记录仪
@@ -54,6 +57,7 @@ import java.util.function.Supplier;
  * @author WangCai
  * @since 1.0
  */
+@Slf4j
 public class TraceRecorder {
 
     /**
@@ -132,6 +136,19 @@ public class TraceRecorder {
      * @since 2.2.1
      */
     private boolean closed;
+
+    static {
+        /*
+        打印banner
+         */
+        try {
+            log.info(
+                new String(ClassLoader.getSystemResourceAsStream("banner.txt").readAllBytes(), StandardCharsets.UTF_8)
+            );
+        } catch (IOException e) {
+            // nop
+        }
+    }
 
     {
         /*
