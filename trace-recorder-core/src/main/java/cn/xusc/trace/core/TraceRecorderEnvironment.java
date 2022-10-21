@@ -33,6 +33,11 @@ public final class TraceRecorderEnvironment {
     private static final Map<String, Supplier<Object>> ENV = new HashMap<>();
 
     /**
+     * 基础构造
+     */
+    public TraceRecorderEnvironment() {}
+
+    /**
      * 设置值属性
      *
      * @param key 键
