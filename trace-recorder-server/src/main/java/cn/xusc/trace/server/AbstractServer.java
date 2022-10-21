@@ -18,7 +18,9 @@ package cn.xusc.trace.server;
 import cn.xusc.trace.common.exception.TraceException;
 import cn.xusc.trace.common.exception.TraceUnsupportedOperationException;
 import cn.xusc.trace.common.util.Formats;
+import cn.xusc.trace.common.util.Strings;
 import cn.xusc.trace.common.util.reflect.Annotation;
+import cn.xusc.trace.common.util.reflect.Class;
 import cn.xusc.trace.common.util.reflect.Method;
 import cn.xusc.trace.common.util.reflect.Reflector;
 import cn.xusc.trace.server.annotation.*;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 抽象服务
@@ -41,6 +44,7 @@ import java.util.Optional;
  * @author WangCai
  * @since 2.5
  */
+@Slf4j
 public abstract class AbstractServer implements Server {
 
     /**
@@ -69,6 +73,10 @@ public abstract class AbstractServer implements Server {
 
         this.serverConfig = config;
         this.resources = new ServerResources();
+        if (log.isDebugEnabled()) {
+            log.debug("create server resources successful!");
+        }
+
         this.defaultNoValueAnnotation =
             new Annotation(new Object(), Object.class) {
                 @Override
@@ -77,6 +85,10 @@ public abstract class AbstractServer implements Server {
                 }
             };
         registerServerResources();
+
+        if (log.isDebugEnabled()) {
+            log.debug("register server resource to server resources successful!");
+        }
     }
 
     /**
@@ -130,7 +142,7 @@ public abstract class AbstractServer implements Server {
                                 );
                             }
 
-                            Annotation<Class<? extends java.lang.annotation.Annotation>> serverResourcesAnnotation = method
+                            Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>> serverResourcesAnnotation = method
                                 .findAvailableAnnotation(cn.xusc.trace.server.annotation.ServerResource.class)
                                 .get();
                             /*
@@ -174,6 +186,10 @@ public abstract class AbstractServer implements Server {
                                     重写服务资源许可移除
                                      */
                                     resources.remove(path);
+
+                                    if (log.isTraceEnabled()) {
+                                        log.trace("remove override path [ {} ] server resource successful!", path);
+                                    }
                                 }
                                 registerServerResource(
                                     (boolean) method
@@ -211,7 +227,7 @@ public abstract class AbstractServer implements Server {
         /*
         源注释获取(RenderServerResources、RenderServerResource)
          */
-        Optional<Annotation<Class<? extends java.lang.annotation.Annotation>>> renderServerResourcesAnnotationOptional = method.findAvailableAnnotation(
+        Optional<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>> renderServerResourcesAnnotationOptional = method.findAvailableAnnotation(
             RenderServerResources.class
         );
         if (renderServerResourcesAnnotationOptional.isPresent()) {
@@ -221,7 +237,7 @@ public abstract class AbstractServer implements Server {
                 metaAnnotations.add(new Annotation<>(renderServerResource, renderServerResource.annotationType()));
             }
         } else {
-            Optional<Annotation<Class<? extends java.lang.annotation.Annotation>>> renderServerResourceAnnotationOptional = method.findAvailableAnnotation(
+            Optional<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>> renderServerResourceAnnotationOptional = method.findAvailableAnnotation(
                 RenderServerResource.class
             );
             if (renderServerResourceAnnotationOptional.isPresent()) {
@@ -235,7 +251,7 @@ public abstract class AbstractServer implements Server {
         /*
         源注释获取(OutputStreamServerResource)
          */
-        Optional<Annotation<Class<? extends java.lang.annotation.Annotation>>> outputStreamServerResourceAnnotationOptional = method.findAvailableAnnotation(
+        Optional<Annotation<java.lang.Class<? extends java.lang.annotation.Annotation>>> outputStreamServerResourceAnnotationOptional = method.findAvailableAnnotation(
             OutputStreamServerResource.class
         );
         if ((boolean) outputStreamServerResourceAnnotationOptional.orElse(defaultNoValueAnnotation).value()) {
@@ -266,6 +282,14 @@ public abstract class AbstractServer implements Server {
             throw new TraceException(Formats.format("resource path [ {} ] already exist", path));
         }
         resources.register(resource, isCloseServerResource);
+
+        if (log.isTraceEnabled()) {
+            log.trace(
+                "register path [ {} ] {} server resource successful!",
+                path,
+                isCloseServerResource ? "close" : Strings.empty()
+            );
+        }
         return true;
     }
 
@@ -274,24 +298,40 @@ public abstract class AbstractServer implements Server {
         doStart();
         printStartedInfo();
         ServerClosedWaiter.INSTANCE.canWait();
+
+        if (log.isTraceEnabled()) {
+            log.trace("server [ {} ] started successful!", new Class<>(this).name());
+        }
     }
 
     @Override
     public void shutdown() {
         doShutdown();
         ServerClosedWaiter.INSTANCE.doNotifyAll();
+
+        if (log.isTraceEnabled()) {
+            log.trace("server [ {} ] shutdown successful!", new Class<>(this).name());
+        }
     }
 
     @Override
     public void destroy() {
         doDestroy();
         ServerClosedWaiter.INSTANCE.doNotifyAll();
+
+        if (log.isTraceEnabled()) {
+            log.trace("server [ {} ] destroy successful!", new Class<>(this).name());
+        }
     }
 
     @Override
     public void printStartedInfo() {
         if (serverConfig.getPrintStartedInfo()) {
             doPrintStartedInfo();
+
+            if (log.isTraceEnabled()) {
+                log.trace("print server started info successful!");
+            }
         }
     }
 
