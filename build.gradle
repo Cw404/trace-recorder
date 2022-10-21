@@ -117,6 +117,8 @@ subprojects {
 			implementation "org.junit.jupiter:junit-jupiter-api:${jupiterVersion}"
 			implementation "org.junit.jupiter:junit-jupiter-params:${jupiterVersion}"
 			runtimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}"
+			// https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+			implementation "org.slf4j:slf4j-simple:${slf4jVersion}"
 		})
 	}
 
