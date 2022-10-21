@@ -15,8 +15,9 @@
  */
 package cn.xusc.trace.example.common;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import cn.xusc.trace.common.util.Ognls;
-import cn.xusc.trace.core.TraceRecorder;
 import cn.xusc.trace.example.common.data.StandardData;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,10 +36,6 @@ public final class OgnlsTest {
     @DisplayName("read name filed value")
     public void readNameFiledValue() {
         Object value = Ognls.getValue("name", new StandardData());
-
-        /*
-        log value
-         */
-        new TraceRecorder().log("{}", value);
+        assertEquals("trace-recorder", value);
     }
 }

@@ -15,9 +15,10 @@
  */
 package cn.xusc.trace.example.common;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import cn.xusc.trace.common.exception.TraceException;
 import cn.xusc.trace.common.util.Jsons;
-import cn.xusc.trace.core.TraceRecorder;
 import cn.xusc.trace.example.common.data.StandardData;
 import java.io.*;
 import lombok.SneakyThrows;
@@ -64,9 +65,7 @@ public final class JsonsTest {
             }
         });
 
-        /*
-        log Data
-         */
-        new TraceRecorder().log("{}", data);
+        assertEquals("trace-recorder", data.getName());
+        assertEquals(1, data.getAge());
     }
 }
