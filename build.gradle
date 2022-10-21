@@ -102,9 +102,13 @@ subprojects {
 			implementation "com.lmax:disruptor:${disruptorVersion}"
 		})
 
-		// 日志通用依赖(排除示例)
-		project.name.eachMatch("trace-recorder-(?!example)", {
+		// 核心日志依赖
+		project.name.eachMatch("trace-recorder-core", {
 			implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+		})
+		// 日志通用编译依赖(排除示例)
+		project.name.eachMatch("trace-recorder-(?!example)", {
+			compileOnly "org.slf4j:slf4j-api:${slf4jVersion}"
 		})
 
 		// 示例项目特殊通用依赖
