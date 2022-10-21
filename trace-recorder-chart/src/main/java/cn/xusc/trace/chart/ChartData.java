@@ -70,4 +70,11 @@ public interface ChartData {
      * @return 下一个图表数据
      */
     ChartData nextChartData();
+
+    /**
+     * 获取基础的图表数据
+     *
+     * @return 基础的图表数据
+     */
+    String basicChartData();
 }

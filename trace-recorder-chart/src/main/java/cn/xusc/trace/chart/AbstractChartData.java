@@ -95,4 +95,26 @@ public abstract class AbstractChartData implements ChartData {
     public ChartData nextChartData() {
         return nextChartData;
     }
+
+    @Override
+    public String basicChartData() {
+        return (
+            "{" +
+            "threadName='" +
+            threadName +
+            '\'' +
+            ", className='" +
+            className +
+            '\'' +
+            ", methodName='" +
+            methodName +
+            '\'' +
+            ", lineNumber=" +
+            lineNumber +
+            ", info='" +
+            info +
+            '\'' +
+            '}'
+        );
+    }
 }

@@ -16,8 +16,10 @@
 package cn.xusc.trace.chart;
 
 import cn.xusc.trace.common.exception.TraceException;
+import cn.xusc.trace.common.util.reflect.Class;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 抽象图表
@@ -33,6 +35,7 @@ import java.util.concurrent.TimeUnit;
  * @author WangCai
  * @since 2.5
  */
+@Slf4j
 public abstract class AbstractChart implements Chart {
 
     /**
@@ -64,13 +67,39 @@ public abstract class AbstractChart implements Chart {
      * 基础构造
      */
     public AbstractChart() {
+        boolean debugEnabled = log.isDebugEnabled();
+        String chartName = new Class<>(this).name();
+        if (debugEnabled) {
+            log.debug("init chart: {}", chartName);
+        }
+
         this.CHART_CONFIG = initChartConfig();
+        if (debugEnabled) {
+            log.debug("init chart config successful!");
+        }
+
         initChartAttribute();
+        if (debugEnabled) {
+            log.debug("init chart attribute successful!");
+        }
+
         this.CHART_FLOW = new ChartFlow();
+        if (debugEnabled) {
+            log.debug("creat chart flow successful!");
+        }
+
         initCharProcessSteps(CHART_FLOW);
+        if (debugEnabled) {
+            log.debug("init chart processSteps successful!");
+        }
+
         this.CHART_DATA_PROCESSOR = initChartDataProcessor(this);
         this.CHART_DATA_PROCESSOR.setDaemon(true);
         this.CHART_DATA_PROCESSOR.start();
+        if (debugEnabled) {
+            log.debug("started chart data processor [ {} ] successful!", CHART_DATA_PROCESSOR.getName());
+            log.debug("init chart: [ {} ] successful!", chartName);
+        }
     }
 
     @Override
@@ -95,11 +124,24 @@ public abstract class AbstractChart implements Chart {
         ChartProcessStep.ValuePipeline<ChartData> valuePipeline = new ChartProcessStep.ValuePipeline<>(
             renderChartData = chartData
         );
+
+        if (log.isDebugEnabled()) {
+            log.debug("render chart data: {}", renderChartData.basicChartData());
+        }
+
         for (ChartProcessStep chartProcessStep : CHART_FLOW.flow()) {
             try {
                 chartProcessStep.run(CHART_CONFIG, valuePipeline);
             } catch (Exception e) {
                 throw new TraceException(e);
+            }
+
+            if (log.isTraceEnabled()) {
+                log.debug(
+                    "chart process step [ {} ] generate value: {}",
+                    new Class<>(chartProcessStep).name(),
+                    valuePipeline.getValue()
+                );
             }
         }
         return renderChartData;
@@ -122,12 +164,20 @@ public abstract class AbstractChart implements Chart {
         render();
         continueShow();
         openServerShow();
+
+        if (log.isDebugEnabled()) {
+            log.debug("open server show chart successful!");
+        }
     }
 
     /**
      * 等待第一个数据产生
      */
     private void waitFirstData() {
+        if (log.isDebugEnabled()) {
+            log.debug("wait for first chart data of generate");
+        }
+
         while (true) {
             if (Objects.nonNull(chartData)) {
                 break;
@@ -147,6 +197,10 @@ public abstract class AbstractChart implements Chart {
         this.chartDataContinueShower = new ChartDataContinueShower(this);
         this.chartDataContinueShower.setDaemon(true);
         this.chartDataContinueShower.start();
+
+        if (log.isDebugEnabled()) {
+            log.debug("started chart data continue shower [ {} ] successful!", chartDataContinueShower.getName());
+        }
     }
 
     /**
