@@ -16,6 +16,7 @@
 package cn.xusc.trace.example.common.data;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
@@ -26,6 +27,7 @@ import lombok.experimental.FieldDefaults;
  * @author wangcai
  */
 @ToString
+@Getter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StandardData {
