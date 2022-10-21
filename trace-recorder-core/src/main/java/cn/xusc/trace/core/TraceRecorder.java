@@ -185,8 +185,8 @@ public class TraceRecorder {
         enableStack = true;
         enableThreadName = true;
         environment = new TraceRecorderEnvironment();
-        if (log.isDebugEnabled()) {
-            log.debug("TraceRecorder environment create successful!");
+        if (log.isInfoEnabled()) {
+            log.info("TraceRecorder environment create successful!");
         }
     }
 
@@ -327,8 +327,8 @@ public class TraceRecorder {
      */
     private void localThreadShareTraceRecorder() {
         TraceRecorders.register(this);
-        if (log.isDebugEnabled()) {
-            log.debug("local thread enable share TraceRecorder [ {} ] successful!", NAME);
+        if (log.isInfoEnabled()) {
+            log.info("local thread enable share TraceRecorder [ {} ] successful!", NAME);
         }
     }
 
@@ -338,8 +338,8 @@ public class TraceRecorder {
      * @since 2.5
      */
     private void quickSpiComponentsRegister() {
-        if (log.isDebugEnabled()) {
-            log.debug("enable spi components register");
+        if (log.isInfoEnabled()) {
+            log.info("enable spi components register");
         }
 
         TraceRecorderLoader<InfoFilter> infoFilterLoader = TraceRecorderLoader.getTraceRecorderLoader(InfoFilter.class);
@@ -359,31 +359,31 @@ public class TraceRecorder {
         );
         INFO_ENHANCERS.add(infoEnhancerLoader.find(Temporary.SPI_COMPONENT_PREFIX.concat("threadInfoEnhancer")).get());
         INFO_RECORDERS.add(infoRecorderLoader.find(Temporary.SPI_COMPONENT_PREFIX.concat("consoleInfoRecorder")).get());
-        if (log.isDebugEnabled()) {
-            log.debug("inner spi components register:");
+        if (log.isInfoEnabled()) {
+            log.info("inner spi components register:");
             for (InfoFilter infoFilter : INFO_FILTERS) {
-                log.debug("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
+                log.info("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
             }
             for (InfoEnhancer infoEnhancer : INFO_ENHANCERS) {
-                log.debug("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
+                log.info("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
             }
             for (InfoRecorder infoRecorder : INFO_RECORDERS) {
-                log.debug("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
+                log.info("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
             }
         }
         List<?> innerComponents = Lists.merge(INFO_FILTERS, INFO_ENHANCERS, INFO_RECORDERS);
 
         /* external(外部) */
-        if (log.isDebugEnabled()) {
-            log.debug("external spi components register:");
+        if (log.isInfoEnabled()) {
+            log.info("external spi components register:");
         }
         boolean existExternalSpiComponents = false;
         for (InfoFilter infoFilter : infoFilterLoader.findAll().get()) {
             if (!innerComponents.contains(infoFilter)) {
                 addInfoFilter(infoFilter);
 
-                if (log.isDebugEnabled()) {
-                    log.debug("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
+                if (log.isInfoEnabled()) {
+                    log.info("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
                 }
                 existExternalSpiComponents = true;
             }
@@ -392,8 +392,8 @@ public class TraceRecorder {
             if (!innerComponents.contains(infoEnhancer)) {
                 addInfoEnhancer(infoEnhancer);
 
-                if (log.isDebugEnabled()) {
-                    log.debug("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
+                if (log.isInfoEnabled()) {
+                    log.info("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
                 }
                 existExternalSpiComponents = true;
             }
@@ -402,16 +402,16 @@ public class TraceRecorder {
             if (!innerComponents.contains(infoRecorder)) {
                 addInfoRecorder(infoRecorder);
 
-                if (log.isDebugEnabled()) {
-                    log.debug("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
+                if (log.isInfoEnabled()) {
+                    log.info("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
                 }
                 existExternalSpiComponents = true;
             }
         }
 
         if (!existExternalSpiComponents) {
-            if (log.isDebugEnabled()) {
-                log.debug("     not components register");
+            if (log.isInfoEnabled()) {
+                log.info("     not components register");
             }
         }
     }
@@ -452,8 +452,8 @@ public class TraceRecorder {
         );
         environment.put(environmentCollectMaps);
 
-        if (log.isDebugEnabled()) {
-            log.debug("init base environment successful!");
+        if (log.isInfoEnabled()) {
+            log.info("init base environment successful!");
         }
     }
 
@@ -477,8 +477,8 @@ public class TraceRecorder {
                     );
                 });
 
-            if (log.isDebugEnabled()) {
-                log.debug("init addition properties environment successful!");
+            if (log.isInfoEnabled()) {
+                log.info("init addition properties environment successful!");
             }
         }
     }
@@ -490,8 +490,8 @@ public class TraceRecorder {
      * @since 2.5
      */
     private void registerConfigComponents(TraceRecorderConfig config) {
-        if (log.isDebugEnabled()) {
-            log.debug("external config components register:");
+        if (log.isInfoEnabled()) {
+            log.info("external config components register:");
         }
 
         boolean existExternalConfigComponents = false;
@@ -499,8 +499,8 @@ public class TraceRecorder {
             for (InfoFilter infoFilter : config.getInfoFilters()) {
                 addInfoFilter(infoFilter);
 
-                if (log.isDebugEnabled()) {
-                    log.debug("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
+                if (log.isInfoEnabled()) {
+                    log.info("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
                 }
             }
             existExternalConfigComponents = true;
@@ -509,8 +509,8 @@ public class TraceRecorder {
             for (InfoEnhancer infoEnhancer : config.getInfoEnhancers()) {
                 addInfoEnhancer(infoEnhancer);
 
-                if (log.isDebugEnabled()) {
-                    log.debug("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
+                if (log.isInfoEnabled()) {
+                    log.info("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
                 }
             }
             existExternalConfigComponents = true;
@@ -519,16 +519,16 @@ public class TraceRecorder {
             for (InfoRecorder infoRecorder : config.getInfoRecorders()) {
                 addInfoRecorder(infoRecorder);
 
-                if (log.isDebugEnabled()) {
-                    log.debug("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
+                if (log.isInfoEnabled()) {
+                    log.info("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
                 }
             }
             existExternalConfigComponents = true;
         }
 
         if (!existExternalConfigComponents) {
-            if (log.isDebugEnabled()) {
-                log.debug("     not components register");
+            if (log.isInfoEnabled()) {
+                log.info("     not components register");
             }
         }
     }
