@@ -18,12 +18,9 @@ package cn.xusc.trace.example.common;
 import cn.xusc.trace.common.exception.TraceException;
 import cn.xusc.trace.common.util.Jsons;
 import cn.xusc.trace.core.TraceRecorder;
+import cn.xusc.trace.example.common.data.StandardData;
 import java.io.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.ToString;
-import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -47,7 +44,7 @@ public final class JsonsTest {
         ByteArrayOutputStream bytesOutputStream = new ByteArrayOutputStream();
         Jsons.write(objectMapper -> {
             try {
-                objectMapper.writeValue(bytesOutputStream, new Data());
+                objectMapper.writeValue(bytesOutputStream, new StandardData());
             } catch (IOException e) {
                 throw new TraceException(e);
             }
@@ -56,9 +53,12 @@ public final class JsonsTest {
         /*
         read bytesOutputStream to Data
          */
-        Data data = Jsons.read(objectMapper -> {
+        StandardData data = Jsons.read(objectMapper -> {
             try {
-                return objectMapper.readValue(new ByteArrayInputStream(bytesOutputStream.toByteArray()), Data.class);
+                return objectMapper.readValue(
+                    new ByteArrayInputStream(bytesOutputStream.toByteArray()),
+                    StandardData.class
+                );
             } catch (IOException e) {
                 throw new TraceException(e);
             }
@@ -68,24 +68,5 @@ public final class JsonsTest {
         log Data
          */
         new TraceRecorder().log("{}", data);
-    }
-
-    /**
-     * 数据
-     */
-    @ToString
-    @NoArgsConstructor
-    @FieldDefaults(level = AccessLevel.PRIVATE)
-    private static class Data {
-
-        /**
-         * 名称
-         */
-        String name = "trace-recorder";
-
-        /**
-         * 年龄
-         */
-        int age = 1;
     }
 }
