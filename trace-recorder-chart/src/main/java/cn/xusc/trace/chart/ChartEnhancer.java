@@ -24,6 +24,7 @@ import cn.xusc.trace.common.exception.TraceException;
 import cn.xusc.trace.common.util.Formats;
 import cn.xusc.trace.common.util.Lists;
 import cn.xusc.trace.common.util.StackTraces;
+import cn.xusc.trace.common.util.Systems;
 import cn.xusc.trace.core.EnhanceInfo;
 import cn.xusc.trace.core.enhance.AbstractStatisticsInfoEnhancer;
 import cn.xusc.trace.core.util.TraceRecorders;
@@ -68,6 +69,10 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
     public ChartEnhancer() {
         super(TraceRecorders.get());
         chart = discoverChart();
+        if (Objects.isNull(chart)) {
+            STRATEGY = ChartRefreshStrategy.IDLE;
+            return;
+        }
         STRATEGY = chart.config().getChartRefreshStrategy();
     }
 
@@ -80,7 +85,8 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
         TraceRecorderLoader<Chart> loader = TraceRecorderLoader.getTraceRecorderLoader(Chart.class);
         Optional<List<Chart>> chartsOptional = loader.findAll();
         if (chartsOptional.isEmpty()) {
-            throw new TraceException(Formats.format("not discover chart"));
+            Systems.report("No Chart component were found.");
+            return null;
         }
         List<Chart> charts = chartsOptional.get();
         if (charts.size() > 1) {
@@ -97,6 +103,13 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
      */
     @Override
     protected EnhanceInfo doEnhance(EnhanceInfo eInfo) {
+        /*
+        闲置处理
+         */
+        if (Objects.equals(STRATEGY, ChartRefreshStrategy.IDLE)) {
+            return eInfo;
+        }
+
         /*
         堆栈信息获取
          */
@@ -145,6 +158,13 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
      */
     @Override
     protected String showInfo() {
+        /*
+        闲置处理
+         */
+        if (Objects.equals(STRATEGY, ChartRefreshStrategy.IDLE)) {
+            return "";
+        }
+
         if (!alreadyShowChart && Objects.equals(STRATEGY, ChartRefreshStrategy.DEATH)) {
             /*
              JVM关闭时刷新策略显示

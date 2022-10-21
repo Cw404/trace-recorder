@@ -23,6 +23,10 @@ package cn.xusc.trace.chart.constant;
  */
 public enum ChartRefreshStrategy {
     /**
+     * 闲置（不刷新）
+     */
+    IDLE,
+    /**
      * 及时刷新
      */
     TIMELY,
