@@ -255,21 +255,6 @@ public class TraceRecorder {
      * @since 2.0
      */
     public TraceRecorder(TraceRecorderConfig config) {
-        if (!config.getInfoFilters().isEmpty()) {
-            for (InfoFilter infoFilter : config.getInfoFilters()) {
-                addInfoFilter(infoFilter);
-            }
-        }
-        if (!config.getInfoEnhancers().isEmpty()) {
-            for (InfoEnhancer infoEnhancer : config.getInfoEnhancers()) {
-                addInfoEnhancer(infoEnhancer);
-            }
-        }
-        if (!config.getInfoRecorders().isEmpty()) {
-            for (InfoRecorder infoRecorder : config.getInfoRecorders()) {
-                addInfoRecorder(infoRecorder);
-            }
-        }
         /*
           堆栈信息默认启用
           短类名默认禁用
@@ -296,12 +281,14 @@ public class TraceRecorder {
             initBaseEnvironment();
             initAdditionPropertiesEnvironment(Optional.ofNullable(config.getAdditionProperties()));
             quickSpiComponentsRegister();
+            registerConfigComponents(config);
             return;
         }
         TRACE_HANDLER = new SyncTraceHandler(this);
         initBaseEnvironment();
         initAdditionPropertiesEnvironment(Optional.ofNullable(config.getAdditionProperties()));
         quickSpiComponentsRegister();
+        registerConfigComponents(config);
     }
 
     /**
@@ -410,6 +397,30 @@ public class TraceRecorder {
                         }
                     );
                 });
+        }
+    }
+
+    /**
+     * 注册配置组件
+     *
+     * @param config 跟踪记录仪配置
+     * @since 2.5
+     */
+    private void registerConfigComponents(TraceRecorderConfig config) {
+        if (!config.getInfoFilters().isEmpty()) {
+            for (InfoFilter infoFilter : config.getInfoFilters()) {
+                addInfoFilter(infoFilter);
+            }
+        }
+        if (!config.getInfoEnhancers().isEmpty()) {
+            for (InfoEnhancer infoEnhancer : config.getInfoEnhancers()) {
+                addInfoEnhancer(infoEnhancer);
+            }
+        }
+        if (!config.getInfoRecorders().isEmpty()) {
+            for (InfoRecorder infoRecorder : config.getInfoRecorders()) {
+                addInfoRecorder(infoRecorder);
+            }
         }
     }
 
