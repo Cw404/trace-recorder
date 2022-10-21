@@ -33,6 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Echarts关系图图表
@@ -40,6 +41,7 @@ import java.util.List;
  * @author WangCai
  * @since 2.5
  */
+@Slf4j
 public class EchartsRelationChart extends AbstractChart {
 
     /**
@@ -95,6 +97,10 @@ public class EchartsRelationChart extends AbstractChart {
                 .build()
         )
             .start();
+
+        if (log.isDebugEnabled()) {
+            log.debug("started tomcat server successful!");
+        }
     }
 
     /**

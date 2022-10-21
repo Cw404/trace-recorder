@@ -39,4 +39,30 @@ public class EchartsRelationChartData extends AbstractChartData {
      * 坐标轴
      */
     Spaces.CoordinateAxis coordinateAxis;
+
+    @Override
+    public String basicChartData() {
+        return (
+            "{" +
+            "symbolSize=" +
+            symbolSize +
+            ", coordinateAxis=" +
+            coordinateAxis +
+            ", threadName='" +
+            threadName +
+            '\'' +
+            ", className='" +
+            className +
+            '\'' +
+            ", methodName='" +
+            methodName +
+            '\'' +
+            ", lineNumber=" +
+            lineNumber +
+            ", info='" +
+            info +
+            '\'' +
+            '}'
+        );
+    }
 }
