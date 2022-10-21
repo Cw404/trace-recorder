@@ -38,7 +38,7 @@ import org.junit.jupiter.params.provider.ValueSource;
  *
  * @author wangcai
  */
-public class DisruptorsTest {
+public final class DisruptorsTest {
 
     /**
      * 基础Disruptors测试

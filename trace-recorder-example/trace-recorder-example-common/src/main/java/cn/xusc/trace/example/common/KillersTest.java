@@ -37,7 +37,7 @@ import java.util.Scanner;
  *
  * @author wangcai
  */
-public class KillersTest {
+public final class KillersTest {
 
     /**
      * 系统输入扫描仪

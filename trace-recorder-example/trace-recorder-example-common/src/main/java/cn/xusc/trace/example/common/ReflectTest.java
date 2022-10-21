@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author wangcai
  */
-public class ReflectTest {
+public final class ReflectTest {
 
     /**
      * 显示ReflectModel引用信息

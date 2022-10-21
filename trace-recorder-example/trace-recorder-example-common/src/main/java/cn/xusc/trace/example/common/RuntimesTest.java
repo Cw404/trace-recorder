@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author wangcai
  */
-public class RuntimesTest {
+public final class RuntimesTest {
 
     /**
      * 基础清理任务

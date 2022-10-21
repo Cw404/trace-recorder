@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author wangcai
  */
-public class FormatsTest {
+public final class FormatsTest {
 
     /**
      * 跟踪记录仪

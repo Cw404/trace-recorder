@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author wangcai
  */
-public class PainterTest {
+public final class PainterTest {
 
     /**
      * 画家
