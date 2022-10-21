@@ -74,6 +74,13 @@ public class TraceRecorder {
     private final List<InfoRecorder> INFO_RECORDERS = new FastList<>(InfoRecorder.class);
 
     /**
+     * 跟踪记录仪名称
+     *
+     * @since 2.5
+     */
+    private final String NAME;
+
+    /**
      * 跟踪记录仪环境
      *
      * @since 2.5
@@ -131,6 +138,13 @@ public class TraceRecorder {
     private boolean enableThreadName;
 
     /**
+     * 跟踪记录仪id
+     *
+     * @since 2.5
+     */
+    private static long traceRecorderSeqNumber;
+
+    /**
      * 关闭标识
      *
      * @since 2.2.1
@@ -150,7 +164,19 @@ public class TraceRecorder {
         }
     }
 
+    /**
+     * 下一个跟踪记录仪id
+     *
+     * @return 跟踪记录仪id
+     * @since 2.5
+     */
+    private static synchronized long nextTraceRecorderID() {
+        return ++traceRecorderSeqNumber;
+    }
+
     {
+        NAME = "TraceRecorder-" + nextTraceRecorderID();
+
         /*
           初始化基础跟踪记录仪
          */
@@ -159,6 +185,9 @@ public class TraceRecorder {
         enableStack = true;
         enableThreadName = true;
         environment = new TraceRecorderEnvironment();
+        if (log.isDebugEnabled()) {
+            log.debug("TraceRecorder environment create successful!");
+        }
     }
 
     /**
@@ -298,6 +327,9 @@ public class TraceRecorder {
      */
     private void localThreadShareTraceRecorder() {
         TraceRecorders.register(this);
+        if (log.isDebugEnabled()) {
+            log.debug("local thread enable share TraceRecorder [ {} ] successful!", NAME);
+        }
     }
 
     /**
@@ -306,6 +338,10 @@ public class TraceRecorder {
      * @since 2.5
      */
     private void quickSpiComponentsRegister() {
+        if (log.isDebugEnabled()) {
+            log.debug("enable spi components register");
+        }
+
         TraceRecorderLoader<InfoFilter> infoFilterLoader = TraceRecorderLoader.getTraceRecorderLoader(InfoFilter.class);
         TraceRecorderLoader<InfoEnhancer> infoEnhancerLoader = TraceRecorderLoader.getTraceRecorderLoader(
             InfoEnhancer.class
@@ -323,22 +359,59 @@ public class TraceRecorder {
         );
         INFO_ENHANCERS.add(infoEnhancerLoader.find(Temporary.SPI_COMPONENT_PREFIX.concat("threadInfoEnhancer")).get());
         INFO_RECORDERS.add(infoRecorderLoader.find(Temporary.SPI_COMPONENT_PREFIX.concat("consoleInfoRecorder")).get());
+        if (log.isDebugEnabled()) {
+            log.debug("inner spi components register:");
+            for (InfoFilter infoFilter : INFO_FILTERS) {
+                log.debug("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
+            }
+            for (InfoEnhancer infoEnhancer : INFO_ENHANCERS) {
+                log.debug("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
+            }
+            for (InfoRecorder infoRecorder : INFO_RECORDERS) {
+                log.debug("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
+            }
+        }
         List<?> innerComponents = Lists.merge(INFO_FILTERS, INFO_ENHANCERS, INFO_RECORDERS);
 
         /* external(外部) */
+        if (log.isDebugEnabled()) {
+            log.debug("external spi components register:");
+        }
+        boolean existExternalSpiComponents = false;
         for (InfoFilter infoFilter : infoFilterLoader.findAll().get()) {
             if (!innerComponents.contains(infoFilter)) {
                 addInfoFilter(infoFilter);
+
+                if (log.isDebugEnabled()) {
+                    log.debug("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
+                }
+                existExternalSpiComponents = true;
             }
         }
         for (InfoEnhancer infoEnhancer : infoEnhancerLoader.findAll().get()) {
             if (!innerComponents.contains(infoEnhancer)) {
                 addInfoEnhancer(infoEnhancer);
+
+                if (log.isDebugEnabled()) {
+                    log.debug("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
+                }
+                existExternalSpiComponents = true;
             }
         }
         for (InfoRecorder infoRecorder : infoRecorderLoader.findAll().get()) {
             if (!innerComponents.contains(infoRecorder)) {
                 addInfoRecorder(infoRecorder);
+
+                if (log.isDebugEnabled()) {
+                    log.debug("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
+                }
+                existExternalSpiComponents = true;
+            }
+        }
+
+        if (!existExternalSpiComponents) {
+            if (log.isDebugEnabled()) {
+                log.debug("     not components register");
             }
         }
     }
@@ -350,6 +423,8 @@ public class TraceRecorder {
      */
     private void initBaseEnvironment() {
         Map<String, Supplier<Object>> environmentCollectMaps = Map.of(
+            "name",
+            () -> getName(),
             "version",
             () -> {
                 verifyClosed();
@@ -376,6 +451,10 @@ public class TraceRecorder {
             () -> Lists.classNames(getInfoRecorders())
         );
         environment.put(environmentCollectMaps);
+
+        if (log.isDebugEnabled()) {
+            log.debug("init base environment successful!");
+        }
     }
 
     /**
@@ -397,6 +476,10 @@ public class TraceRecorder {
                         }
                     );
                 });
+
+            if (log.isDebugEnabled()) {
+                log.debug("init addition properties environment successful!");
+            }
         }
     }
 
@@ -407,21 +490,57 @@ public class TraceRecorder {
      * @since 2.5
      */
     private void registerConfigComponents(TraceRecorderConfig config) {
+        if (log.isDebugEnabled()) {
+            log.debug("external config components register:");
+        }
+
+        boolean existExternalConfigComponents = false;
         if (!config.getInfoFilters().isEmpty()) {
             for (InfoFilter infoFilter : config.getInfoFilters()) {
                 addInfoFilter(infoFilter);
+
+                if (log.isDebugEnabled()) {
+                    log.debug("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
+                }
             }
+            existExternalConfigComponents = true;
         }
         if (!config.getInfoEnhancers().isEmpty()) {
             for (InfoEnhancer infoEnhancer : config.getInfoEnhancers()) {
                 addInfoEnhancer(infoEnhancer);
+
+                if (log.isDebugEnabled()) {
+                    log.debug("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
+                }
             }
+            existExternalConfigComponents = true;
         }
         if (!config.getInfoRecorders().isEmpty()) {
             for (InfoRecorder infoRecorder : config.getInfoRecorders()) {
                 addInfoRecorder(infoRecorder);
+
+                if (log.isDebugEnabled()) {
+                    log.debug("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
+                }
+            }
+            existExternalConfigComponents = true;
+        }
+
+        if (!existExternalConfigComponents) {
+            if (log.isDebugEnabled()) {
+                log.debug("     not components register");
             }
         }
+    }
+
+    /**
+     * 获取跟踪记录仪名称
+     *
+     * @return 跟踪记录仪名称
+     * @since 2.5
+     */
+    public String getName() {
+        return NAME;
     }
 
     /**
