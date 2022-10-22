@@ -7,5 +7,6 @@ include 'trace-recorder-chart:trace-recorder-chart-echarts:trace-recorder-chart-
 include 'trace-recorder-example'
 include 'trace-recorder-example:trace-recorder-example-common'
 include 'trace-recorder-example:trace-recorder-example-core'
+include 'trace-recorder-example:trace-recorder-example-chart'
 include 'trace-recorder-server'
 include 'trace-recorder-server:trace-recorder-server-tomcat'
