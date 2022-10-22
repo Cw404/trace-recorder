@@ -97,7 +97,8 @@ public class EchartsRelationJsonChartProcessStep implements ChartProcessStep {
 
         Path templatePath = Temporary.TEMPLATE_PATH;
         generatePath = generatePath.resolve(Temporary.GENERATE_PATH);
-        List<Path> paths = Finder.find(ClassLoader.getSystemResource(chartConfig.getHomePath().toString()), "**");
+        String homePath = chartConfig.getHomePath().toString();
+        List<Path> paths = Finder.find(ClassLoader.getSystemResource(homePath), "**");
         if (Files.notExists(generatePath)) {
             Files.createDirectory(generatePath);
             for (Path path : paths) {
@@ -122,10 +123,10 @@ public class EchartsRelationJsonChartProcessStep implements ChartProcessStep {
                 /*
                 处理源码项目使用
                  */
-                String templatePathStr = templatePath.toString();
-                Path generateFilePath = generatePath.resolve(
-                    Finder.find(ClassLoader.getSystemResource(templatePathStr), templatePathStr).get(0).relativize(path)
-                );
+                String pathPath = path.toString();
+                String homeFilePath = pathPath.substring(pathPath.lastIndexOf(homePath));
+                Path generateFilePath = generatePath.resolve(templatePath.relativize(Path.of(homeFilePath)));
+
                 if (Files.isDirectory(path)) {
                     Files.createDirectories(generateFilePath);
                     continue;
