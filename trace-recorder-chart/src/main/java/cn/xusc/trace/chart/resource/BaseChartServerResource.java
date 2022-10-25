@@ -17,6 +17,7 @@ package cn.xusc.trace.chart.resource;
 
 import cn.xusc.trace.chart.constant.Temporary;
 import cn.xusc.trace.common.exception.TraceException;
+import cn.xusc.trace.common.util.Systems;
 import cn.xusc.trace.server.annotation.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -132,7 +133,7 @@ public class BaseChartServerResource {
     protected byte[] readClassLoaderResourceData(String resourcePath) {
         try (
             InputStream inputStream = ClassLoader.getSystemResourceAsStream(
-                Temporary.TEMPLATE_PATH.resolve(resourcePath).toString()
+                Systems.getSystemClassPath(Temporary.TEMPLATE_PATH.resolve(resourcePath).toString())
             )
         ) {
             return inputStream.readAllBytes();
