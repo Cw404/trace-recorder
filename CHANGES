@@ -1,5 +1,9 @@
 trace-recorder Changes
 
+Changes in 2.5.1
+
+ * Compatible Windows
+
 Changes in 2.5
 
  * Modularity of project, project name changed to trace-recorder
