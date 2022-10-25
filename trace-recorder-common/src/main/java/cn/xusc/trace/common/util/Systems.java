@@ -15,6 +15,7 @@
  */
 package cn.xusc.trace.common.util;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -123,6 +124,31 @@ public class Systems {
      */
     public String getJavaHome() {
         return getProperties("java.home");
+    }
+
+    /**
+     * 获取系统类路径
+     *
+     * @param path 路径
+     * @return 系统类路径
+     * @since 2.5.1
+     */
+    public String getSystemClassPath(String path) {
+        if (Objects.equals(systemType, SystemType.WINDOWS)) {
+            return path.replace("\\", "/");
+        }
+        return path;
+    }
+
+    /**
+     * 获取系统类路径
+     *
+     * @param path 路径
+     * @return 系统类路径
+     * @since 2.5.1
+     */
+    public Path getSystemClassPath(Path path) {
+        return Path.of(getSystemClassPath(path.toString()));
     }
 
     /**
