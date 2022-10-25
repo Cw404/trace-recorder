@@ -42,10 +42,11 @@ public class Systems {
     /**
      * 属性分割符
      */
-    private String splitSymbol = ":";
+    private String splitSymbol;
 
     static {
         systemType = SystemType.systemType(getProperties("os.name"));
+        splitSymbol = Objects.equals(systemType, SystemType.WINDOWS) ? ";" : ":";
     }
 
     /**
