@@ -24,6 +24,8 @@ import cn.xusc.trace.common.exception.TraceException;
 import cn.xusc.trace.common.util.Formats;
 import cn.xusc.trace.common.util.Lists;
 import cn.xusc.trace.common.util.StackTraces;
+import cn.xusc.trace.common.util.Systems;
+import cn.xusc.trace.common.util.reflect.Class;
 import cn.xusc.trace.core.EnhanceInfo;
 import cn.xusc.trace.core.enhance.AbstractStatisticsInfoEnhancer;
 import cn.xusc.trace.core.util.TraceRecorders;
@@ -32,6 +34,7 @@ import cn.xusc.trace.server.util.ServerClosedWaiter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 图表增强器
@@ -43,6 +46,7 @@ import java.util.Optional;
  * @author WangCai
  * @since 2.5
  */
+@Slf4j
 @TraceOrder(Integer.MIN_VALUE + 100_0000)
 @CloseOrder(1)
 public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
@@ -68,7 +72,15 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
     public ChartEnhancer() {
         super(TraceRecorders.get());
         chart = discoverChart();
+        if (Objects.isNull(chart)) {
+            STRATEGY = ChartRefreshStrategy.IDLE;
+            return;
+        }
         STRATEGY = chart.config().getChartRefreshStrategy();
+
+        if (log.isDebugEnabled()) {
+            log.debug("discover chart: {}, refresh strategy: {}", new Class<>(chart).name(), STRATEGY.name());
+        }
     }
 
     /**
@@ -80,7 +92,8 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
         TraceRecorderLoader<Chart> loader = TraceRecorderLoader.getTraceRecorderLoader(Chart.class);
         Optional<List<Chart>> chartsOptional = loader.findAll();
         if (chartsOptional.isEmpty()) {
-            throw new TraceException(Formats.format("not discover chart"));
+            Systems.report("No Chart component were found.");
+            return null;
         }
         List<Chart> charts = chartsOptional.get();
         if (charts.size() > 1) {
@@ -97,6 +110,13 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
      */
     @Override
     protected EnhanceInfo doEnhance(EnhanceInfo eInfo) {
+        /*
+        闲置处理
+         */
+        if (Objects.equals(STRATEGY, ChartRefreshStrategy.IDLE)) {
+            return eInfo;
+        }
+
         /*
         堆栈信息获取
          */
@@ -116,12 +136,19 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
         standardChartData.setInfo(eInfo.getInfo());
         standardChartData.setStackTraceElements(stackTraceElements);
 
+        if (log.isTraceEnabled()) {
+            log.trace("generate standard chart data: {}", standardChartData.basicChartData());
+        }
+
         /*
         标准图表数据填充到存储库
          */
         for (;;) {
             try {
                 ChartDataRepository.INSTANCE.put(standardChartData);
+                if (log.isTraceEnabled()) {
+                    log.trace("put standard chart data to repository");
+                }
                 break;
             } catch (InterruptedException e) {
                 // nop
@@ -145,6 +172,13 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
      */
     @Override
     protected String showInfo() {
+        /*
+        闲置处理
+         */
+        if (Objects.equals(STRATEGY, ChartRefreshStrategy.IDLE)) {
+            return "";
+        }
+
         if (!alreadyShowChart && Objects.equals(STRATEGY, ChartRefreshStrategy.DEATH)) {
             /*
              JVM关闭时刷新策略显示
@@ -167,7 +201,17 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
      * 内部显示图表
      */
     private void innerShow() {
+        String chartName = new Class<>(chart).name();
+
+        if (log.isTraceEnabled()) {
+            log.trace("show chart: {}", chartName);
+        }
+
         chart.show();
         alreadyShowChart = true;
+
+        if (log.isDebugEnabled()) {
+            log.debug("showed chart: {}", chartName);
+        }
     }
 }

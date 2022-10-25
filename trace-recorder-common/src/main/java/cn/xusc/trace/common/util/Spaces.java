@@ -18,6 +18,7 @@ package cn.xusc.trace.common.util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -71,6 +72,7 @@ public class Spaces {
      */
     @Setter
     @Getter
+    @ToString
     @AllArgsConstructor
     public class CoordinateAxis {
 

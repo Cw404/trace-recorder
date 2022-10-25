@@ -1,5 +1,23 @@
 trace-recorder Changes
 
+Changes in 2.5
+
+ * Modularity of project, project name changed to trace-recorder
+
+ * Add echarts relation chart
+
+ * Add SPI components register
+
+ * Add local shared TraceRecorder
+
+ * Add TraceRecorderEnvironment, make the TraceRecorder more stronger
+
+ * Add TraceRecorderVersion, describe the current version
+
+ * Add slf4j log record all flow of TraceRecorder
+
+ * Add more...
+
 Changes in 2.4
 
  * Add TraceRecorderProperties, support from properties file and xml file to generate TraceRecorderConfig

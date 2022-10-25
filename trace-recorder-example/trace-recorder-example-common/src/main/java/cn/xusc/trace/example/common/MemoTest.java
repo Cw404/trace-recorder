@@ -28,7 +28,7 @@ import org.junit.jupiter.params.provider.ValueSource;
  *
  * @author wangcai
  */
-public class MemoTest {
+public final class MemoTest {
 
     /**
      * 备忘录

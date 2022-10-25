@@ -45,6 +45,8 @@ buildscript{
 		mockitoVersion = '4.7.0'
 		// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
 		jupiterVersion = '5.9.0'
+		// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+		slf4jVersion = '2.0.3'
 	}
 }
 
@@ -100,12 +102,23 @@ subprojects {
 			implementation "com.lmax:disruptor:${disruptorVersion}"
 		})
 
+		// 核心日志依赖
+		project.name.eachMatch("trace-recorder-core", {
+			implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+		})
+		// 日志通用编译依赖(排除示例)
+		project.name.eachMatch("trace-recorder-(?!example)", {
+			compileOnly "org.slf4j:slf4j-api:${slf4jVersion}"
+		})
+
 		// 示例项目特殊通用依赖
 		project.name.eachMatch("example",{
 			implementation "org.mockito:mockito-core:${mockitoVersion}"
 			implementation "org.junit.jupiter:junit-jupiter-api:${jupiterVersion}"
 			implementation "org.junit.jupiter:junit-jupiter-params:${jupiterVersion}"
 			runtimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}"
+			// https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+			implementation "org.slf4j:slf4j-simple:${slf4jVersion}"
 		})
 	}
 

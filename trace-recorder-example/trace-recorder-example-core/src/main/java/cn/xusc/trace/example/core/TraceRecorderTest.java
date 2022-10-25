@@ -18,16 +18,20 @@ package cn.xusc.trace.example.core;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
+import cn.xusc.trace.common.exception.TraceClosedException;
 import cn.xusc.trace.common.exception.TraceException;
 import cn.xusc.trace.common.util.Formats;
 import cn.xusc.trace.common.util.Strings;
 import cn.xusc.trace.core.TraceRecorder;
+import cn.xusc.trace.core.TraceRecorderEnvironment;
+import cn.xusc.trace.core.TraceRecorderVersion;
 import cn.xusc.trace.core.config.TraceRecorderConfig;
 import cn.xusc.trace.core.enhance.*;
 import cn.xusc.trace.core.filter.InfoFilter;
 import cn.xusc.trace.core.filter.RecordLabelInfoFilter;
 import cn.xusc.trace.core.record.ConsoleInfoRecorder;
 import cn.xusc.trace.core.record.InfoRecorder;
+import cn.xusc.trace.core.util.TraceRecorders;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -416,6 +420,42 @@ public class TraceRecorderTest {
         assertTrue(recorder.isEnableStackInfo());
         recorder.disableStackInfo();
         assertFalse(recorder.isEnableStackInfo());
+    }
+
+    /**
+     * 验证跟踪记录仪环境
+     *
+     * @param recorder 跟踪记录仪
+     */
+    @ParameterizedTest
+    @MethodSource("generateSyncTraceRecorder")
+    @DisplayName("verify environment")
+    public void environment(TraceRecorder recorder) {
+        /*
+        基本访问
+         */
+        TraceRecorderEnvironment environment = recorder.environment();
+        assertNotNull(environment);
+        assertEquals(TraceRecorderVersion.INSTANCE, environment.get("version").get());
+
+        /*
+        关闭跟踪记录仪，不能访问环境和环境中元素
+         */
+        recorder.shutdown();
+        assertThrowsExactly(TraceClosedException.class, () -> recorder.environment());
+        assertThrowsExactly(TraceClosedException.class, () -> environment.get("version"));
+    }
+
+    /**
+     * 验证本地共享跟踪记录仪
+     *
+     * @param recorder 跟踪记录仪
+     */
+    @ParameterizedTest
+    @MethodSource("generateSyncTraceRecorder")
+    @DisplayName("verify local shared TraceRecorder")
+    public void localShared(TraceRecorder recorder) {
+        assertEquals(recorder, TraceRecorders.get());
     }
 
     /**

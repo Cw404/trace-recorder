@@ -85,7 +85,8 @@ public class TraceRecorderConfig {
      *
      * <p>默认不启用</p>
      *
-     * @see <a href="#cn.xusc.trace.handle.SyncTraceHandler">SyncTraceHandler</a>、<a href="#cn.xusc.trace.handle.AsyncTraceHandler">AsyncTraceHandler</a>
+     * @see cn.xusc.trace.core.handle.SyncTraceHandler SyncTraceHandler
+     * @see cn.xusc.trace.core.handle.AsyncTraceHandler AsyncTraceHandler
      */
     private boolean enableAsync;
 
@@ -94,7 +95,7 @@ public class TraceRecorderConfig {
      *
      * <p>默认为1个处理器，由构造补偿</p>
      *
-     * @see <a href="#cn.xusc.trace.handle.AsyncTraceHandler">AsyncTraceHandler</a>
+     * @see cn.xusc.trace.core.handle.AsyncTraceHandler AsyncTraceHandler
      */
     private int taskHandlerSize;
 

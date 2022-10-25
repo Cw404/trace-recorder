@@ -38,6 +38,7 @@ import java.util.Optional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 服务调度器
@@ -49,6 +50,7 @@ import lombok.Setter;
  * @author WangCai
  * @since 2.5
  */
+@Slf4j
 public class ServerDispatchServlet extends HttpServlet {
 
     /**
@@ -85,6 +87,10 @@ public class ServerDispatchServlet extends HttpServlet {
             closeResourcePaths.add(path);
             return true;
         });
+
+        if (log.isDebugEnabled()) {
+            log.debug("init ServerDispatchServlet successful!");
+        }
     }
 
     /**
@@ -102,12 +108,12 @@ public class ServerDispatchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Writer innerWriter = new Writer(resp);
+        String servletPath = req.getServletPath();
         resources.walkServerResource((path, serverResource) -> {
             /*
             匹配路径资源写出资源数据
              */
-            String servletPath;
-            if (ANT_PATH_MATCHER.match(path, servletPath = req.getServletPath())) {
+            if (ANT_PATH_MATCHER.match(path, servletPath)) {
                 byte[] writeData = parseWriteData(req, serverResource, innerWriter);
                 doWriteData(writeData, innerWriter);
                 if (
@@ -117,6 +123,10 @@ public class ServerDispatchServlet extends HttpServlet {
                     关闭资源服务
                      */
                     closeServerRunnable.run();
+                }
+
+                if (log.isTraceEnabled()) {
+                    log.trace("match request path: {}, writer model: {}", servletPath, innerWriter.writerModel);
                 }
                 return false;
             }
@@ -130,9 +140,25 @@ public class ServerDispatchServlet extends HttpServlet {
             Optional<ServerResource> notFoundServerResourceOptional = resources.serverResource("/notFound");
             if (notFoundServerResourceOptional.isPresent()) {
                 doWriteData(parseWriteData(req, notFoundServerResourceOptional.get(), innerWriter), innerWriter);
+
+                if (log.isTraceEnabled()) {
+                    log.trace(
+                        "not match request path: {}, use [ /notFound ] server resource response, writer model: {}",
+                        servletPath,
+                        innerWriter.writerModel
+                    );
+                }
                 return;
             }
             doWriteData("Hello trace-recorder with a cute tomcat".getBytes(StandardCharsets.UTF_8), innerWriter);
+
+            if (log.isTraceEnabled()) {
+                log.trace(
+                    "not match request path: {}, use default welcome words response, writer model: {}",
+                    servletPath,
+                    innerWriter.writerModel
+                );
+            }
         }
     }
 

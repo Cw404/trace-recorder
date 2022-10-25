@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author wangcai
  */
-public class ProcessTest {
+public final class ProcessTest {
 
     /**
      * 跟踪记录仪

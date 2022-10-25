@@ -34,9 +34,12 @@ import cn.xusc.trace.core.record.InfoRecorder;
 import cn.xusc.trace.core.util.TraceRecorderProperties;
 import cn.xusc.trace.core.util.TraceRecorders;
 import cn.xusc.trace.core.util.spi.TraceRecorderLoader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 跟踪记录仪
@@ -54,6 +57,7 @@ import java.util.function.Supplier;
  * @author WangCai
  * @since 1.0
  */
+@Slf4j
 public class TraceRecorder {
 
     /**
@@ -68,6 +72,13 @@ public class TraceRecorder {
      * 信息记录器链
      */
     private final List<InfoRecorder> INFO_RECORDERS = new FastList<>(InfoRecorder.class);
+
+    /**
+     * 跟踪记录仪名称
+     *
+     * @since 2.5
+     */
+    private final String NAME;
 
     /**
      * 跟踪记录仪环境
@@ -127,13 +138,45 @@ public class TraceRecorder {
     private boolean enableThreadName;
 
     /**
+     * 跟踪记录仪id
+     *
+     * @since 2.5
+     */
+    private static long traceRecorderSeqNumber;
+
+    /**
      * 关闭标识
      *
      * @since 2.2.1
      */
     private boolean closed;
 
+    static {
+        /*
+        打印banner
+         */
+        try {
+            log.info(
+                new String(ClassLoader.getSystemResourceAsStream("banner.txt").readAllBytes(), StandardCharsets.UTF_8)
+            );
+        } catch (IOException e) {
+            // nop
+        }
+    }
+
+    /**
+     * 下一个跟踪记录仪id
+     *
+     * @return 跟踪记录仪id
+     * @since 2.5
+     */
+    private static synchronized long nextTraceRecorderID() {
+        return ++traceRecorderSeqNumber;
+    }
+
     {
+        NAME = "TraceRecorder-" + nextTraceRecorderID();
+
         /*
           初始化基础跟踪记录仪
          */
@@ -142,6 +185,9 @@ public class TraceRecorder {
         enableStack = true;
         enableThreadName = true;
         environment = new TraceRecorderEnvironment();
+        if (log.isInfoEnabled()) {
+            log.info("TraceRecorder environment create successful!");
+        }
     }
 
     /**
@@ -238,21 +284,6 @@ public class TraceRecorder {
      * @since 2.0
      */
     public TraceRecorder(TraceRecorderConfig config) {
-        if (!config.getInfoFilters().isEmpty()) {
-            for (InfoFilter infoFilter : config.getInfoFilters()) {
-                addInfoFilter(infoFilter);
-            }
-        }
-        if (!config.getInfoEnhancers().isEmpty()) {
-            for (InfoEnhancer infoEnhancer : config.getInfoEnhancers()) {
-                addInfoEnhancer(infoEnhancer);
-            }
-        }
-        if (!config.getInfoRecorders().isEmpty()) {
-            for (InfoRecorder infoRecorder : config.getInfoRecorders()) {
-                addInfoRecorder(infoRecorder);
-            }
-        }
         /*
           堆栈信息默认启用
           短类名默认禁用
@@ -279,12 +310,14 @@ public class TraceRecorder {
             initBaseEnvironment();
             initAdditionPropertiesEnvironment(Optional.ofNullable(config.getAdditionProperties()));
             quickSpiComponentsRegister();
+            registerConfigComponents(config);
             return;
         }
         TRACE_HANDLER = new SyncTraceHandler(this);
         initBaseEnvironment();
         initAdditionPropertiesEnvironment(Optional.ofNullable(config.getAdditionProperties()));
         quickSpiComponentsRegister();
+        registerConfigComponents(config);
     }
 
     /**
@@ -294,6 +327,9 @@ public class TraceRecorder {
      */
     private void localThreadShareTraceRecorder() {
         TraceRecorders.register(this);
+        if (log.isInfoEnabled()) {
+            log.info("local thread enable share TraceRecorder [ {} ] successful!", NAME);
+        }
     }
 
     /**
@@ -302,6 +338,10 @@ public class TraceRecorder {
      * @since 2.5
      */
     private void quickSpiComponentsRegister() {
+        if (log.isInfoEnabled()) {
+            log.info("enable spi components register");
+        }
+
         TraceRecorderLoader<InfoFilter> infoFilterLoader = TraceRecorderLoader.getTraceRecorderLoader(InfoFilter.class);
         TraceRecorderLoader<InfoEnhancer> infoEnhancerLoader = TraceRecorderLoader.getTraceRecorderLoader(
             InfoEnhancer.class
@@ -319,22 +359,59 @@ public class TraceRecorder {
         );
         INFO_ENHANCERS.add(infoEnhancerLoader.find(Temporary.SPI_COMPONENT_PREFIX.concat("threadInfoEnhancer")).get());
         INFO_RECORDERS.add(infoRecorderLoader.find(Temporary.SPI_COMPONENT_PREFIX.concat("consoleInfoRecorder")).get());
+        if (log.isInfoEnabled()) {
+            log.info("inner spi components register:");
+            for (InfoFilter infoFilter : INFO_FILTERS) {
+                log.info("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
+            }
+            for (InfoEnhancer infoEnhancer : INFO_ENHANCERS) {
+                log.info("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
+            }
+            for (InfoRecorder infoRecorder : INFO_RECORDERS) {
+                log.info("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
+            }
+        }
         List<?> innerComponents = Lists.merge(INFO_FILTERS, INFO_ENHANCERS, INFO_RECORDERS);
 
         /* external(外部) */
+        if (log.isInfoEnabled()) {
+            log.info("external spi components register:");
+        }
+        boolean existExternalSpiComponents = false;
         for (InfoFilter infoFilter : infoFilterLoader.findAll().get()) {
             if (!innerComponents.contains(infoFilter)) {
                 addInfoFilter(infoFilter);
+
+                if (log.isInfoEnabled()) {
+                    log.info("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
+                }
+                existExternalSpiComponents = true;
             }
         }
         for (InfoEnhancer infoEnhancer : infoEnhancerLoader.findAll().get()) {
             if (!innerComponents.contains(infoEnhancer)) {
                 addInfoEnhancer(infoEnhancer);
+
+                if (log.isInfoEnabled()) {
+                    log.info("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
+                }
+                existExternalSpiComponents = true;
             }
         }
         for (InfoRecorder infoRecorder : infoRecorderLoader.findAll().get()) {
             if (!innerComponents.contains(infoRecorder)) {
                 addInfoRecorder(infoRecorder);
+
+                if (log.isInfoEnabled()) {
+                    log.info("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
+                }
+                existExternalSpiComponents = true;
+            }
+        }
+
+        if (!existExternalSpiComponents) {
+            if (log.isInfoEnabled()) {
+                log.info("     not components register");
             }
         }
     }
@@ -346,6 +423,8 @@ public class TraceRecorder {
      */
     private void initBaseEnvironment() {
         Map<String, Supplier<Object>> environmentCollectMaps = Map.of(
+            "name",
+            () -> getName(),
             "version",
             () -> {
                 verifyClosed();
@@ -372,6 +451,10 @@ public class TraceRecorder {
             () -> Lists.classNames(getInfoRecorders())
         );
         environment.put(environmentCollectMaps);
+
+        if (log.isInfoEnabled()) {
+            log.info("init base environment successful!");
+        }
     }
 
     /**
@@ -393,7 +476,71 @@ public class TraceRecorder {
                         }
                     );
                 });
+
+            if (log.isInfoEnabled()) {
+                log.info("init addition properties environment successful!");
+            }
         }
+    }
+
+    /**
+     * 注册配置组件
+     *
+     * @param config 跟踪记录仪配置
+     * @since 2.5
+     */
+    private void registerConfigComponents(TraceRecorderConfig config) {
+        if (log.isInfoEnabled()) {
+            log.info("external config components register:");
+        }
+
+        boolean existExternalConfigComponents = false;
+        if (!config.getInfoFilters().isEmpty()) {
+            for (InfoFilter infoFilter : config.getInfoFilters()) {
+                addInfoFilter(infoFilter);
+
+                if (log.isInfoEnabled()) {
+                    log.info("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
+                }
+            }
+            existExternalConfigComponents = true;
+        }
+        if (!config.getInfoEnhancers().isEmpty()) {
+            for (InfoEnhancer infoEnhancer : config.getInfoEnhancers()) {
+                addInfoEnhancer(infoEnhancer);
+
+                if (log.isInfoEnabled()) {
+                    log.info("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
+                }
+            }
+            existExternalConfigComponents = true;
+        }
+        if (!config.getInfoRecorders().isEmpty()) {
+            for (InfoRecorder infoRecorder : config.getInfoRecorders()) {
+                addInfoRecorder(infoRecorder);
+
+                if (log.isInfoEnabled()) {
+                    log.info("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
+                }
+            }
+            existExternalConfigComponents = true;
+        }
+
+        if (!existExternalConfigComponents) {
+            if (log.isInfoEnabled()) {
+                log.info("     not components register");
+            }
+        }
+    }
+
+    /**
+     * 获取跟踪记录仪名称
+     *
+     * @return 跟踪记录仪名称
+     * @since 2.5
+     */
+    public String getName() {
+        return NAME;
     }
 
     /**

@@ -141,6 +141,27 @@ public class Systems {
     }
 
     /**
+     * 报告消息
+     *
+     * @param message 消息
+     */
+    public void report(String message) {
+        System.err.println("TraceRecorder: " + message);
+    }
+
+    /**
+     * 报告异常消息
+     *
+     * @param message 消息
+     * @param t 异常
+     */
+    public void report(String message, Throwable t) {
+        System.err.println(message);
+        System.err.println("reported exception:");
+        t.printStackTrace();
+    }
+
+    /**
      * 获取系统类型
      *
      * @return 系统类型

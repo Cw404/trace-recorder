@@ -28,8 +28,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.logging.LogManager;
-import org.apache.catalina.Context;
-import org.apache.catalina.LifecycleException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.*;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 
@@ -39,6 +39,7 @@ import org.apache.catalina.startup.Tomcat;
  * @author WangCai
  * @since 2.5
  */
+@Slf4j
 public class TomcatServer extends AbstractServer {
 
     /**
@@ -60,7 +61,14 @@ public class TomcatServer extends AbstractServer {
         super(config);
         this.config = config;
         tomcat = new Tomcat();
+        if (log.isDebugEnabled()) {
+            log.debug("create tomcat successful!");
+        }
+
         initConfig();
+        if (log.isDebugEnabled()) {
+            log.debug("init tomcat config successful!");
+        }
     }
 
     /**
@@ -80,11 +88,13 @@ public class TomcatServer extends AbstractServer {
         /*
         基本目录初始化
          */
+        String baseDir;
         try {
             tomcat.setBaseDir(
-                Objects.nonNull(config.getBaseDir())
-                    ? config.getBaseDir()
-                    : Files.createTempDirectory(Formats.format("tomcat.{}.", config.getPort())).toString()
+                baseDir =
+                    Objects.nonNull(config.getBaseDir())
+                        ? config.getBaseDir()
+                        : Files.createTempDirectory(Formats.format("tomcat.{}.", config.getPort())).toString()
             );
         } catch (IOException e) {
             throw new TraceException(
@@ -99,6 +109,15 @@ public class TomcatServer extends AbstractServer {
         tomcat.setHostname(config.getHost());
         tomcat.setPort(config.getPort());
         tomcat.getHost().setAutoDeploy(false);
+
+        if (log.isTraceEnabled()) {
+            log.trace(
+                "init base config: { baseDir: {}, hostname: {}, port: {}, autoDeploy: false }",
+                baseDir,
+                config.getHost(),
+                config.getPort()
+            );
+        }
     }
 
     /**
@@ -110,6 +129,10 @@ public class TomcatServer extends AbstractServer {
          */
         Connector connector = tomcat.getConnector();
         connector.setThrowOnFailure(true);
+
+        if (log.isTraceEnabled()) {
+            log.trace("init connector config: { throwOnFailure: true }");
+        }
     }
 
     /**
@@ -119,37 +142,55 @@ public class TomcatServer extends AbstractServer {
         /*
         添加上下文
          */
-        Context context = tomcat.addContext(config.getContextPath(), config.getDocBase());
+        String contextPath;
+        Context context = tomcat.addContext(contextPath = config.getContextPath(), config.getDocBase());
         /*
         添加基础Servlet
          */
         ServerDispatchServlet dispatchServlet = new ServerDispatchServlet(resources);
         dispatchServlet.registerCloseServer(() -> {
             shutdown();
+            destroy();
         });
         Tomcat.addServlet(context, "dispatch", dispatchServlet);
         /*
         添加Servlet映射
          */
         context.addServletMappingDecoded("/", "dispatch");
+
+        if (log.isTraceEnabled()) {
+            log.trace(
+                "init context config: { contextPath: {}, docBase: {}}, servlet mapping [ ' / ' -> ' {} ' ]",
+                contextPath,
+                config.getDocBase(),
+                contextPath
+            );
+        }
     }
 
     /**
      * 初始化日志配置
      */
     private void initLoggingConfig() {
+        String loggingPath;
         try {
             LogManager
                 .getLogManager()
                 .readConfiguration(
-                    Objects.nonNull(config.getLoggingPropertiesPath())
-                        ? Files.newInputStream(Paths.get(config.getLoggingPropertiesPath()))
+                    Objects.nonNull(loggingPath = config.getLoggingPropertiesPath())
+                        ? Files.newInputStream(Paths.get(loggingPath))
                         : config.getUseFileProperties()
-                            ? ClassLoader.getSystemResourceAsStream("logging/java/logging-file.properties")
-                            : ClassLoader.getSystemResourceAsStream("logging/java/logging.properties")
+                            ? ClassLoader.getSystemResourceAsStream(
+                                loggingPath = "logging/java/logging-file.properties"
+                            )
+                            : ClassLoader.getSystemResourceAsStream(loggingPath = "logging/java/logging.properties")
                 );
         } catch (IOException e) {
             throw new TraceException(e);
+        }
+
+        if (log.isTraceEnabled()) {
+            log.trace("init logging config: { loggingPath: {} }", loggingPath);
         }
     }
 
