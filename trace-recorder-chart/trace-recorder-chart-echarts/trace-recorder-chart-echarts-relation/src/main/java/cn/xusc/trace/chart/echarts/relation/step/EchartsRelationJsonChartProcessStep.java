@@ -23,6 +23,7 @@ import cn.xusc.trace.chart.echarts.relation.mapping.EchartsRelation;
 import cn.xusc.trace.common.exception.TraceException;
 import cn.xusc.trace.common.util.Formats;
 import cn.xusc.trace.common.util.Jsons;
+import cn.xusc.trace.common.util.Systems;
 import cn.xusc.trace.common.util.file.Finder;
 import cn.xusc.trace.common.util.file.JarPath;
 import java.io.IOException;
@@ -98,7 +99,7 @@ public class EchartsRelationJsonChartProcessStep implements ChartProcessStep {
         Path templatePath = Temporary.TEMPLATE_PATH;
         generatePath = generatePath.resolve(Temporary.GENERATE_PATH);
         String homePath = chartConfig.getHomePath().toString();
-        List<Path> paths = Finder.find(ClassLoader.getSystemResource(homePath), "**");
+        List<Path> paths = Finder.find(ClassLoader.getSystemResource(Systems.getSystemClassPath(homePath)), "**");
         if (Files.notExists(generatePath)) {
             Files.createDirectory(generatePath);
             for (Path path : paths) {

@@ -67,7 +67,7 @@ public final class Finder extends SimpleFileVisitor<Path> {
 
         Finder finder = new Finder(pattern);
         Files.FileProtocol fileProtocol = Files.findProtocol(originUrl.getProtocol());
-        Files.walkFileTree(Path.of(originUrl.getPath()), fileProtocol, finder);
+        Files.walkFileTree(originUrl.getPath(), fileProtocol, finder);
         return finder.done();
     }
 

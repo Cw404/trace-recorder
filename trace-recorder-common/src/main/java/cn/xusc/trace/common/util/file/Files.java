@@ -48,17 +48,18 @@ class Files {
      * @return 起始路径
      * @throws IOException if an I/O error has occurred.
      */
-    public Path walkFileTree(Path start, FileProtocol protocol, FileVisitor<? super Path> visitor) throws IOException {
+    public String walkFileTree(String start, FileProtocol protocol, FileVisitor<? super Path> visitor)
+        throws IOException {
         switch (protocol) {
             case FILE:
                 {
-                    java.nio.file.Files.walkFileTree(start, visitor);
+                    java.nio.file.Files.walkFileTree(Path.of(start), visitor);
                     break;
                 }
             case JAR:
                 {
                     URL jarFileURL;
-                    String spec = start.toString(), entryName = null;
+                    String spec = start, entryName = null;
 
                     int separator = spec.indexOf("!/");
                     /* 注意: 暂不处理纯jar包 */

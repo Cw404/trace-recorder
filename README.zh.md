@@ -3,12 +3,15 @@
 简单的， 可伸缩的， 高性能的。 trace-recorder 是一个跟踪记录仪，主要是为了更好的去进行源码流程的记录，
 可以更好的获取源码执行的基础流程和全流程；通过可伸缩的插件体系可以更好的去管理记录。
 
+### 新闻
+* 跟踪记录仪记录信息到echarts关系图显示。
+
 ### 使用
 **项目依赖**
 
 gradle
 ```gradle
-implementation 'cn.xusc:trace-recorder:2.5'
+implementation 'cn.xusc:trace-recorder:2.5.1'
 ```
 
 maven
@@ -16,7 +19,7 @@ maven
 <dependency>
    <groupId>cn.xusc</groupId>
    <artifactId>trace-recorder</artifactId>
-   <version>2.5</version>
+   <version>2.5.1</version>
 </dependency>
 ```
 
