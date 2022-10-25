@@ -54,7 +54,7 @@ public enum TraceRecorderVersion {
         major = 2;
         minor = 5;
         revision = 0;
-        snapshot = true;
+        snapshot = false;
     }
 
     @Override
