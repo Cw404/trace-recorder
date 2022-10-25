@@ -32,6 +32,8 @@ public final class ServerTest {
 
     /**
      * 运行服务
+     *
+     * @param server 标准服务
      */
     @ParameterizedTest
     @MethodSource("generateServerArgs")
