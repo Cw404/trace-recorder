@@ -63,7 +63,7 @@ public class EchartsRelationChart extends AbstractChart {
         EchartsRelationChartConfig.RelationAttribute relationAttribute = chartConfig.getRelationAttribute();
         ChartAttribute.INSTANCE.setAttribute("symbolSize", relationAttribute.getSymbolSize());
         ChartAttribute.INSTANCE.setAttribute("maxXAxis", relationAttribute.getMaxXAxis());
-        ChartAttribute.INSTANCE.setAttribute("offsetXAxis", relationAttribute.getMaxXAxis());
+        ChartAttribute.INSTANCE.setAttribute("offsetXAxis", relationAttribute.getOffsetXAxis());
         ChartAttribute.INSTANCE.setAttribute("offsetYAxis", relationAttribute.getOffsetYAxis());
         ChartAttribute.INSTANCE.setAttribute("minYAxis", relationAttribute.getMinYAxis());
     }
