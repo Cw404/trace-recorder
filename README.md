@@ -49,3 +49,8 @@ maven
 * WeChat: m47705945
 * email : 18573707104@163.com
 * describe: Please contact the author if you have any questions
+
+## Special thanks to JetBrains for supporting open source projects
+<a href="https://jb.gg/OpenSourceSupport">
+  <img src="https://user-images.githubusercontent.com/8643542/160519107-199319dc-e1cf-4079-94b7-01b6b8d23aa6.png" align="left" height="100" width="100"  alt="JetBrains">
+</a>
