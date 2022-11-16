@@ -52,14 +52,14 @@ public class EchartsBarDataChartProcessStep implements ChartProcessStep {
             seriesData.add(chartData.getCounter());
         }
         boolean beautifyInterval = Boolean.parseBoolean(ChartAttribute.INSTANCE.getAttribute("beautifyInterval"));
-        EchartsBar relation = EchartsBar
+        EchartsBar bar = EchartsBar
             .builder()
             .xAxisData(xAxisData)
             .seriesData(seriesData)
             .beautifyInterval(beautifyInterval ? deduceBeautifyInterval(xAxisData.size()) : 0)
             .build();
 
-        valuePipeline.setValue((T) relation);
+        valuePipeline.setValue((T) bar);
     }
 
     /**
