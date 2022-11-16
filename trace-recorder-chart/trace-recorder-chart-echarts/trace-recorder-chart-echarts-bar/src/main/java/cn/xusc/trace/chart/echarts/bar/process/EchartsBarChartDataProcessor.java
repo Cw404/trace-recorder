@@ -64,7 +64,7 @@ public class EchartsBarChartDataProcessor extends ChartDataProcessor {
 
         /*
         查找当前匹配的图表数据
-            1、存在对计数器进行自增
+            1、存在对计数器进行自增、构建可刷新的柱状图数据（持续显示）
             2、不存在链接图表数据
          */
         Optional<EchartsBarChartData> chartDataOptional = findCurrentChartData(chartData);
@@ -72,6 +72,7 @@ public class EchartsBarChartDataProcessor extends ChartDataProcessor {
             echartsBarChartData -> {
                 EchartsBarChartData needIncrementChartData = chartDataOptional.get();
                 needIncrementChartData.setCounter(needIncrementChartData.getCounter() + 1);
+                preBarChartData = buildRefreshableBarChartData();
             },
             () -> {
                 barChartData.setNextChartData(preBarChartData);
@@ -80,6 +81,24 @@ public class EchartsBarChartDataProcessor extends ChartDataProcessor {
         );
 
         return preBarChartData;
+    }
+
+    /**
+     * 构建可刷新的柱状图数据
+     *
+     * @return 可刷新的柱状图数据
+     */
+    private EchartsBarChartData buildRefreshableBarChartData() {
+        EchartsBarChartData currentBarChartData = preBarChartData;
+        EchartsBarChartData refreshableBarChartData = new EchartsBarChartData();
+        refreshableBarChartData.setCounter(currentBarChartData.getCounter());
+        refreshableBarChartData.setThreadName(currentBarChartData.threadName());
+        refreshableBarChartData.setClassName(currentBarChartData.className());
+        refreshableBarChartData.setMethodName(currentBarChartData.methodName());
+        refreshableBarChartData.setLineNumber(currentBarChartData.lineNumber());
+        refreshableBarChartData.setInfo(currentBarChartData.info());
+        refreshableBarChartData.setStackTraceElements(null);
+        return refreshableBarChartData;
     }
 
     /**
