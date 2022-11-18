@@ -15,9 +15,7 @@
  */
 package cn.xusc.trace.chart.echarts.relation.config;
 
-import cn.xusc.trace.chart.AbstractChartConfig;
-import cn.xusc.trace.chart.constant.Temporary;
-import java.nio.file.Path;
+import cn.xusc.trace.chart.config.GenerableChartConfig;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,23 +30,12 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @Getter
 @SuperBuilder
-public class EchartsRelationChartConfig extends AbstractChartConfig {
+public class EchartsRelationChartConfig extends GenerableChartConfig {
 
     /**
      * 关系图图表配置类名
      */
     public static final String CONFIG_CLASSNAME = EchartsRelationChartConfig.class.getName();
-
-    /**
-     * 关系图生成路径
-     */
-    private Path generatePath;
-
-    /**
-     * 关系图家路径
-     */
-    @Builder.Default
-    private Path homePath = Temporary.TEMPLATE_PATH.resolve("echarts/relation");
 
     /**
      * 关系图属性

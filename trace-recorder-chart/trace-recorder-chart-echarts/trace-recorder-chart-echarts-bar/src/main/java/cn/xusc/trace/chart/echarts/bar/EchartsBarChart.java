@@ -54,7 +54,7 @@ public class EchartsBarChart extends AbstractChart {
     @Override
     protected AbstractChartConfig initChartConfig() {
         TraceRecorderEnvironment environment = TraceRecorders.get().environment();
-        return deduceEchartsRelationChartConfig(environment);
+        return deduceEchartsBarChartConfig(environment);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class EchartsBarChart extends AbstractChart {
 
     @Override
     protected void openServerShow() {
-        Path generatePath = ((EchartsBarChartConfig) CHART_CONFIG).getGeneratePath().resolve(Temporary.GENERATE_PATH);
+        Path generatePath = ((EchartsBarChartConfig) CHART_CONFIG).getSpecificGeneratePath();
 
         new TomcatServer(
             TomcatServerConfig
@@ -101,7 +101,7 @@ public class EchartsBarChart extends AbstractChart {
      * @param environment 跟踪记录仪环境
      * @return Echarts柱状图图表配置
      */
-    private EchartsBarChartConfig deduceEchartsRelationChartConfig(TraceRecorderEnvironment environment) {
+    private EchartsBarChartConfig deduceEchartsBarChartConfig(TraceRecorderEnvironment environment) {
         return EchartsBarChartConfig
             .builder()
             .chartRefreshStrategy(
@@ -118,8 +118,12 @@ public class EchartsBarChart extends AbstractChart {
                         .orElse(Systems.getClassPaths(classPath -> Files.isDirectory(Paths.get(classPath)))[0])
                 )
             )
+            .homePath(Temporary.TEMPLATE_PATH.resolve("echarts/bar"))
+            .specificGenerateChartPath(Path.of("echarts/bar"))
+            .jsonFilePath(Path.of("echarts/bar/data/bar.json"))
             .barAttribute(contextBarAttribute(environment))
-            .build();
+            .build()
+            .buildCompleteVerify();
     }
 
     /**
