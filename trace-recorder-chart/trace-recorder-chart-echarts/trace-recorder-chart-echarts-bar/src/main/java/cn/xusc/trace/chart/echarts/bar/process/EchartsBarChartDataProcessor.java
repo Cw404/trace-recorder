@@ -98,6 +98,10 @@ public class EchartsBarChartDataProcessor extends ChartDataProcessor {
         refreshableBarChartData.setLineNumber(currentBarChartData.lineNumber());
         refreshableBarChartData.setInfo(currentBarChartData.info());
         refreshableBarChartData.setStackTraceElements(null);
+        /*
+        链接前面的柱状图数据
+         */
+        refreshableBarChartData.setNextChartData(currentBarChartData.nextChartData());
         return refreshableBarChartData;
     }
 
