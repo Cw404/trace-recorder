@@ -4,6 +4,7 @@
 可以更好的获取源码执行的基础流程和全流程；通过可伸缩的插件体系可以更好的去管理记录。
 
 ### 新闻
+* 跟踪记录仪记录信息到echarts柱状图显示。
 * 跟踪记录仪记录信息到echarts关系图显示。
 
 ### 使用
@@ -11,7 +12,7 @@
 
 gradle
 ```gradle
-implementation 'cn.xusc:trace-recorder:2.5.1'
+implementation 'cn.xusc:trace-recorder:2.5.2'
 ```
 
 maven
@@ -19,7 +20,7 @@ maven
 <dependency>
    <groupId>cn.xusc</groupId>
    <artifactId>trace-recorder</artifactId>
-   <version>2.5.1</version>
+   <version>2.5.2</version>
 </dependency>
 ```
 
