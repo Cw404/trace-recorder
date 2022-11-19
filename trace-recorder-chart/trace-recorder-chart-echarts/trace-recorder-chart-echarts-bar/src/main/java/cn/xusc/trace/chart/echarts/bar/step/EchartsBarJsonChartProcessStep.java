@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.xusc.trace.chart.echarts.relation.step;
+package cn.xusc.trace.chart.echarts.bar.step;
 
 import cn.xusc.trace.chart.step.BaseJsonChartProcessStep;
 
 /**
- * Echarts关系图json化图表处理步骤
+ * Echarts柱状图json化图表处理步骤
  *
  * @author WangCai
- * @since 2.5
+ * @since 2.5.2
  */
-public class EchartsRelationJsonChartProcessStep extends BaseJsonChartProcessStep {
+public class EchartsBarJsonChartProcessStep extends BaseJsonChartProcessStep {
 
     /**
      * 基础构造
      */
-    public EchartsRelationJsonChartProcessStep() {}
+    public EchartsBarJsonChartProcessStep() {}
 }

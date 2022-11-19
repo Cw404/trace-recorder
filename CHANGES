@@ -2,6 +2,10 @@ trace-recorder Changes
 
 Changes in 2.5.2
 
+ * Add chart-echarts-bar module, use bar chart to show dat
+
+ * Rebuild json step in relation chart and bar chart
+
  * Fix offsetXAxis set abnormal in ChartAttribute properties
 
 Changes in 2.5.1

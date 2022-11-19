@@ -5,6 +5,7 @@ can better access to the source code implementation of the basic process and the
 Records can be better managed with a scalable plug-in architecture.
 
 ### News
+* TraceRecorder log info to echarts bar chart show.
 * TraceRecorder log info to echarts relation chart show.
 
 ### Use
@@ -12,7 +13,7 @@ Records can be better managed with a scalable plug-in architecture.
 
 gradle
 ```gradle
-implementation 'cn.xusc:trace-recorder:2.5.1'
+implementation 'cn.xusc:trace-recorder:2.5.2'
 ```
 
 maven
@@ -20,7 +21,7 @@ maven
 <dependency>
    <groupId>cn.xusc</groupId>
    <artifactId>trace-recorder</artifactId>
-   <version>2.5.1</version>
+   <version>2.5.2</version>
 </dependency>
 ```
 

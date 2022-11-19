@@ -13,20 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.xusc.trace.chart.echarts.relation.step;
+package cn.xusc.trace.chart.echarts.bar.mapping;
 
-import cn.xusc.trace.chart.step.BaseJsonChartProcessStep;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Echarts关系图json化图表处理步骤
+ * Echarts柱状图
  *
  * @author WangCai
- * @since 2.5
+ * @since 2.5.2
  */
-public class EchartsRelationJsonChartProcessStep extends BaseJsonChartProcessStep {
+@Setter
+@Getter
+@Builder
+public class EchartsBar {
 
     /**
-     * 基础构造
+     * Echarts柱状图x轴数据列表
      */
-    public EchartsRelationJsonChartProcessStep() {}
+    @JsonProperty(value = "xAxisData")
+    List<String> xAxisData;
+
+    /**
+     * Echarts柱状图系列数据列表
+     */
+    List<Integer> seriesData;
+
+    /**
+     * Echarts柱状图美化间隔
+     */
+    short beautifyInterval;
 }

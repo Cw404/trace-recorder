@@ -13,20 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.xusc.trace.chart.echarts.relation.step;
 
-import cn.xusc.trace.chart.step.BaseJsonChartProcessStep;
-
-/**
- * Echarts关系图json化图表处理步骤
- *
- * @author WangCai
- * @since 2.5
- */
-public class EchartsRelationJsonChartProcessStep extends BaseJsonChartProcessStep {
-
-    /**
-     * 基础构造
-     */
-    public EchartsRelationJsonChartProcessStep() {}
+dependencies {
+	// 项目模块依赖
+	compileOnly project(":trace-recorder-common")
+	compileOnly project(":trace-recorder-core")
+	implementation project(":trace-recorder-chart")
+	compileOnly project(":trace-recorder-server")
+	implementation project(":trace-recorder-server:trace-recorder-server-tomcat")
 }

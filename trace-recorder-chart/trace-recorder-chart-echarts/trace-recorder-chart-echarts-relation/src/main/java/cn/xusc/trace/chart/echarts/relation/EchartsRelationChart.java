@@ -83,8 +83,7 @@ public class EchartsRelationChart extends AbstractChart {
 
     @Override
     protected void openServerShow() {
-        Path generatePath =
-            ((EchartsRelationChartConfig) CHART_CONFIG).getGeneratePath().resolve(Temporary.GENERATE_PATH);
+        Path generatePath = ((EchartsRelationChartConfig) CHART_CONFIG).getSpecificGeneratePath();
 
         new TomcatServer(
             TomcatServerConfig
@@ -127,7 +126,12 @@ public class EchartsRelationChart extends AbstractChart {
                 )
             )
             .relationAttribute(contextRelationAttribute(environment))
-            .build();
+            .homePath(Temporary.TEMPLATE_PATH.resolve("echarts/relation"))
+            .specificGenerateChartPath(Path.of("echarts/relation"))
+            .jsonFilePath(Path.of("echarts/relation/data/relation.json"))
+            .relationAttribute(contextRelationAttribute(environment))
+            .build()
+            .buildCompleteVerify();
     }
 
     /**

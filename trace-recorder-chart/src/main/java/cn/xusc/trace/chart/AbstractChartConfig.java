@@ -16,9 +16,7 @@
 package cn.xusc.trace.chart;
 
 import cn.xusc.trace.chart.constant.ChartRefreshStrategy;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 /**
