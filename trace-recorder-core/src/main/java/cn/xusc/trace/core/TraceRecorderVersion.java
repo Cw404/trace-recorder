@@ -53,8 +53,8 @@ public enum TraceRecorderVersion {
         /* 初始化版本 */
         major = 2;
         minor = 5;
-        revision = 1;
-        snapshot = false;
+        revision = 2;
+        snapshot = true;
     }
 
     @Override
