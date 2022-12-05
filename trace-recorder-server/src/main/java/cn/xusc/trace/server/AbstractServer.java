@@ -25,10 +25,7 @@ import cn.xusc.trace.common.util.reflect.Method;
 import cn.xusc.trace.common.util.reflect.Reflector;
 import cn.xusc.trace.server.annotation.*;
 import cn.xusc.trace.server.util.ServerClosedWaiter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -51,6 +48,13 @@ public abstract class AbstractServer implements Server {
      * 服务资源点
      */
     protected ServerResources resources;
+
+    /**
+     * 禁用重写服务资源点
+     *
+     * @since 2.5.3
+     */
+    private List<String> disableOverrideResources = new ArrayList<>();
 
     /**
      * 服务配置
@@ -169,6 +173,24 @@ public abstract class AbstractServer implements Server {
                                 .value();
 
                             /*
+                            获取禁用重写许可
+                             */
+                            boolean isDisableOverridePermit = (Boolean) method
+                                .findAvailableAnnotation(DisableOverrideServerResource.class)
+                                .orElse(defaultNoValueAnnotation)
+                                .value();
+
+                            if (Boolean.logicalAnd(isOverridePermit, isDisableOverridePermit)) {
+                                throw new TraceUnsupportedOperationException(
+                                    Formats.format(
+                                        "@OverrideServerResource and @DisableOverrideServerResource can't be used together on {}#{}()",
+                                        clazz.name(),
+                                        method.name()
+                                    )
+                                );
+                            }
+
+                            /*
                             探测源注释
                              */
                             List<Annotation<java.lang.annotation.Annotation>> metaAnnotations = detectionMetaAnnotations(
@@ -181,16 +203,30 @@ public abstract class AbstractServer implements Server {
                             String[] paths = (String[]) pathMethod.call();
                             byte[] data = ServerResource.parseSpecificData(method.call());
                             for (String path : paths) {
-                                if (isOverridePermit) {
-                                    /*
-                                    重写服务资源许可移除
-                                     */
-                                    resources.remove(path);
+                                if (!isDisableOverridePermit) {
+                                    if (disableOverrideResources.contains(path)) {
+                                        throw new TraceUnsupportedOperationException(
+                                            Formats.format("server resource path [ {} ] disable override!", path)
+                                        );
+                                    }
+                                    if (isOverridePermit) {
+                                        /*
+                                        重写服务资源许可移除
+                                         */
+                                        resources.remove(path);
+
+                                        if (log.isTraceEnabled()) {
+                                            log.trace("remove override path [ {} ] server resource successful!", path);
+                                        }
+                                    }
+                                } else {
+                                    disableOverrideResources.add(path);
 
                                     if (log.isTraceEnabled()) {
-                                        log.trace("remove override path [ {} ] server resource successful!", path);
+                                        log.trace("add disable override path [ {} ] server resource successful!", path);
                                     }
                                 }
+
                                 registerServerResource(
                                     (boolean) method
                                             .findAvailableAnnotation(
