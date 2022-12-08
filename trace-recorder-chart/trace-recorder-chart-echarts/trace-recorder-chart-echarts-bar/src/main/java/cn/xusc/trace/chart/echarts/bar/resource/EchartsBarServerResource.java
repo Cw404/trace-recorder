@@ -58,7 +58,7 @@ public class EchartsBarServerResource extends BaseChartServerResource {
      */
     @TransientServerResource
     @ServerResource(path = { "/data/bar.json" })
-    public byte[] relationJson() {
+    public byte[] barJson() {
         return readGenerateResourceData("echarts/bar/data/bar.json");
     }
 
