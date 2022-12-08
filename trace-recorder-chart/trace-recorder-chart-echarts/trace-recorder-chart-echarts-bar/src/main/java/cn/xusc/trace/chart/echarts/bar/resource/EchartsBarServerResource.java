@@ -16,10 +16,7 @@
 package cn.xusc.trace.chart.echarts.bar.resource;
 
 import cn.xusc.trace.chart.resource.BaseChartServerResource;
-import cn.xusc.trace.server.annotation.OverrideServerResource;
-import cn.xusc.trace.server.annotation.ServerCloseResource;
-import cn.xusc.trace.server.annotation.ServerResource;
-import cn.xusc.trace.server.annotation.TransientServerResource;
+import cn.xusc.trace.server.annotation.*;
 import java.nio.file.Path;
 
 /**
@@ -44,6 +41,7 @@ public class EchartsBarServerResource extends BaseChartServerResource {
      *
      * @return bar.html
      */
+    @OutputStreamServerResource
     @ServerResource(path = { "/", "/bar" })
     public byte[] bar() {
         return readGenerateResourceData("echarts/bar/bar.html");
@@ -69,6 +67,7 @@ public class EchartsBarServerResource extends BaseChartServerResource {
      *
      * @return echarts.min.js
      */
+    @OutputStreamServerResource
     @ServerResource(path = { "/js/echarts.min.js" })
     public byte[] echartsJs() {
         return readGenerateResourceData("echarts/bar/js/echarts.min.js");
