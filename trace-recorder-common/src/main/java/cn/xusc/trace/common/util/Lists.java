@@ -93,6 +93,33 @@ public class Lists {
     }
 
     /**
+     * 列表元素转移
+     *
+     * @param from 源列表
+     * @param to 转移列表
+     * @return 转移列表
+     * @param <E> 元素类型
+     * @throws NullPointerException if {@code from} is null.
+     * @throws NullPointerException if {@code to} is null.
+     * @since 2.5.3
+     */
+    public <E> List<E> transfer(List<E> from, List<E> to) {
+        Objects.requireNonNull(from);
+        Objects.requireNonNull(to);
+
+        if (from instanceof FastList) {
+            Iterator iterator = from.iterator();
+            while (iterator.hasNext()) {
+                to.add((E) iterator.next());
+            }
+            return to;
+        }
+
+        to.addAll(from);
+        return to;
+    }
+
+    /**
      * 统计列表中符合条件的列表数据
      *
      * @param list      列表数据
