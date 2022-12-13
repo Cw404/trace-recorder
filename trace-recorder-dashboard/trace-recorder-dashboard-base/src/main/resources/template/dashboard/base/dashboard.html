@@ -1,0 +1,278 @@
+<!--
+Copyright 2022 WangCai.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+<head>
+  <meta charset="UTF-8">
+  <title>trace-recorder dashboard</title>
+  <link rel="shortcut icon" href="trace-recorder-icon.png" />
+  <!-- jquery JS -->
+  <script src="js/jquery.js"></script>
+  <!-- UIkit CSS -->
+  <link rel="stylesheet" href="uikit-3/css/uikit.css" />
+
+  <!-- UIkit JS -->
+  <script src="uikit-3/js/uikit.js"></script>
+  <script src="uikit-3/js/uikit-icons.js"></script>
+
+  <!-- extension(扩展)-->
+  <link rel="stylesheet" href="uikit-3/extension/css/uikit-extension.css" />
+  <script src="uikit-3/extension/js/uikit-icons-extension.js"></script>
+
+  <!-- custom(自定义)-->
+  <style type="text/css">
+    /* layout(布局) */
+    #head {
+      height: 8%;
+    }
+    #body {
+      height: 92%;
+    }
+    #rightBody-top {
+      height: 95%;
+    }
+    #rightBody-bottom {
+      height: 5%;
+    }
+  </style>
+</head>
+<body class="uk-height-1-1 uk-background-default">
+  <!--  major(主要的) -->
+  <div class="uk-height-1-1 uk-flex uk-flex-wrap uk-flex-wrap-around uk-background-muted">
+
+    <!-- head(头部) -->
+    <div id="head" class="uk-width-1-1 uk-visible-height-extension@l uk-background-primary">
+      <div class="uk-container uk-container-expand uk-background-primary">
+        <div class="uk-clearfix">
+          <div class="uk-float-left">
+            <a href="#" id="jumpHomePage-1" class="uk-navbar-item uk-logo uk-text-white">
+              <img uk-svg="" src="trace-recorder.svg" class="uk-margin-small-right" hidden="">trace-recorder
+            </a>
+          </div>
+          <div class="uk-float-right uk-navbar-item">
+            <label class="uk-switch" for="translation">
+              <input id="translation" value="英" type="checkbox" checked>
+              <div class="uk-switch-slider uk-switch-zh-en round">
+                <span class="uk-float-left uk-switch-text uk-switch-text-zh">中</span>
+                <span class="uk-float-right uk-switch-text uk-switch-text-en">英</span>
+              </div>
+            </label>
+          </div>
+          <div class="uk-float-right">
+            <a href="https://trace-recorder.xusc.cn" target="_blank" class="uk-navbar-item uk-logo">
+              <span class="uk-margin-small-right" uk-icon="icon: trace-recorder"></span>
+            </a>
+          </div>
+          <div class="uk-float-right">
+            <a href="https://github.com/Cw404/trace-recorder" target="_blank" class="uk-navbar-item uk-logo uk-text-white">
+              <span class="uk-margin-small-right" uk-icon="icon: github-trace-recorder"></span>
+            </a>
+          </div>
+          <div class="uk-float-right">
+            <a href="https://gitee.com/Cw404/trace-recorder" target="_blank" class="uk-navbar-item uk-logo">
+              <span class="uk-margin-small-right" uk-icon="icon: gitee-trace-recorder"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- body(主体) -->
+    <div id="body" class="uk-width-1-1 uk-flex uk-padding-small">
+      <!-- left body(左边主体) -->
+      <div id="leftBody" class="uk-width-1-6 uk-height-1-1">
+        <div class="uk-width-1-1 uk-height-1-1 uk-card uk-card-body uk-overflow-auto uk-visible@m">
+          <ul id="select-list" class="uk-nav-default uk-nav-parent-icon" uk-nav>
+            <li class="uk-invisible-height-extension@l uk-hidden">
+              <a href="#" id="jumpHomePage-2" class="uk-width-5-6 uk-navbar-item uk-logo uk-border-rounded uk-align-center uk-background-default">
+                <img src="trace-recorder-larger.svg" class="uk-margin-small-right" hidden="" uk-svg>
+              </a>
+            </li>
+            <li class="uk-active"><a href="#" id="jumpHomePage-3"><span class="uk-margin-small-right" uk-icon="icon: home"></span><span class="translation" data-translation-zh="首页" data-translation-en="home Page">home Page</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <!-- right body(右边主体) -->
+      <div id="rightBody" class="uk-width-expand  uk-height-1-1">
+        <!-- right body top(右边主体顶部) -->
+        <div id="rightBody-top" class="uk-width-1-1 uk-card uk-card-body uk-card-default uk-margin-left ">
+          <div class="uk-float-right" uk-lightbox>
+            <a id="lightbox" href="" data-type="iframe"><span uk-icon="icon: expand"></span></a>
+          </div>
+          <iframe id="show-iframe" src="" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+        <!-- right body bottom(右边主体底部) -->
+        <div id="rightBody-bottom" class="uk-width-1-1 uk-text-center uk-padding-small uk-visible@m uk-text-warning">
+          Copyright &copy; 2022 - <span id="copyright-time">2022</span> trace-recorder. All Rights Reserved.
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script type="text/javascript">
+  $(function (){
+    // home page(首页)
+    let homePage = 'https://trace-recorder.xusc.cn';
+
+    // variable in initSelectList function(initSelectList函数中的变量)
+    let lis,selectE;
+
+    // call init(调用初始化)
+    init();
+
+    // init(初始化)
+    function init(){
+      initCopyrightTime();
+      initIframe();
+      initSelectList();
+      initDashboard();
+      initTranslation();
+      initLightbox();
+    }
+
+    // init copyright time(初始化版本时间)
+    function initCopyrightTime() {
+      $('#copyright-time').text(new Date().getUTCFullYear())
+    }
+
+    // init iframe(初始化内嵌框架)
+    function initIframe() {
+      jumpToTargetIframe(homePage);
+    }
+
+    // init select list(初始化选择列表)
+    function initSelectList() {
+
+      // inner init select status list(内部初始化选择列表状态)
+      const innerInitSelectListStatus = () => {
+        (lis = $("#select-list li")).each((index, el) => {
+          $(el).click(() => {
+            if (typeof selectE != "undefined") {
+              // remove some properties in cache node(移除缓存节点中的某些属性)
+              $(selectE).removeClass('uk-active')
+              $(selectE).removeClass('uk-animation-scale-up uk-transform-origin-bottom-center')
+            } else {
+              lis.each((index,iel) => {$(iel).removeClass('uk-active')})
+            }
+
+            // add some properties in current node(在当前节点中添加一些属性)
+            $(el).addClass('uk-active')
+            $(el).addClass('uk-animation-scale-up uk-transform-origin-bottom-center')
+
+            // cache current node(缓存当前节点)
+            selectE = $(el);
+          })
+        })
+      };
+
+      // inner init select list show(内部初始化选择列表显示)
+      const innerInitSelectListShow = () => {
+        (lis = $("#select-list li a")).each((index, el) => {
+          $(el).click(() => {
+            let dataAccessPath;
+            if ((dataAccessPath = $(el).attr("data-access-path")) == undefined) {
+              return;
+            }
+
+            jumpToTargetIframe(dataAccessPath);
+          })
+        })
+      };
+
+      // inner init exit(内部初始化退出)
+      const innerInitExit = () => {
+        $('#select-list').append("<li className=\"uk-nav-divider\"></li>" +
+                "<li><a href=\"specificationClose\" target='_self'><span className=\"uk-margin-small-right\" uk-icon=\"icon: sign-out\"></span><span class=\"translation\" data-translation-zh=\" 退出\" data-translation-en=\" Quit\"> Quit</span></a></li>")
+      };
+
+      // load select list(加载选择列表)
+      const loadSelectList = () => {
+        fetch('./data/dashboard.json')
+          .then((response) => response.json())
+          .then((data) => {
+            let appendComponentsData = "";
+            for (let componentGroupData of data) {
+              appendComponentsData += "<li class=\"uk-nav-header translation\" data-translation-zh=\"" + componentGroupData.groupChineseName + "\" data-translation-en=\"" + componentGroupData.groupName + "\">" + calculateBeautifulTranslationData(componentGroupData.groupName) + "</li>"
+              for (let componentData of componentGroupData.components) {
+                appendComponentsData += "<li><a href=\"#\" data-access-path=\"" + componentData.accessPath + "\"><span class=\"uk-margin-small-right\" uk-icon=\"icon: minus\"></span><span class=\"translation\" data-translation-zh=\"" + componentData.chineseName + "\" data-translation-en=\""+ componentData.name + "\">" + calculateBeautifulTranslationData(componentData.name) + "</span></a></li>"
+              }
+            }
+            $('#select-list').append(appendComponentsData)
+            innerInitExit()
+          }).catch((reason) => {
+            innerInitExit()
+          }).finally(() => {
+            innerInitSelectListStatus()
+            innerInitSelectListShow()
+          });
+      };
+
+      // call loadSelectList function(调用loadSelectList函数)
+      loadSelectList();
+    }
+
+    // init dashboard(初始化仪表盘)
+    function initDashboard(){
+      const count = 4;
+      for (let index = 1;index <= count;) {
+        $('#jumpHomePage-'+ (index++)).click(() => {
+          jumpToTargetIframe(homePage)
+        })
+      }
+    }
+
+    // jump to target iframe(跳转到目标内嵌框架)
+    function jumpToTargetIframe(targetSrc){
+      $('#show-iframe').attr('src',targetSrc)
+    }
+
+    // init translation(初始化翻译)
+    function initTranslation() {
+      $('#translation').change(() => {
+        let translationComponent = $('#translation');
+        if (translationComponent.val() == '英') {
+          translationComponent.val('中')
+        } else {
+          translationComponent.val('英')
+        }
+        let translationSuffix = translationComponent.val() == '英' ? 'en' : 'zh';
+        $('.translation').each((index,translationEl) => {
+          let translationData = $(translationEl).attr('data-translation-' + translationSuffix);
+          $(translationEl).text(calculateBeautifulTranslationData(translationData))
+        })
+      })
+    }
+
+    // calculate beautiful translation data(计算漂亮的翻译数据)
+    function calculateBeautifulTranslationData(translationData) {
+      if (translationData.length > 18) {
+        translationData = translationData.substring(0,18) + "...";
+      }
+      return translationData;
+    }
+
+    // init lightbox(初始化灯箱)
+    function initLightbox() {
+      $('#lightbox').click(() => {
+        let showIframeSrc = $('#show-iframe').attr('src');
+        $('#lightbox').attr('href',showIframeSrc)
+      })
+    }
+  })
+</script>
+</html>
