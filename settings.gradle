@@ -9,6 +9,8 @@ include 'trace-recorder-server'
 include 'trace-recorder-server:trace-recorder-server-tomcat'
 include 'trace-recorder-dashboard'
 include 'trace-recorder-dashboard:trace-recorder-dashboard-base'
+include 'trace-recorder-dashboard:trace-recorder-dashboard-component'
+include 'trace-recorder-dashboard:trace-recorder-dashboard-component:trace-recorder-dashboard-component-chart'
 
 include 'trace-recorder-example'
 include 'trace-recorder-example:trace-recorder-example-common'
