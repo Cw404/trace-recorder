@@ -18,6 +18,7 @@ package cn.xusc.trace.dashboard;
 import cn.xusc.trace.common.util.Maps;
 import cn.xusc.trace.common.util.reflect.Class;
 import cn.xusc.trace.dashboard.annotation.TraceDashboardComponentOrder;
+import cn.xusc.trace.dashboard.mapping.TraceDashboardData;
 import java.lang.annotation.Annotation;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;

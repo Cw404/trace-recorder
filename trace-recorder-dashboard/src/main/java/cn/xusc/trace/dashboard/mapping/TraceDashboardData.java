@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.xusc.trace.dashboard;
+package cn.xusc.trace.dashboard.mapping;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

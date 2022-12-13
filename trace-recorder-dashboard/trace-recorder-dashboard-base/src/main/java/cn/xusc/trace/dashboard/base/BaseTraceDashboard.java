@@ -26,6 +26,7 @@ import cn.xusc.trace.dashboard.base.resource.BaseTraceDashboardComponentResource
 import cn.xusc.trace.dashboard.config.GenerableTraceDashboardConfig;
 import cn.xusc.trace.dashboard.constant.Temporary;
 import cn.xusc.trace.dashboard.generate.BaseJsonTraceDashboardGenerator;
+import cn.xusc.trace.dashboard.mapping.TraceDashboardData;
 import cn.xusc.trace.dashboard.resource.SpecificationBaseTraceDashboardComponentResource;
 import cn.xusc.trace.server.tomcat.TomcatServer;
 import cn.xusc.trace.server.tomcat.config.TomcatServerConfig;
