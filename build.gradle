@@ -38,7 +38,7 @@ buildscript{
 		// https://mvnrepository.com/artifact/org.projectlombok/lombok
 		lombokVersion = '1.18.24'
 		// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-		jacksonVersion = '2.13.3'
+		jacksonVersion = '2.14.1'
 		// https://mvnrepository.com/artifact/com.lmax/disruptor
 		disruptorVersion = '3.4.4'
 		// https://mvnrepository.com/artifact/org.mockito/mockito-core
