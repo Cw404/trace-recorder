@@ -97,9 +97,7 @@ public class EchartsRelationChart extends AbstractChart {
         )
             .start();
 
-        if (log.isDebugEnabled()) {
-            log.debug("started tomcat server successful!");
-        }
+        log.debug("started tomcat server successful!");
     }
 
     /**
