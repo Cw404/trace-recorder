@@ -24,3 +24,4 @@ include 'trace-recorder-example:trace-recorder-example-chart:trace-recorder-exam
 include 'trace-recorder-example:trace-recorder-example-server'
 include 'trace-recorder-example:trace-recorder-example-server:trace-recorder-example-server-tomcat'
 include 'trace-recorder-example:trace-recorder-example-dashboard'
+include 'trace-recorder-example:trace-recorder-example-dashboard:trace-recorder-example-dashboard-base'
