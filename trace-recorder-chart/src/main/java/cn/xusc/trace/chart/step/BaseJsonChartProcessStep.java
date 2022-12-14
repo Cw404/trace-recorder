@@ -118,7 +118,7 @@ public abstract class BaseJsonChartProcessStep implements ChartProcessStep {
         Path templatePath = Temporary.TEMPLATE_PATH;
         generatePath = generatePath.resolve(generableChartConfig.getSpecificGenerateChartPath());
         String homePath = generableChartConfig.getHomePath().toString();
-        List<Path> paths = Finder.find(ClassLoader.getSystemResource(Systems.getSystemClassPath(homePath)), "**");
+        List<Path> paths = Finder.find(ClassLoader.getSystemResource(Systems.getSystemClassPath(homePath)), "**", true);
         if (Files.notExists(generatePath)) {
             Files.createDirectories(generatePath);
             for (Path path : paths) {

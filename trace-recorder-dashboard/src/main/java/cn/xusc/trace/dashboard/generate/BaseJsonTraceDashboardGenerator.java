@@ -103,7 +103,7 @@ public class BaseJsonTraceDashboardGenerator {
         Path templatePath = Temporary.TEMPLATE_PATH;
         generatePath = generatePath.resolve(config.getSpecificGenerateDashboardPath());
         String homePath = config.getHomePath().toString();
-        List<Path> paths = Finder.find(ClassLoader.getSystemResource(Systems.getSystemClassPath(homePath)), "**");
+        List<Path> paths = Finder.find(ClassLoader.getSystemResource(Systems.getSystemClassPath(homePath)), "**", true);
         if (Files.notExists(generatePath)) {
             Files.createDirectories(generatePath);
             for (Path path : paths) {
