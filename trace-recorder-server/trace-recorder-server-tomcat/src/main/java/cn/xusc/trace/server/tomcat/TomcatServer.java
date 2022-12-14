@@ -61,14 +61,10 @@ public class TomcatServer extends AbstractServer {
         super(config);
         this.config = config;
         tomcat = new Tomcat();
-        if (log.isDebugEnabled()) {
-            log.debug("create tomcat successful!");
-        }
+        log.debug("create tomcat successful!");
 
         initConfig();
-        if (log.isDebugEnabled()) {
-            log.debug("init tomcat config successful!");
-        }
+        log.debug("init tomcat config successful!");
     }
 
     /**
@@ -110,14 +106,12 @@ public class TomcatServer extends AbstractServer {
         tomcat.setPort(config.getPort());
         tomcat.getHost().setAutoDeploy(false);
 
-        if (log.isTraceEnabled()) {
-            log.trace(
-                "init base config: { baseDir: {}, hostname: {}, port: {}, autoDeploy: false }",
-                baseDir,
-                config.getHost(),
-                config.getPort()
-            );
-        }
+        log.trace(
+            "init base config: { baseDir: {}, hostname: {}, port: {}, autoDeploy: false }",
+            baseDir,
+            config.getHost(),
+            config.getPort()
+        );
     }
 
     /**
@@ -130,9 +124,7 @@ public class TomcatServer extends AbstractServer {
         Connector connector = tomcat.getConnector();
         connector.setThrowOnFailure(true);
 
-        if (log.isTraceEnabled()) {
-            log.trace("init connector config: { throwOnFailure: true }");
-        }
+        log.trace("init connector config: { throwOnFailure: true }");
     }
 
     /**
@@ -158,14 +150,12 @@ public class TomcatServer extends AbstractServer {
          */
         context.addServletMappingDecoded("/", "dispatch");
 
-        if (log.isTraceEnabled()) {
-            log.trace(
-                "init context config: { contextPath: {}, docBase: {}}, servlet mapping [ ' / ' -> ' {} ' ]",
-                contextPath,
-                config.getDocBase(),
-                contextPath
-            );
-        }
+        log.trace(
+            "init context config: { contextPath: {}, docBase: {}}, servlet mapping [ ' / ' -> ' {} ' ]",
+            contextPath,
+            config.getDocBase(),
+            contextPath
+        );
     }
 
     /**
@@ -189,9 +179,7 @@ public class TomcatServer extends AbstractServer {
             throw new TraceException(e);
         }
 
-        if (log.isTraceEnabled()) {
-            log.trace("init logging config: { loggingPath: {} }", loggingPath);
-        }
+        log.trace("init logging config: { loggingPath: {} }", loggingPath);
     }
 
     @Override
