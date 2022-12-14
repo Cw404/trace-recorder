@@ -77,9 +77,7 @@ public abstract class AbstractServer implements Server {
 
         this.serverConfig = config;
         this.resources = new ServerResources();
-        if (log.isDebugEnabled()) {
-            log.debug("create server resources successful!");
-        }
+        log.debug("create server resources successful!");
 
         this.defaultNoValueAnnotation =
             new Annotation(new Object(), Object.class) {
@@ -90,9 +88,7 @@ public abstract class AbstractServer implements Server {
             };
         registerServerResources();
 
-        if (log.isDebugEnabled()) {
-            log.debug("register server resource to server resources successful!");
-        }
+        log.debug("register server resource to server resources successful!");
     }
 
     /**
@@ -215,16 +211,12 @@ public abstract class AbstractServer implements Server {
                                          */
                                         resources.remove(path);
 
-                                        if (log.isTraceEnabled()) {
-                                            log.trace("remove override path [ {} ] server resource successful!", path);
-                                        }
+                                        log.trace("remove override path [ {} ] server resource successful!", path);
                                     }
                                 } else {
                                     disableOverrideResources.add(path);
 
-                                    if (log.isTraceEnabled()) {
-                                        log.trace("add disable override path [ {} ] server resource successful!", path);
-                                    }
+                                    log.trace("add disable override path [ {} ] server resource successful!", path);
                                 }
 
                                 registerServerResource(
@@ -319,13 +311,11 @@ public abstract class AbstractServer implements Server {
         }
         resources.register(resource, isCloseServerResource);
 
-        if (log.isTraceEnabled()) {
-            log.trace(
-                "register path [ {} ] {} server resource successful!",
-                path,
-                isCloseServerResource ? "close" : Strings.empty()
-            );
-        }
+        log.trace(
+            "register path [ {} ] {} server resource successful!",
+            path,
+            isCloseServerResource ? "close" : Strings.empty()
+        );
         return true;
     }
 
@@ -335,9 +325,7 @@ public abstract class AbstractServer implements Server {
         printStartedInfo();
         ServerClosedWaiter.INSTANCE.canWait();
 
-        if (log.isTraceEnabled()) {
-            log.trace("server [ {} ] started successful!", new Class<>(this).name());
-        }
+        log.trace("server [ {} ] started successful!", new Class<>(this).name());
     }
 
     @Override
@@ -345,9 +333,7 @@ public abstract class AbstractServer implements Server {
         doShutdown();
         ServerClosedWaiter.INSTANCE.doNotifyAll();
 
-        if (log.isTraceEnabled()) {
-            log.trace("server [ {} ] shutdown successful!", new Class<>(this).name());
-        }
+        log.trace("server [ {} ] shutdown successful!", new Class<>(this).name());
     }
 
     @Override
@@ -355,9 +341,7 @@ public abstract class AbstractServer implements Server {
         doDestroy();
         ServerClosedWaiter.INSTANCE.doNotifyAll();
 
-        if (log.isTraceEnabled()) {
-            log.trace("server [ {} ] destroy successful!", new Class<>(this).name());
-        }
+        log.trace("server [ {} ] destroy successful!", new Class<>(this).name());
     }
 
     @Override
@@ -365,9 +349,7 @@ public abstract class AbstractServer implements Server {
         if (serverConfig.getPrintStartedInfo()) {
             doPrintStartedInfo();
 
-            if (log.isTraceEnabled()) {
-                log.trace("print server started info successful!");
-            }
+            log.trace("print server started info successful!");
         }
     }
 

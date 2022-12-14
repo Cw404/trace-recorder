@@ -88,9 +88,7 @@ public class ServerDispatchServlet extends HttpServlet {
             return true;
         });
 
-        if (log.isDebugEnabled()) {
-            log.debug("init ServerDispatchServlet successful!");
-        }
+        log.debug("init ServerDispatchServlet successful!");
     }
 
     /**
@@ -125,9 +123,7 @@ public class ServerDispatchServlet extends HttpServlet {
                     closeServerRunnable.run();
                 }
 
-                if (log.isTraceEnabled()) {
-                    log.trace("match request path: {}, writer model: {}", servletPath, innerWriter.writerModel);
-                }
+                log.trace("match request path: {}, writer model: {}", servletPath, innerWriter.writerModel);
                 return false;
             }
             return true;
@@ -141,24 +137,20 @@ public class ServerDispatchServlet extends HttpServlet {
             if (notFoundServerResourceOptional.isPresent()) {
                 doWriteData(parseWriteData(req, notFoundServerResourceOptional.get(), innerWriter), innerWriter);
 
-                if (log.isTraceEnabled()) {
-                    log.trace(
-                        "not match request path: {}, use [ /notFound ] server resource response, writer model: {}",
-                        servletPath,
-                        innerWriter.writerModel
-                    );
-                }
+                log.trace(
+                    "not match request path: {}, use [ /notFound ] server resource response, writer model: {}",
+                    servletPath,
+                    innerWriter.writerModel
+                );
                 return;
             }
             doWriteData("Hello trace-recorder with a cute tomcat".getBytes(StandardCharsets.UTF_8), innerWriter);
 
-            if (log.isTraceEnabled()) {
-                log.trace(
-                    "not match request path: {}, use default welcome words response, writer model: {}",
-                    servletPath,
-                    innerWriter.writerModel
-                );
-            }
+            log.trace(
+                "not match request path: {}, use default welcome words response, writer model: {}",
+                servletPath,
+                innerWriter.writerModel
+            );
         }
     }
 
