@@ -65,10 +65,7 @@ public final class Finder extends SimpleFileVisitor<Path> {
         Objects.requireNonNull(originUrl);
         Objects.requireNonNull(pattern);
 
-        Finder finder = new Finder(pattern);
-        Files.FileProtocol fileProtocol = Files.findProtocol(originUrl.getProtocol());
-        Files.walkFileTree(originUrl.getPath(), fileProtocol, finder);
-        return finder.done();
+        return find(originUrl, pattern, false);
     }
 
     /**
@@ -85,7 +82,7 @@ public final class Finder extends SimpleFileVisitor<Path> {
         Objects.requireNonNull(originPath);
         Objects.requireNonNull(pattern);
 
-        return find(originPath.toUri().toURL(), pattern);
+        return find(originPath.toUri().toURL(), pattern, false);
     }
 
     /**
@@ -102,7 +99,67 @@ public final class Finder extends SimpleFileVisitor<Path> {
         Objects.requireNonNull(originPath);
         Objects.requireNonNull(pattern);
 
-        return find(Path.of(originPath), pattern);
+        return find(Path.of(originPath), pattern, false);
+    }
+
+    /**
+     * 查找匹配的路径列表
+     *
+     * @param originUrl 源url
+     * @param pattern 查找表达式
+     * @param matchDirectorySelf 匹配文件夹自身
+     * @return 匹配的路径列表
+     * @since 2.5.3
+     * @throws IOException if an I/O error has occurred.
+     * @throws NullPointerException  if {@code originUrl} is null.
+     * @throws NullPointerException  if {@code pattern} is null.
+     */
+    public static List<Path> find(URL originUrl, String pattern, boolean matchDirectorySelf) throws IOException {
+        Objects.requireNonNull(originUrl);
+        Objects.requireNonNull(pattern);
+
+        Finder finder = new Finder(pattern);
+        Files.FileProtocol fileProtocol = Files.findProtocol(originUrl.getProtocol());
+        Files.walkFileTree(originUrl.getPath(), fileProtocol, matchDirectorySelf, finder);
+        return finder.done();
+    }
+
+    /**
+     * 查找匹配的路径列表
+     *
+     * @param originPath 源路径
+     * @param pattern 查找表达式
+     * @param matchDirectorySelf 匹配文件夹自身
+     * @return 匹配的路径列表
+     * @since 2.5.3
+     * @throws IOException if an I/O error has occurred.
+     * @throws NullPointerException  if {@code originPath} is null.
+     * @throws NullPointerException  if {@code pattern} is null.
+     */
+    public static List<Path> find(Path originPath, String pattern, boolean matchDirectorySelf) throws IOException {
+        Objects.requireNonNull(originPath);
+        Objects.requireNonNull(pattern);
+
+        return find(originPath.toUri().toURL(), pattern, matchDirectorySelf);
+    }
+
+    /**
+     * 查找匹配的路径列表
+     *
+     * @param originPath 源路径
+     * @param pattern 查找表达式
+     * @param matchDirectorySelf 匹配文件夹自身
+     * @return 匹配的路径列表
+     * @since 2.5.3
+     * @throws IOException if an I/O error has occurred.
+     * @throws NullPointerException  if {@code originPath} is null.
+     * @throws NullPointerException  if {@code pattern} is null.
+     */
+    public static List<Path> find(String originPath, String pattern, boolean matchDirectorySelf) throws IOException {
+        Objects.requireNonNull(originPath);
+        Objects.requireNonNull(pattern);
+
+        return find(Path.of(originPath), pattern, matchDirectorySelf);
     }
 
     /**

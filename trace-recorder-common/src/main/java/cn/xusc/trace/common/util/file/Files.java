@@ -44,12 +44,18 @@ class Files {
      *
      * @param start 起始路径
      * @param protocol 文件协议
+     * @param matchDirectorySelf 匹配文件夹自身
+     *                           jar协议的一种补偿机制，如果你需要当前文件夹
      * @param visitor 文件访问者
      * @return 起始路径
      * @throws IOException if an I/O error has occurred.
      */
-    public String walkFileTree(String start, FileProtocol protocol, FileVisitor<? super Path> visitor)
-        throws IOException {
+    public String walkFileTree(
+        String start,
+        FileProtocol protocol,
+        boolean matchDirectorySelf,
+        FileVisitor<? super Path> visitor
+    ) throws IOException {
         switch (protocol) {
             case FILE:
                 {
@@ -81,8 +87,12 @@ class Files {
 
                     JarFile jarFile = new JarFile(jarFileURL.getFile());
                     /* 构建路径表达式匹配器 */
+                    PathMatcher directorySelfMatcher = null;
                     String matcherPattern = "glob:".concat(entryName);
                     if (jarFile.getJarEntry(entryName).isDirectory()) {
+                        if (matchDirectorySelf) {
+                            directorySelfMatcher = FileSystems.getDefault().getPathMatcher(matcherPattern);
+                        }
                         matcherPattern = matcherPattern.concat("/**");
                     }
                     PathMatcher matcher = FileSystems.getDefault().getPathMatcher(matcherPattern);
@@ -98,6 +108,15 @@ class Files {
                             }
                         }
                         JarEntry entry = entries.nextElement();
+                        /* 文件夹自身匹配 */
+                        if (
+                            Objects.nonNull(directorySelfMatcher) &&
+                            directorySelfMatcher.matches(Path.of(entry.getName()))
+                        ) {
+                            result = visitor.preVisitDirectory(new JarPath(entry, jarLoader), null);
+                            continue;
+                        }
+                        /* 文件夹子集匹配 */
                         if (matcher.matches(Path.of(entry.getName()))) {
                             if (entry.isDirectory()) {
                                 result = visitor.preVisitDirectory(new JarPath(entry, jarLoader), null);
