@@ -80,7 +80,7 @@ subprojects {
 	apply plugin: "com.diffplug.spotless"
 
 	group 'cn.xusc'
-	version = new Version(major: 2, minor: 5, revision: 2, snapshot: false)
+	version = new Version(major: 2, minor: 5, revision: 3, snapshot: false)
 
 	// 配置lombok编译时期的注释解析
 	configurations {
