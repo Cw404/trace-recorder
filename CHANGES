@@ -1,5 +1,13 @@
 trace-recorder Changes
 
+Changes in 2.5.3
+
+ * Add dashboard, management chart
+
+ * Fix browser display garbled Chinese problem in some server resource
+
+ * Fix not found self directory environment in generate process
+
 Changes in 2.5.2
 
  * Add chart-echarts-bar module, use bar chart to show dat
