@@ -67,39 +67,27 @@ public abstract class AbstractChart implements Chart {
      * 基础构造
      */
     public AbstractChart() {
-        boolean debugEnabled = log.isDebugEnabled();
         String chartName = new Class<>(this).name();
-        if (debugEnabled) {
-            log.debug("init chart: {}", chartName);
-        }
+        log.debug("init chart: {}", chartName);
 
         this.CHART_CONFIG = initChartConfig();
-        if (debugEnabled) {
-            log.debug("init chart config successful!");
-        }
+        log.debug("init chart config successful!");
 
         initChartAttribute();
-        if (debugEnabled) {
-            log.debug("init chart attribute successful!");
-        }
+        log.debug("init chart attribute successful!");
 
         this.CHART_FLOW = new ChartFlow();
-        if (debugEnabled) {
-            log.debug("creat chart flow successful!");
-        }
+        log.debug("creat chart flow successful!");
 
         initCharProcessSteps(CHART_FLOW);
-        if (debugEnabled) {
-            log.debug("init chart processSteps successful!");
-        }
+        log.debug("init chart processSteps successful!");
 
         this.CHART_DATA_PROCESSOR = initChartDataProcessor(this);
         this.CHART_DATA_PROCESSOR.setDaemon(true);
         this.CHART_DATA_PROCESSOR.start();
-        if (debugEnabled) {
-            log.debug("started chart data processor [ {} ] successful!", CHART_DATA_PROCESSOR.getName());
-            log.debug("init chart: [ {} ] successful!", chartName);
-        }
+        log.debug("started chart data processor [ {} ] successful!", CHART_DATA_PROCESSOR.getName());
+
+        log.debug("init chart: [ {} ] successful!", chartName);
     }
 
     @Override
@@ -125,9 +113,7 @@ public abstract class AbstractChart implements Chart {
             renderChartData = chartData
         );
 
-        if (log.isDebugEnabled()) {
-            log.debug("render chart data: {}", renderChartData.basicChartData());
-        }
+        log.debug("render chart data: {}", renderChartData.basicChartData());
 
         for (ChartProcessStep chartProcessStep : CHART_FLOW.flow()) {
             try {
@@ -136,13 +122,11 @@ public abstract class AbstractChart implements Chart {
                 throw new TraceException(e);
             }
 
-            if (log.isTraceEnabled()) {
-                log.debug(
-                    "chart process step [ {} ] generate value: {}",
-                    new Class<>(chartProcessStep).name(),
-                    valuePipeline.getValue()
-                );
-            }
+            log.debug(
+                "chart process step [ {} ] generate value: {}",
+                new Class<>(chartProcessStep).name(),
+                valuePipeline.getValue()
+            );
         }
         return renderChartData;
     }
@@ -165,18 +149,14 @@ public abstract class AbstractChart implements Chart {
         continueShow();
         openServerShow();
 
-        if (log.isDebugEnabled()) {
-            log.debug("open server show chart successful!");
-        }
+        log.debug("open server show chart successful!");
     }
 
     /**
      * 等待第一个数据产生
      */
     private void waitFirstData() {
-        if (log.isDebugEnabled()) {
-            log.debug("wait for first chart data of generate");
-        }
+        log.debug("wait for first chart data of generate");
 
         while (true) {
             if (Objects.nonNull(chartData)) {
@@ -198,9 +178,7 @@ public abstract class AbstractChart implements Chart {
         this.chartDataContinueShower.setDaemon(true);
         this.chartDataContinueShower.start();
 
-        if (log.isDebugEnabled()) {
-            log.debug("started chart data continue shower [ {} ] successful!", chartDataContinueShower.getName());
-        }
+        log.debug("started chart data continue shower [ {} ] successful!", chartDataContinueShower.getName());
     }
 
     /**

@@ -53,7 +53,7 @@ public enum TraceRecorderVersion {
         /* 初始化版本 */
         major = 2;
         minor = 5;
-        revision = 2;
+        revision = 3;
         snapshot = false;
     }
 

@@ -185,9 +185,7 @@ public class TraceRecorder {
         enableStack = true;
         enableThreadName = true;
         environment = new TraceRecorderEnvironment();
-        if (log.isInfoEnabled()) {
-            log.info("TraceRecorder environment create successful!");
-        }
+        log.info("TraceRecorder environment create successful!");
     }
 
     /**
@@ -327,9 +325,7 @@ public class TraceRecorder {
      */
     private void localThreadShareTraceRecorder() {
         TraceRecorders.register(this);
-        if (log.isInfoEnabled()) {
-            log.info("local thread enable share TraceRecorder [ {} ] successful!", NAME);
-        }
+        log.info("local thread enable share TraceRecorder [ {} ] successful!", NAME);
     }
 
     /**
@@ -338,9 +334,7 @@ public class TraceRecorder {
      * @since 2.5
      */
     private void quickSpiComponentsRegister() {
-        if (log.isInfoEnabled()) {
-            log.info("enable spi components register");
-        }
+        log.info("enable spi components register");
 
         TraceRecorderLoader<InfoFilter> infoFilterLoader = TraceRecorderLoader.getTraceRecorderLoader(InfoFilter.class);
         TraceRecorderLoader<InfoEnhancer> infoEnhancerLoader = TraceRecorderLoader.getTraceRecorderLoader(
@@ -374,17 +368,13 @@ public class TraceRecorder {
         List<?> innerComponents = Lists.merge(INFO_FILTERS, INFO_ENHANCERS, INFO_RECORDERS);
 
         /* external(外部) */
-        if (log.isInfoEnabled()) {
-            log.info("external spi components register:");
-        }
+        log.info("external spi components register:");
         boolean existExternalSpiComponents = false;
         for (InfoFilter infoFilter : infoFilterLoader.findAll().get()) {
             if (!innerComponents.contains(infoFilter)) {
                 addInfoFilter(infoFilter);
 
-                if (log.isInfoEnabled()) {
-                    log.info("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
-                }
+                log.info("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
                 existExternalSpiComponents = true;
             }
         }
@@ -392,9 +382,7 @@ public class TraceRecorder {
             if (!innerComponents.contains(infoEnhancer)) {
                 addInfoEnhancer(infoEnhancer);
 
-                if (log.isInfoEnabled()) {
-                    log.info("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
-                }
+                log.info("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
                 existExternalSpiComponents = true;
             }
         }
@@ -402,17 +390,13 @@ public class TraceRecorder {
             if (!innerComponents.contains(infoRecorder)) {
                 addInfoRecorder(infoRecorder);
 
-                if (log.isInfoEnabled()) {
-                    log.info("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
-                }
+                log.info("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
                 existExternalSpiComponents = true;
             }
         }
 
         if (!existExternalSpiComponents) {
-            if (log.isInfoEnabled()) {
-                log.info("     not components register");
-            }
+            log.info("     not components register");
         }
     }
 
@@ -452,9 +436,7 @@ public class TraceRecorder {
         );
         environment.put(environmentCollectMaps);
 
-        if (log.isInfoEnabled()) {
-            log.info("init base environment successful!");
-        }
+        log.info("init base environment successful!");
     }
 
     /**
@@ -477,9 +459,7 @@ public class TraceRecorder {
                     );
                 });
 
-            if (log.isInfoEnabled()) {
-                log.info("init addition properties environment successful!");
-            }
+            log.info("init addition properties environment successful!");
         }
     }
 
@@ -490,18 +470,14 @@ public class TraceRecorder {
      * @since 2.5
      */
     private void registerConfigComponents(TraceRecorderConfig config) {
-        if (log.isInfoEnabled()) {
-            log.info("external config components register:");
-        }
+        log.info("external config components register:");
 
         boolean existExternalConfigComponents = false;
         if (!config.getInfoFilters().isEmpty()) {
             for (InfoFilter infoFilter : config.getInfoFilters()) {
                 addInfoFilter(infoFilter);
 
-                if (log.isInfoEnabled()) {
-                    log.info("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
-                }
+                log.info("     register InfoFilter   component: {}", new Class<>(infoFilter).name());
             }
             existExternalConfigComponents = true;
         }
@@ -509,9 +485,7 @@ public class TraceRecorder {
             for (InfoEnhancer infoEnhancer : config.getInfoEnhancers()) {
                 addInfoEnhancer(infoEnhancer);
 
-                if (log.isInfoEnabled()) {
-                    log.info("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
-                }
+                log.info("     register InfoEnhancer component: {}", new Class<>(infoEnhancer).name());
             }
             existExternalConfigComponents = true;
         }
@@ -519,17 +493,13 @@ public class TraceRecorder {
             for (InfoRecorder infoRecorder : config.getInfoRecorders()) {
                 addInfoRecorder(infoRecorder);
 
-                if (log.isInfoEnabled()) {
-                    log.info("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
-                }
+                log.info("     register InfoRecorder component: {}", new Class<>(infoRecorder).name());
             }
             existExternalConfigComponents = true;
         }
 
         if (!existExternalConfigComponents) {
-            if (log.isInfoEnabled()) {
-                log.info("     not components register");
-            }
+            log.info("     not components register");
         }
     }
 

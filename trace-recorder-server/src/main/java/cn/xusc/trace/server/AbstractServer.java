@@ -25,10 +25,7 @@ import cn.xusc.trace.common.util.reflect.Method;
 import cn.xusc.trace.common.util.reflect.Reflector;
 import cn.xusc.trace.server.annotation.*;
 import cn.xusc.trace.server.util.ServerClosedWaiter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -53,6 +50,13 @@ public abstract class AbstractServer implements Server {
     protected ServerResources resources;
 
     /**
+     * 禁用重写服务资源点
+     *
+     * @since 2.5.3
+     */
+    private List<String> disableOverrideResources = new ArrayList<>();
+
+    /**
      * 服务配置
      */
     protected AbstractServerConfig serverConfig;
@@ -73,9 +77,7 @@ public abstract class AbstractServer implements Server {
 
         this.serverConfig = config;
         this.resources = new ServerResources();
-        if (log.isDebugEnabled()) {
-            log.debug("create server resources successful!");
-        }
+        log.debug("create server resources successful!");
 
         this.defaultNoValueAnnotation =
             new Annotation(new Object(), Object.class) {
@@ -86,9 +88,7 @@ public abstract class AbstractServer implements Server {
             };
         registerServerResources();
 
-        if (log.isDebugEnabled()) {
-            log.debug("register server resource to server resources successful!");
-        }
+        log.debug("register server resource to server resources successful!");
     }
 
     /**
@@ -169,6 +169,24 @@ public abstract class AbstractServer implements Server {
                                 .value();
 
                             /*
+                            获取禁用重写许可
+                             */
+                            boolean isDisableOverridePermit = (Boolean) method
+                                .findAvailableAnnotation(DisableOverrideServerResource.class)
+                                .orElse(defaultNoValueAnnotation)
+                                .value();
+
+                            if (Boolean.logicalAnd(isOverridePermit, isDisableOverridePermit)) {
+                                throw new TraceUnsupportedOperationException(
+                                    Formats.format(
+                                        "@OverrideServerResource and @DisableOverrideServerResource can't be used together on {}#{}()",
+                                        clazz.name(),
+                                        method.name()
+                                    )
+                                );
+                            }
+
+                            /*
                             探测源注释
                              */
                             List<Annotation<java.lang.annotation.Annotation>> metaAnnotations = detectionMetaAnnotations(
@@ -181,16 +199,26 @@ public abstract class AbstractServer implements Server {
                             String[] paths = (String[]) pathMethod.call();
                             byte[] data = ServerResource.parseSpecificData(method.call());
                             for (String path : paths) {
-                                if (isOverridePermit) {
-                                    /*
-                                    重写服务资源许可移除
-                                     */
-                                    resources.remove(path);
+                                if (!isDisableOverridePermit) {
+                                    if (disableOverrideResources.contains(path)) {
+                                        throw new TraceUnsupportedOperationException(
+                                            Formats.format("server resource path [ {} ] disable override!", path)
+                                        );
+                                    }
+                                    if (isOverridePermit) {
+                                        /*
+                                        重写服务资源许可移除
+                                         */
+                                        resources.remove(path);
 
-                                    if (log.isTraceEnabled()) {
                                         log.trace("remove override path [ {} ] server resource successful!", path);
                                     }
+                                } else {
+                                    disableOverrideResources.add(path);
+
+                                    log.trace("add disable override path [ {} ] server resource successful!", path);
                                 }
+
                                 registerServerResource(
                                     (boolean) method
                                             .findAvailableAnnotation(
@@ -283,13 +311,11 @@ public abstract class AbstractServer implements Server {
         }
         resources.register(resource, isCloseServerResource);
 
-        if (log.isTraceEnabled()) {
-            log.trace(
-                "register path [ {} ] {} server resource successful!",
-                path,
-                isCloseServerResource ? "close" : Strings.empty()
-            );
-        }
+        log.trace(
+            "register path [ {} ] {} server resource successful!",
+            path,
+            isCloseServerResource ? "close" : Strings.empty()
+        );
         return true;
     }
 
@@ -299,9 +325,7 @@ public abstract class AbstractServer implements Server {
         printStartedInfo();
         ServerClosedWaiter.INSTANCE.canWait();
 
-        if (log.isTraceEnabled()) {
-            log.trace("server [ {} ] started successful!", new Class<>(this).name());
-        }
+        log.trace("server [ {} ] started successful!", new Class<>(this).name());
     }
 
     @Override
@@ -309,9 +333,7 @@ public abstract class AbstractServer implements Server {
         doShutdown();
         ServerClosedWaiter.INSTANCE.doNotifyAll();
 
-        if (log.isTraceEnabled()) {
-            log.trace("server [ {} ] shutdown successful!", new Class<>(this).name());
-        }
+        log.trace("server [ {} ] shutdown successful!", new Class<>(this).name());
     }
 
     @Override
@@ -319,9 +341,7 @@ public abstract class AbstractServer implements Server {
         doDestroy();
         ServerClosedWaiter.INSTANCE.doNotifyAll();
 
-        if (log.isTraceEnabled()) {
-            log.trace("server [ {} ] destroy successful!", new Class<>(this).name());
-        }
+        log.trace("server [ {} ] destroy successful!", new Class<>(this).name());
     }
 
     @Override
@@ -329,9 +349,7 @@ public abstract class AbstractServer implements Server {
         if (serverConfig.getPrintStartedInfo()) {
             doPrintStartedInfo();
 
-            if (log.isTraceEnabled()) {
-                log.trace("print server started info successful!");
-            }
+            log.trace("print server started info successful!");
         }
     }
 

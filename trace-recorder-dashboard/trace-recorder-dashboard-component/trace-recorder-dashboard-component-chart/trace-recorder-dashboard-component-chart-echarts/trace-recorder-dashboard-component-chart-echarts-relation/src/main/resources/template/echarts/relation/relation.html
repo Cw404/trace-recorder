@@ -1,0 +1,104 @@
+<!--
+Copyright 2022 WangCai.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!--
+    来源: https://echarts.apache.org/examples/zh/editor.html?c=graph
+	origin form: https://echarts.apache.org/examples/zh/editor.html?c=graph
+-->
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+<head>
+  <meta charset="UTF-8">
+  <title>trace-recorder relation</title>
+  <link rel="shortcut icon" href="trace-recorder-icon.png" />
+</head>
+<body style="height: 100%; margin: 0">
+<div id="container" style="height: 100%;background-color: azure"></div>
+<script type="text/javascript" src="js/chart_jquery.js"></script>
+<script type="text/javascript" src="js/chart_echarts.min.js"></script>
+
+<script type="text/javascript">
+  var dom = document.getElementById('container');
+  var myChart = echarts.init(dom, null, {
+    renderer: 'canvas',
+    useDirtyRect: false
+  });
+  var option;
+
+  myChart.showLoading();
+  $.getJSON('./data/relation.json', function (relation) {
+    myChart.hideLoading();
+    relation.nodes.forEach(function (node) {
+      node.label = {
+        show: node.symbolSize >= 20
+      };
+    });
+    option = {
+      title: {
+        text: 'trace-recorder',
+        subtext: '跟踪记录仪',
+        top: 'bottom',
+        left: 'right'
+      },
+      tooltip: {},
+      legend: [
+        {
+          // selectedMode: 'single',
+          data: relation.categories.map(function (a) {
+            return a.name;
+          })
+        }
+      ],
+      animationDuration: 1500,
+      animationEasingUpdate: 'quinticInOut',
+      series: [
+        {
+          name: 'trace-recorder',
+          type: 'graph',
+          layout: 'none',
+          data: relation.nodes,
+          links: relation.links,
+          categories: relation.categories,
+          roam: true,
+          draggable:true,
+          label: {
+            position: 'right',
+            formatter: function (param) {
+              var value = param.value;
+              // 确保显示大小
+              return value.toString().substring(0,20);
+            }
+          },
+          lineStyle: {
+            color: 'source',
+            curveness: 0.3
+          },
+          emphasis: {
+            focus: 'adjacency',
+            lineStyle: {
+              width: 10
+            }
+          }
+        }
+      ]
+    };
+    myChart.setOption(option);
+  });
+
+  window.addEventListener('resize', myChart.resize);
+</script>
+</body>
+</html>

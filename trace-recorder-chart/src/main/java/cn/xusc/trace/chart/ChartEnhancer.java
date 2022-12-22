@@ -78,9 +78,7 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
         }
         STRATEGY = chart.config().getChartRefreshStrategy();
 
-        if (log.isDebugEnabled()) {
-            log.debug("discover chart: {}, refresh strategy: {}", new Class<>(chart).name(), STRATEGY.name());
-        }
+        log.debug("discover chart: {}, refresh strategy: {}", new Class<>(chart).name(), STRATEGY.name());
     }
 
     /**
@@ -136,9 +134,7 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
         standardChartData.setInfo(eInfo.getInfo());
         standardChartData.setStackTraceElements(stackTraceElements);
 
-        if (log.isTraceEnabled()) {
-            log.trace("generate standard chart data: {}", standardChartData.basicChartData());
-        }
+        log.trace("generate standard chart data: {}", standardChartData.basicChartData());
 
         /*
         标准图表数据填充到存储库
@@ -146,9 +142,7 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
         for (;;) {
             try {
                 ChartDataRepository.INSTANCE.put(standardChartData);
-                if (log.isTraceEnabled()) {
-                    log.trace("put standard chart data to repository");
-                }
+                log.trace("put standard chart data to repository");
                 break;
             } catch (InterruptedException e) {
                 // nop
@@ -203,15 +197,11 @@ public class ChartEnhancer extends AbstractStatisticsInfoEnhancer {
     private void innerShow() {
         String chartName = new Class<>(chart).name();
 
-        if (log.isTraceEnabled()) {
-            log.trace("show chart: {}", chartName);
-        }
+        log.trace("show chart: {}", chartName);
 
         chart.show();
         alreadyShowChart = true;
 
-        if (log.isDebugEnabled()) {
-            log.debug("showed chart: {}", chartName);
-        }
+        log.debug("showed chart: {}", chartName);
     }
 }

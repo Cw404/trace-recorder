@@ -1,0 +1,102 @@
+trace-recorder 变更
+
+在2.5.3中的变更
+
+ * 添加dashboard, 管理图
+
+ * 修复浏览器在一些服务资源中显示中文乱码问题
+
+ * 修复在生成过程中找不到自身目录环境的问题
+
+在2.5.2中的变更
+
+ * 添加chart-echarts-bar模块, 使用柱状图显示数据
+
+ * 在关系图和柱状图中重构json步骤
+
+ * 修复在ChartAttribute属性中设置offsetXAxis属性异常
+
+在2.5.1中的变更
+
+ * 兼容Windows
+
+在2.5中的变更
+
+ * 项目模块化, 项目名变更为trace-recorder
+
+ * 添加echarts关系图
+
+ * 添加SPI组件注册
+
+ * 添加本地共享TraceRecorder
+
+ * 添加TraceRecorderEnvironment, 使TraceRecorder更强
+
+ * 添加TraceRecorderVersion, 描述当前版本
+
+ * 添加slf4j日志去记录TraceRecorder的所有流程
+
+ * 添加更多...
+
+在2.4中的变更
+
+ * 添加TraceRecorderProperties, 支持从properties文件和xml文件中去生成TraceRecorderConfig
+
+ * 变更TraceRecorder的InfoEnhancer链定义，内部InfoEnhancer应晚于外部InfoEnhancer
+
+在2.3中的变更
+
+ * 废弃Recorders，它是不受控制的
+
+在2.2.1中的变更
+
+ * 修复TraceRecorder关闭方法直接引发com.lmax.disruptor.TimeoutException触发的编译问题
+
+ * 修复TraceRecorder关闭方法的有效性
+
+在2.2中的变更
+
+ * 添加Memo和Randoms, 支持TraceRecorder复位到特定的结构
+
+在2.1中的变更
+
+ * 添加TraceHandler关闭方法, 支持AsyncTraceHandler中释放Disruptor资源
+
+在2.0中的变更
+
+ * 将TraceRecorder日志处理提取到TraceHandler，支持同步与异步两种方式
+
+ * 添加TraceRecorderConfig, 使用TraceRecorder配置更灵活
+
+ * 添加ThreadInfoEnhancer, 支持线程信息log
+
+ * 为应用级别添加TraceException, 统一异常
+
+ * 添加Disruptors和TeConsumer, 为异步提供更简单的使用
+
+ * 添加Lists和Strings, 提供列表的元素打印
+
+ * 修正许可证的正确年份
+
+ * 更多javadoc信息
+
+在1.2.1中的变更
+
+ * 在TraceRecorder和Recorders中添加移除组件方法
+
+在1.2中的变更
+
+ * 在Recorders中新的方法非静态的，由于1.1版本已经发布到中央存储库，所以升级到1.2版本，这是一个不好的做法
+
+在1.1中的变更
+
+ * 添加Formats, 设置log格式。
+   清理实例化的一些util类
+
+在1.0.3中的变更
+
+ * 添加Symbols, 简化符号生成
+
+在1.0.1中的变更
+
+ * 通过中央存储库解析依赖关系，而不是手动推送到本地Maven存储库

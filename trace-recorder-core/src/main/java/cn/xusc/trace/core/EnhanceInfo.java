@@ -15,6 +15,7 @@
  */
 package cn.xusc.trace.core;
 
+import cn.xusc.trace.common.util.Maps;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +27,7 @@ import java.util.Objects;
  * @author WangCai
  * @since 1.0
  */
-public class EnhanceInfo implements Serializable {
+public class EnhanceInfo implements Serializable, Cloneable {
 
     private static final long serialVersionUID = -2646424027034058288L;
 
@@ -174,6 +175,28 @@ public class EnhanceInfo implements Serializable {
     public void setTemporaryValue(String key, Object value) {
         Objects.requireNonNull(key);
         this.temporaryValue.put(key, value);
+    }
+
+    /**
+     * 克隆增强信息
+     *
+     * <p>
+     * 保留一个增强信息主要的内容，因为其余数据是内部使用
+     * </p>
+     *
+     * @return 克隆后的增强信息
+     * @since 2.5.3
+     */
+    @Override
+    public EnhanceInfo clone() {
+        EnhanceInfo enhanceInfo = new EnhanceInfo(info);
+        Maps.walkEnd(
+            temporaryValue,
+            (k, v) -> {
+                enhanceInfo.setTemporaryValue(k, v);
+            }
+        );
+        return enhanceInfo;
     }
 
     /**

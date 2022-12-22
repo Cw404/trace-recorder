@@ -97,9 +97,7 @@ public class EchartsRelationChart extends AbstractChart {
         )
             .start();
 
-        if (log.isDebugEnabled()) {
-            log.debug("started tomcat server successful!");
-        }
+        log.debug("started tomcat server successful!");
     }
 
     /**
@@ -125,7 +123,6 @@ public class EchartsRelationChart extends AbstractChart {
                         .orElse(Systems.getClassPaths(classPath -> Files.isDirectory(Paths.get(classPath)))[0])
                 )
             )
-            .relationAttribute(contextRelationAttribute(environment))
             .homePath(Temporary.TEMPLATE_PATH.resolve("echarts/relation"))
             .specificGenerateChartPath(Path.of("echarts/relation"))
             .jsonFilePath(Path.of("echarts/relation/data/relation.json"))
